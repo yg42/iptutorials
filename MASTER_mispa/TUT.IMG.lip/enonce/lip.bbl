@@ -1,0 +1,28 @@
+\begin{thebibliography}{1}
+
+\bibitem{Jourlin1987}
+M.~Jourlin and J.~C. Pinoli.
+\newblock Logarithmic image processing.
+\newblock {\em Acta Stereologica}, 6:651--656, 1987.
+
+\bibitem{Jourlin1995}
+Michel Jourlin and Jean-Charles Pinoli.
+\newblock Image dynamic range enhancement and stabilization in the context of
+  the logarithmic image processing model.
+\newblock {\em Signal Process.}, 41(2):225--237, January 1995.
+
+\bibitem{Pinoli1987}
+J.~C. Pinoli.
+\newblock {\em Contribution \`a la mod\'elisation, au traitement et \`a
+  l'analyse d'image}.
+\newblock PhD thesis, D{\'e}partement de Math{\'e}matiques, Universit{\'e} de
+  Saint-Etienne, France, 1987.
+
+\bibitem{Pinoli1997}
+J.~C. Pinoli.
+\newblock The logarithmic image processing model: Connections with human
+  brightness perception and contrast estimators.
+\newblock {\em Journal of Mathematical Imaging and Vision}, 7(4):341--358,
+  October 1997.
+
+\end{thebibliography}

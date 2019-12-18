@@ -1,0 +1,109 @@
+\def\difficulty{2}
+\sujet{Morphological skeletonization}
+\index{Mathematical Morphology!Skeleton}
+\index{Mathematical Morphology!Hit-or-miss Transform}
+\index{Mathematical Morphology!Topological Skeleton}
+
+\begin{note}This tutorial aims to skeletonize objects with specific tools from mathematical morphology (thinning, maximum ball\dots).
+\end{note}
+
+\noindent The different processes will be applied on the following image:
+%\begin{figure}[h]
+\begin{center}\includegraphics[width=3.25cm]{mickey.png}
+\end{center}
+\vspace*{-10pt}
+%\end{figure}
+
+
+\section{Hit-or-miss transform}
+The hit-or-miss transformation enables specific pixel configurations to be detected. Based on a pair of disjoint structuring elements $T=(T^1,T^2)$, this transformation is defined as:
+\begin{eqnarray}
+\eta_T(X)&=&\{x, T_x^1\subseteq X, T_x^2\subseteq X^c\}\\
+&=&\epsilon_{T^1}(X)\cap \epsilon_{T^2}(X^c)
+\end{eqnarray}
+where $\epsilon_{B}(X)$ denotes the erosion of $X$ using the structuring element $B$.
+
+\begin{qbox}
+\begin{enumerate}
+	\item Implement the hit-or-miss transform.
+	\item Test this operator with the following pair of disjoint structuring elements:
+	
+	\[\begin{array}{|c|c|c|}
+	\hline
+	+1&+1&+1\\\hline
+	0&+1&0\\\hline
+	-1&-1&-1\\\hline
+	\end{array}
+	\quad
+	\left(T^1=\begin{array}{|c|c|c|}
+	\hline
+	1&1&1\\\hline
+	0&1&0\\\hline
+	0&0&0\\\hline
+	\end{array},\quad
+	T^2=\begin{array}{|c|c|c|}
+	\hline
+	0&0&0\\\hline
+	0&0&0\\\hline
+	1&1&1\\\hline
+	\end{array}\,\right)
+	\]
+	
+	where the points with $+1$ (resp. $-1$) belong to $T^1$ (resp. $T^2$). 
+\end{enumerate}
+\end{qbox}
+
+\section{Thinning and thickening}
+Using the hit-or-miss transform, it is possible to make a thinning or thickening of a binary object in the following way:
+\begin{eqnarray}
+\theta_T(X)&=&X\backslash \eta_T(X)\\
+\chi_T(X)&=&X\cup \eta_T(X^c)
+\end{eqnarray}
+These two operators are dual in the sense that $\theta_T(X)=(\chi_T(X^c))^c$.
+\begin{qbox}
+\begin{enumerate}
+	\item Implement these two transformations.
+	\item Test these operators with the previous pair of structuring elements.
+\end{enumerate}
+\end{qbox}
+
+\section{Topological skeleton}
+By using the two following pairs of structuring elements with their rotations (90$^\circ$) in an iterative way (8 configurations are thus defined), the thinning process converges to a resulting object which is homothetic (topologically equivalent) to the initial object.
+$$\begin{array}{|c|c|c|}
+	\hline
+	+1&+1&+1\\\hline
+	0&+1&0\\\hline
+	-1&-1&-1\\\hline
+	\end{array}
+	\quad
+\begin{array}{|c|c|c|}
+	\hline
+	0&+1&0\\\hline
+	+1&+1&-1\\\hline
+	0&-1&-1\\\hline
+	\end{array}	
+	$$
+	
+	\begin{qbox}
+\begin{enumerate}
+	\item Implement this transformation (the convergence has to be satisfied).
+	\item Test this operator and comment.
+\end{enumerate}
+\end{qbox}
+
+\section{Morphological skeleton}
+A ball $B_n(x)$ with center $x$ and radius $n$ is maximum with respect to the set $X$ if there exists neither indice $k$ nor centre $y$ such that:
+$$
+B_n(x)\subseteq B_k(y) \subseteq X
+$$
+In this way, the morphological skeleton of a set $X$ is constituted by all the centers of maximum balls. Mathematically, it is defined as: 
+\begin{eqnarray}
+S(X)=\bigcup_{r} \epsilon_{B_r(0)}(X) \backslash \gamma_{B_1(0)}(\epsilon_{B_r(0)}(X))
+\end{eqnarray}
+
+\begin{qbox}
+\begin{enumerate}
+	\item Implement this transformation.
+	\item Test this operator and compare it with the topological skeleton.
+\end{enumerate}
+\end{qbox}

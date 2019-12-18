@@ -1,0 +1,8 @@
+%% Find hough lines
+x= 1:size(I, 2);
+figure, imshow(I,[]), hold on
+for i=1:length(rho_peaks)
+    y = (rho_peaks(i) - x* cos(theta_peaks(i)) )/ sin(theta_peaks(i));
+    plot(y, x);
+end
+title('detected lines')

@@ -1,0 +1,26 @@
+\begin{thebibliography}{1}
+
+\bibitem{Catte1992}
+Francine Catté, Pierre-Louis Lions, Jean-Michel Morel, and Tomeu Coll.
+\newblock Image selective smoothing and edge detection by nonlinear diffusion.
+\newblock {\em SIAM Journal on Numerical Analysis}, 29(1):182--193, 1992.
+
+\bibitem{Koenderink1984}
+JanJ. Koenderink.
+\newblock The structure of images.
+\newblock {\em Biological Cybernetics}, 50(5):363--370, 1984.
+
+\bibitem{Maragos1996}
+P.~Maragos and M.~Akmal~Butt.
+\newblock Partial differential equations in image analysis: continuous
+  modeling, discrete processing.
+\newblock In {\em Image Processing, 1996. Proceedings., International
+  Conference on}, volume~3, pages 61--64 vol.3, Sep 1996.
+
+\bibitem{Perona1990}
+P.~Perona and J.~Malik.
+\newblock Scale-space and edge detection using anisotropic diffusion.
+\newblock {\em Pattern Analysis and Machine Intelligence, IEEE Transactions
+  on}, 12(7):629--639, Jul 1990.
+
+\end{thebibliography}

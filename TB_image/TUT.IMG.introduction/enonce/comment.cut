@@ -1,0 +1,3 @@
+\begin{premark}
+The module \pinline{scipy.ndimage.filters} contains a lot of classical filters.
+\end{premark}

@@ -1,0 +1,107 @@
+\def\difficulty{3}
+\sujet{Boolean Models}
+
+\index{Spatial Processes!Boolean Models}
+
+\vspace*{-15pt}
+
+\begin{note}This tutorial aims to study a classical model coming from stochastic geometry: the Boolean model. The first objective is to simulate some realizations of a Boolean model of 2-D disks representing a population of overlapped particles. Thereafter, the geometrical characteristics of the individual disks (from a statistical point of view) will be analyzed.  
+\end{note}
+
+\vspace*{-10pt}
+
+\begin{figure}[H]
+\centering%
+\caption{Illustration of 2-D Boolean models observed in a squared window $W$.}%
+\subfloat[Boolean model of disks]{
+\scalebox{0.75}{\input{tikzBooleanModelDisk}}}\hspace*{1.5cm}
+\subfloat[Boolean model of rectangles]{
+\scalebox{0.75}{\input{tikzBooleanModelRectangle}}}%
+\vspace*{-10pt}%
+\label{fig:booleanModel}%
+\end{figure}
+
+\vspace*{-18pt}
+
+\section{Simulation of a 2-D Boo\-lean model}
+\vspace*{-10pt}
+\index{Spatial Processes!Characterization}
+Let $\{x_i;i\in \mathbb{N}\}$ be a random collection of points in $\mathbb{R}^2$ forming a stationary Poisson point process with intensity $\gamma>0$. 
+Let $Z_0,Z_1,Z_2,\dots$ be independent, identically distributed random 2-D convex bodies (nonempty, compact, convex sets) with distribution $\mathbb{Q}$, which are independent of the point process $\{x_i;i\in \mathbb{N}\}$. The random points $x_1,x_2,\dots$ are the germs and the random sets $Z_1,Z_2,\dots$ are the grains of the Boolean
+model. The random set $Z_0$ is called the typical grain. The union of the translated grains:\vspace*{-8pt}
+\begin{eqnarray}
+Z=\bigcup_{i=1}^{\infty}(Z_i+x_i)
+\end{eqnarray}
+\vspace*{-12pt}
+
+\noindent is a random closed set, which is called the stationary Boolean model with intensity $\lambda$ and grain distribution $\mathbb{Q}$. The random collection $X=\{Z_1+x_1,Z_2+x_2,\dots\} $ of the shifted grains is the particle process underlying the Boolean model. 
+
+Figure \ref{fig:booleanModel} shows a realization of two different Boolean models $Z$ observed in a compact and convex observation window $W$.
+
+
+\textls[-20]{We are going to simulate some realizations of a Boolean model of 2-D disks in a squared observation window. The final simulated model will be represented as a discrete binary image.}
+
+\begin{qbox}
+\begin{itemize}
+\item
+Generate a 2-D discrete observation window $W$ of size $500 \times 500$.
+\item
+Generate the random germs that follows a Poisson law with intensity $\lambda=100/(500*500)$. Take care of the edge effects (a grain with a germ outside the observation window could intersect it!)
+\item Generate the random grains (as disks). The disk radius will follow a uniform distribution $\mathcal{U}(10,50)$.
+\item Vizualize the realization.
+\end{itemize}
+\end{qbox}
+
+\begin{mcomment}
+\begin{mremark}
+ Look at the \matlabregistered{} function \minline{poissrnd} and \minline{randi}.
+ 
+ The \minline{meshgrid} function can be used to generate the disks.
+\end{mremark}
+\end{mcomment}
+
+\begin{pcomment}
+\begin{premark}
+ Look at the \pinline{numpy} functions \minline{random.poisson} and \minline{random.randint}.
+ 
+ Use \pinline{skimage.draw.circle} to generate the disks in an array.
+\end{premark}
+\end{pcomment}
+\vspace*{-8pt}
+\section{Geometrical characterization of a 2-D Boo\-lean mo\-del}\vspace*{-8pt}
+
+Assume we observe $Z$ in a compact, convex observation window $W$ with positive volume (as shown in Figure \ref{fig:booleanModel}).
+Our aim is to extract distributional information from the geometric properties of the sample $Z \cap W$. Thus, we assume we can measure geometric functionals like the perimeter of the sample $Z \cap W$ which is a finite union of convex bodies (a polyconvex set). By a geometric functional $\phi$ we mean a real-valued functional defined on the space of polyconvex sets with specific additional properties. Important examples of geometric functionals are the Minkowski functionals $W_{\nu}$ that are related in the 2-D space to the measures of area ($A$), perimeter ($P$) and Euler number ($\chi$):
+\begin{eqnarray}
+W_0&=&A\\
+W_1&=&P/2\\
+W_2&=&\pi \chi
+\end{eqnarray}
+%
+The boundary of the observation window $W$ has a disturbing effect. It is therefore of advantage to assume a sufficiently large observation
+window and to consider only limits as the window tends to infinity. This motivates the introduction of the density (or specific value) of the Boolean model for a geometric functional $\phi$. The density of $\phi$ is the combined spatial and probabilistic mean value:\vspace*{-8pt}
+\begin{eqnarray}
+\overline{\phi}(Z)=\lim_{r\rightarrow\infty}\frac{\mathbb{E}[\phi(Z\cap rW)]}{W_0(rW)}
+\end{eqnarray}
+The crucial problem when studying a Boolean model is, that the particles overlap and can therefore not be observed individually.
+
+For this purpose, the Miles formula gives relationships between the global Minkowski densities and the Minkowski densities of the particle.\index{Spatial Processes!Miles Formula}
+For isotropic Boolean models and by using the densities of the particle process $X$:
+\begin{eqnarray}
+\overline{\phi}(X)=\gamma\mathbb{E}[\phi(Z_0)]
+\end{eqnarray}
+Miles formulas express the observable Minkowski densities $\overline{W}_{\nu}(Z)$ in terms of the Minkowski densities $\overline{W}_{\nu}(X)$ and can be inverted.\\
+For example in 2-D: \vspace*{-8pt}
+\begin{eqnarray}
+\overline{W}_0(Z)&=&1-e^{-\overline{W}_0(X)}\\
+\overline{W}_1(Z)&=&e^{-\overline{W}_0(X)}\overline{W}_1(X)\label{eq:miles2}\\
+\overline{W}_2(Z)&=&e^{-\overline{W}_0(X)}\left(\overline{W}_2(X)-\overline{W}_1(X)^2\right)\label{eq:miles3}
+\end{eqnarray}
+\vspace*{-8pt}
+\begin{qbox}
+\begin{itemize}
+\item Generate different realizations of the previous Boolean model and compute the Minkowski densities of $Z$ (by using the functions done in the tutorial "Integral Geometry").
+\item Compute the theoretical Minkowski densities of $Z$ by using the Miles formulas.
+\item Compare the computed and theoretical values. 
+\end{itemize}
+\end{qbox}

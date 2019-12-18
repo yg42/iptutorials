@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99d (TeX Live 2019/dev/Debian)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: image_segmentation_histogram_clustering.aux
+The style file: plain.bst
+Database file #1: seg_histo.bib
+You've used 1 entry,
+            2118 wiz_defined-function locations,
+            506 strings with 4215 characters,
+and the built_in function-call counts, 301 in all, are:
+= -- 30
+> -- 7
+< -- 0
++ -- 3
+- -- 2
+* -- 24
+:= -- 56
+add.period$ -- 3
+call.type$ -- 1
+change.case$ -- 4
+chr.to.int$ -- 0
+cite$ -- 1
+duplicate$ -- 11
+empty$ -- 26
+format.name$ -- 2
+if$ -- 58
+int.to.chr$ -- 0
+int.to.str$ -- 1
+missing$ -- 1
+newline$ -- 8
+num.names$ -- 2
+pop$ -- 2
+preamble$ -- 1
+purify$ -- 3
+quote$ -- 0
+skip$ -- 7
+stack$ -- 0
+substring$ -- 24
+swap$ -- 1
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 4
+warning$ -- 0
+while$ -- 4
+width$ -- 2
+write$ -- 13

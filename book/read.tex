@@ -1,0 +1,90 @@
+% how to read this book
+\section*{Liminar considerations}
+
+This book is presented as a collection of tutorials. Each chapter presents different objectives, usually with practical applications, in order to develop the image processing and analysis skills by its own. 
+For each tutorial, you will first find in the statement different questions that will guide you to the complete results. Our suggestion is to start by the first tutorials, that acts as a round-up stage. Then, choose the topic that interests and motivates you, and start to work on your code. 
+
+The statements does not always contain the necessary theoretical background that you need to answer to the questions. Find resources on the net. Wikipedia is usually a very good start. Go to the university library!
+
+The correction gives you a proposition of solution: it is not unique and it might not be perfect (or it might unfortunately contain errors). This correction is also available in a dedicated website (links will be provided along with the tutorials), we suggest you have a look at it only when you encounter blocking problems or fastidious lines of code to program. Moreover, you can evaluate the processing time of your version of the code and compare it to our proposed version, which usually uses fast and optimal functions, except for readibility purposes.
+
+\begin{mcomment}
+Within \matlabregistered{}, you can use the following commands to measure the computation time.
+\begin{matlab}
+tic;
+% run your code
+toc;
+\end{matlab}
+\end{mcomment}
+
+\begin{pcomment}
+ With Python, you can use the following code:
+ \begin{python}
+import time
+
+time_start = time.clock()
+# run your code
+time_elapsed = (time.clock() - time_start)
+ \end{python}
+
+\end{pcomment}
+
+\subsection*{CC-By license?}
+If you manage to code a drastically faster method, if you notice errors or mistakes, if you want to add precisions, remember that this book as well as the code is published under a FREE CC-BY license (as in FREE speech). Contact us and we will be really happy to introduce modifications and insert you in the credits, or more...
+\includegraphics[height=1cm]{media/cc.logo.pdf}
+\includegraphics[height=1cm]{media/BY.pdf}
+
+
+
+The book is available in a high quality printed format, obviously not for free, but the pdf format is free (as in FREE beer). This is due to the fact that we (Johan Debayle and Yann Gavet) are employed by the French government, and we are paid to teach and disseminate informations to students. Our work is thus belongs to the society, and it seems a normal process to give the results back to the society. Feel free to use, modify and distribute these tutorials as you wish. Just remember to keep the appropriate credits (our names and MINES Saint-Etienne). If you want to express your gratitude, send us a postcard at:
+\begin{verbatim}
+Yann GAVET or Johan Debayle
+MINES Saint-Etienne
+CS 62362
+42023 SAINT-ETIENNE cedex 2 - FRANCE
+\end{verbatim}
+
+You can also buy the printed version of the book, which will make our editor really happy.
+
+\subsubsection*{Images}
+The images belong to their authors, unless otherwise stated. If by mistake we used images without giving the appropriate credit, please contact us.
+
+\subsection*{Softwares}
+This book is available for two programming languages, \matlabregistered{} and Python. \matlabregistered{} is a proprietary software dedicated to scientific computing. Functions are grouped into so-called toolboxes. The documentation and the compatibility of the functions are very good, but the price is a consequence of this. Python is built upon open-source and Free softwares. Scientific modules are numerous, but other general purposes functions can also be found. Documentation and code may be of inequal qualities, but major scientific modules (numpy, scipy, opencv...) are really well presented and optimized. 
+
+Portions of code will be highlighted by the use of special boxes, like:
+\begin{matlab}
+% this is matlab code
+\end{matlab}
+
+\begin{python}
+# this is python code
+\end{python}
+
+
+\subsection*{Time to spend on a tutorial}
+The tutorials are almost independent. To evaluate the difficulty of the tutorial, stars are present at the header of each one. Depending on your knowledge, you will have to spend between 2 hours and 10 hours per tutorial.
+
+\begin{itemize}
+ \item One star tutorial should be a relatively easy tutorial,
+ \item two stars tutorials introduce some difficulties, either in programming or in the theoretical concepts,
+ \item three stars tutorials are difficult both in theory and in programming.
+\end{itemize}
+
+
+They are divided into 6 parts, namely:
+\begin{itemize}
+ \item Enhancement and Restoration: dedicated to image processing methods employed to eliminate noise and improve vision of data.
+ \item Mathematical Morphology: introduction to basic operations of mathematical morphology. 
+ \item Registration and Segmentation: methods to segment, i.e. detect objects in images.
+ \item Stochastic Analysis: method based on random processes.
+
+ \item Characterization and Pattern Analysis: measures performed on objects in order to perform analysis and recognition.
+ \item Exams: uncorrected problems and questions.
+\end{itemize}
+
+\subsection*{Enjoy!}
+You will find online corrections on the editor website and at page: \href{http://www.iptutorials.science}{http://iptutorials.science}. You will also find qrcodes for each correction that points to code and images.
+
+
+

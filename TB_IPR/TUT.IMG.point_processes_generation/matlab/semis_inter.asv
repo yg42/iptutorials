@@ -1,0 +1,52 @@
+function [x,y]=semis_inter(point_nb,xmin,xmax,ymin,ymax,seuil_nb,seuil,inter,nbiter)
+% simulation d'un processus de Gibbs
+
+[x,y]=semi_alea(point_nb,xmin,xmax,ymin,ymax);
+
+for i=1:nbiter
+    j=1+floor(alea(point_nb-1)); % on choisit un point au hasard
+    e1=0; % on calcule l'énergie associé à ce point
+    for k=1:point_nb % pour chaque paire de points
+        if k ~= j
+            dd=(x(k)-x(j))^2+(y(k)-y(j))^2; % on calcule la distance
+            dd=sqrt(dd);
+            l=seuil_nb;
+            ee=0;
+            while l>0 % on détermine quelle est la valeur de la fonction de coût pour cette distance
+                if dd<seuil(l)
+                    ee=inter(l);
+                    l=l-1;
+                else
+                    l=0;
+                end
+            end
+            e1=e1+ee; % l'énergie totale est la somme des énergies des paires de points
+        end
+        
+        for m=1:4
+            e2=0;
+            xx=xmin+alea(xmax-xmin);
+            yy=ymin+alea(ymax-ymin);
+            for k=1:point_nb % pour chaque paire de points
+            if k ~= j
+                dd=(x(k)-xx)^2+(y(k)-xx)^2; % on calcule la distance
+                dd=sqrt(dd);
+                l=seuil_nb;
+                ee=0;
+                while l>0 % on détermine quelle est la valeur de la fonction de coût pour cette distance
+                    if dd<seuil(l)
+                        ee=inter(l);
+                        l=l-1;
+                    else
+                        l=0;
+                    end
+                end
+                e2=e2+ee; % l'énergie totale est la somme des énergies des paires de points
+            end
+            if e2<e1
+                x(j)=xx;
+                y(y)=yy;
+                e1=e2;
+            end
+            end
+        

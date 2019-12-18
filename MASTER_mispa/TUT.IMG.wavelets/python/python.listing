@@ -1,0 +1,11 @@
+t = np.linspace(-1, 1, 1000, endpoint=False)
+f1 =  3;
+f2 = 50;
+sig  = np.sin(2 * np.pi * f1 * t) + np.sin(2*np.pi * f2 * t);
+widths = np.arange(1, 129)
+coef, freqs=pywt.cwt(sig,widths,'morl')
+fig = plt.figure();
+plt.imshow(coef, extent=[-1, 1, 1, 31], cmap='PRGn', aspect='auto',
+           vmax=abs(coef).max(), vmin=-abs(coef).max())
+plt.show()
+fig.savefig('cwt.python.pdf', bbox_inches='tight')

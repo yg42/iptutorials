@@ -1,0 +1,214 @@
+\def\difficulty{1}
+\sujet{Topological Description}
+
+\begin{note}The objective of this tutorial is to classify all foreground points of a binary image according to their topological signification: interior, isolated, border\dots. The reader can refer to \cite{Couprie2012}for more details.\end{note}
+
+\noindent The different processes will be realized on the following binary image.
+\begin{figure}[H]
+\caption{Test}
+\centering\includegraphics[width=4cm]{test_topology.jpg}
+\end{figure}
+
+
+\index{Topology!Neighborhood}
+\noindent \textbf{Preliminary definitions:}
+\begin{itemize}
+	\item  $y$ is 4-adjacent to $x$ if $|y_1-x_1|+|y_2-x_2|\leq 1$.
+	\item  $y$ is 8-adjacent to $x$ if $\max(|y_1-x_1|,|y_2-x_2|)\leq 1$.
+	\item $V_4(x)=\{y:y\text{ is 4-adjacent to } x\}$; $V_4^*(x)=V_4(x)\backslash \{x\}$.
+	\item $V_8(x)=\{y:y\text{ is 8-adjacent to } x\}$; $V_8^*(x)=V_8(x)\backslash \{x\}$.
+
+\vspace*{-8pt}
+\begin{figure}[H]
+\centering\caption{Different neighborhoods. By convention, pixels in white are of value 1, in black of value 0.}%
+\subfloat[$V_4(x)$]{
+%\begin{minipage}{0.1\textwidth}
+\begin{tabular}{|m{0.15cm}|m{0.15cm}|m{0.15cm}|}
+\hline
+ \cellcolor{black}$\:$ &  $\:$  & \cellcolor{black}$\:$\\ \hline
+  & $\!x$ &  \\ \hline
+\cellcolor{black}  &    & \cellcolor{black}\\ \hline
+\end{tabular}
+%\vspace*{0.1cm}
+%\end{minipage}
+}\hfill
+%\hspace{.5cm}
+%
+\subfloat[$V_8(x)$]{
+%\begin{minipage}{0.1\textwidth}
+\begin{tabular}[c]{|m{0.15cm}|m{0.15cm}|m{0.15cm}|}
+\hline
+ \cellcolor{white}$\:$ &  \cellcolor{white}  & \cellcolor{white}$\:$\\ \hline
+\cellcolor{white}  & \cellcolor{white} $\!x$ & \cellcolor{white} \\ \hline
+  \cellcolor{white}&  \cellcolor{white}  & \cellcolor{white}\\ \hline
+\end{tabular}
+%\vspace*{0.1cm}
+%\end{minipage}
+}\hfill
+%\hspace{.5cm}
+%
+\subfloat[$V_4^*(x)$]{
+\begin{tabular}{|m{0.15cm}|m{0.15cm}|m{0.15cm}|}
+\hline
+ \cellcolor{black}$\:$ &  $\:$  & \cellcolor{black}$\:$\\ \hline
+  & \cellcolor{black}{\color{white}$\!x$} &  \\ \hline
+\cellcolor{black}  &    & \cellcolor{black}\\ \hline
+\end{tabular}
+}\hfill
+%\hspace{.5cm}
+%
+\subfloat[$V_8^*(x)$]{
+%\begin{minipage}{0.1\textwidth}
+\begin{tabular}[c]{|m{0.15cm}|m{0.15cm}|m{0.15cm}|}
+\hline
+ \cellcolor{white}$\:$ &  \cellcolor{white}  & \cellcolor{white}$\:$\\ \hline
+\cellcolor{white}  & \cellcolor{black} {\color{white}$\!x$} & \cellcolor{white} \\ \hline
+  \cellcolor{white}&  \cellcolor{white}  & \cellcolor{white}\\ \hline
+\end{tabular}
+%\vspace*{0.1cm}
+%\end{minipage}
+}%
+\vspace*{-8pt}
+\end{figure}
+\vspace*{-8pt}
+
+\item a n-path is a point sequence $(x_0,\dots,x_k)$ with $x_j$ n-adjacent to $x_{j-1}$ for $j=1,\dots, k$. 
+\item two points $x, y\in X$ are n-connected in $X$ if there exists a n-path $(x=x_0,\dots ,x_k=y)$ such that $x_j\in X$. It defines an equivalence relation.
+\item the equivalence classes of the previous binary relation are the n-components of $X$.
+%\begin{enumerate}
+%	\item Cr�er une fonction $Comp_8(X)$ permettant de d�terminer le nombre de composantes 8-connexes (i.e. suivant la topologie $V_8$) de l'ensemble $X$ des points allum�s (objet) d'une image binaire. Utiliser la fonction \matlabregistered{} \texttt{bwlabel}.
+%	\item Cr�er une fonction $Comp_4(X)$ permettant de d�terminer le nombre de composantes 4-connexes (i.e. suivant la topologie $V_4$) de l'ensemble $X$ des points allum�s (objet) d'une image binaire. Utiliser la fonction \matlabregistered{} \texttt{bwlabel}.
+%\end{enumerate}
+%\end{exo}
+
+\end{itemize}
+
+\section{Connectivity numbers}
+Let $Comp_n(X)$ be the number of n-components ($n=4$ or $n=8$ within the selected topology $V_4$ or $V_8$) of the set $X$ of foreground points (object). We define the following set:
+$$ 
+CAdj_n(x,X)=\{C\in Comp_n(X): C \text{ is n-adjacent to } x \}
+$$
+We select the 8-connectivity for the set $X$ of foreground points (object) and the 4-connectivity for the complementary $\overline{X}$.
+
+\begin{rmq}Warning: the definition of $CAdj_n$ introduces the n-adjacency to the central pixel x. In the case of the following configuration (Fig.\ref{fig:topological_description:enonce:cadj4}), $T_8=2$, $\bar{T}_8=2$ and $TT_8=3$.\end{rmq}
+\vspace*{-8pt}
+\begin{figure}[H]
+\centering\caption{The pixel in the bottom right corner is not C-adjacent-4 to $x$.}%
+\subfloat[$X$]{
+\begin{tabular}[c]{|m{0.15cm}|m{0.15cm}|m{0.15cm}|}
+\hline
+ \cellcolor{black}$\:$ &  $\:$  & $\:$\\ \hline
+  & \cellcolor{black}$\:$ & \cellcolor{black} \\ \hline
+ &  \cellcolor{black}  & \\ \hline
+\end{tabular}
+}\hspace{15mm}
+\subfloat[$V_8^*(x)\cap X$]{
+\begin{tabular}[c]{|m{0.15cm}|m{0.15cm}|m{0.15cm}|}
+\hline
+ $\:$ &  \cellcolor{black}$\:$  & \cellcolor{black}$\:$\\ \hline
+ \cellcolor{black} &  &  \\ \hline
+ \cellcolor{black} &  & \cellcolor{black}\\ \hline
+\end{tabular}
+}\vspace*{-8pt}%
+\label{fig:topological_description:enonce:cadj4}%
+\end{figure}
+\vspace*{-8pt}
+
+\begin{qbox}
+\begin{enumerate}
+	\item Create a function for determining the connectivity number:\\ $T_8(x,X)=\#CAdj_8(x,V_8^* (x)\cap X)$,
+	\item Create a function for determining the connectivity number:\\ $\overline{T}_8(x,X)=\#CAdj_4(x,V_8^* (x)\cap \overline{X})$,
+	\item Create a function for determining the number: \\$TT_8(x,X)=\#(V_8^*(x)\cap X)$.
+\end{enumerate}
+Test these functions on some foreground points of the image 'test'.
+\end{qbox}
+
+\vspace*{-8pt}
+
+\begin{mcomment}
+\begin{mremark}
+Use the functions \minline{bwlabel} and \minline{bwlabeln}.
+\end{mremark}
+\end{mcomment}
+
+\begin{pcomment}
+\begin{premark}
+Use \pinline{scipy.ndimage.measurements}.
+\end{premark}
+\end{pcomment}
+
+
+\section{Topological classification of binary points}
+\index{Topology!Classification}
+From the connectivity numbers $T_8(x,X)$, $\overline{T}_8(x,X)$ and $TT_8(x,X)$, it is possible to classify a foreground point $x$ within the binary image $X$ according to its topological signification:\vspace*{-8pt}
+$$
+\begin{array}{|c|c|c|c|}\hline
+	T_8(x,X)&\overline{T}_8(x,X)&TT_8(x,X)&\text{Type}\\\hline
+	0&1&&\text{isolated point}\\\hline
+	1&0&&\text{interior point}\\\hline
+	1&1&>1&\text{border point}\\\hline
+	1&1&1&\text{end point}\\\hline
+	2&2&&\text{2-junction point}\\\hline
+	3&3&&\text{3-junction point}\\\hline
+	4&4&&\text{4-junction point}\\\hline
+\end{array}
+$$
+
+
+The following Fig. \ref{fig:enonce:topological_description:pointsconfiguration} shows the classification of 4 points.
+\vspace*{-8pt}
+\begin{figure}[H]
+\centering\caption{Points configurations.}%
+\subfloat[end]{
+%\begin{minipage}{0.12\textwidth}
+\begin{tabular}{|m{0.15cm}|m{0.15cm}|m{0.15cm}|}
+\hline
+  \cellcolor{black}$\:$ &  \cellcolor{black}$\:$ & \cellcolor{black}$\:$\\ \hline
+\cellcolor{black} & \cellcolor{white} &  \cellcolor{black}\\ \hline
+\cellcolor{black}  &  \cellcolor{white}  & \cellcolor{black}\\ \hline
+\end{tabular}
+%\end{minipage}
+}\hfill
+%
+\subfloat[isolated]{
+%\begin{minipage}{0.12\textwidth}
+\begin{tabular}[c]{|m{0.15cm}|m{0.15cm}|m{0.15cm}|}
+\hline
+\cellcolor{black} $\:$ &  \cellcolor{black}$\:$ & \cellcolor{black}$\:$\\ \hline
+\cellcolor{black} & \cellcolor{white}  & \cellcolor{black} \\ \hline
+ \cellcolor{black} &  \cellcolor{black} & \cellcolor{black}\\ \hline
+\end{tabular}
+%\vspace*{0.1cm}
+%\end{minipage}
+}\hfill
+%
+\subfloat[border]{
+%\begin{minipage}{0.12\textwidth}
+\begin{tabular}{|m{0.15cm}|m{0.15cm}|m{0.15cm}|}
+\hline
+ \cellcolor{black}$\:$ &  \cellcolor{black}$\:$  &\cellcolor{black} $\:$\\ \hline
+\cellcolor{white}  & \cellcolor{white} & \cellcolor{white} \\ \hline
+ \cellcolor{white} &  \cellcolor{white}  & \cellcolor{white}\\ \hline
+\end{tabular}
+%\vspace*{0.1cm}
+%\end{minipage}
+}\hfill
+%
+\subfloat[interior]{
+%\begin{minipage}{0.12\textwidth}
+\begin{tabular}[c]{|m{0.15cm}|m{0.15cm}|m{0.15cm}|}
+\hline
+ \cellcolor{white}$\:$ &  \cellcolor{white}$\:$  & \cellcolor{white}$\:$\\ \hline
+\cellcolor{white}  & \cellcolor{white}& \cellcolor{white} \\ \hline
+  \cellcolor{white}&  \cellcolor{white}  & \cellcolor{white}\\ \hline
+\end{tabular}
+%\vspace*{0.1cm}
+%\end{minipage}
+}%
+\label{fig:enonce:topological_description:pointsconfiguration}%
+\vspace*{-8pt}
+\end{figure}
+\vspace*{-8pt}
+\begin{qbox}
+With the help of this table, classify the points of the image 'test'.
+\end{qbox}

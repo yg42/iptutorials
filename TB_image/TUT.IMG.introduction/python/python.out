@@ -1,0 +1,14 @@
+\BOOKMARK [1][-]{section.1}{Python correction}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{First manipulations}{section.1}% 2
+\BOOKMARK [3][-]{subsubsection.1.1.1}{Open, write images}{subsection.1.1}% 3
+\BOOKMARK [3][-]{subsubsection.1.1.2}{Display images}{subsection.1.1}% 4
+\BOOKMARK [3][-]{subsubsection.1.1.3}{Color channels}{subsection.1.1}% 5
+\BOOKMARK [3][-]{subsubsection.1.1.4}{Image Resizing}{subsection.1.1}% 6
+\BOOKMARK [3][-]{subsubsection.1.1.5}{Color quantization}{subsection.1.1}% 7
+\BOOKMARK [3][-]{subsubsection.1.1.6}{JPEG file format}{subsection.1.1}% 8
+\BOOKMARK [2][-]{subsection.1.2}{Histogram}{section.1}% 9
+\BOOKMARK [2][-]{subsection.1.3}{Linear mapping of the image intensities}{section.1}% 10
+\BOOKMARK [2][-]{subsection.1.4}{Aliasing effect}{section.1}% 11
+\BOOKMARK [2][-]{subsection.1.5}{Low-pass filtering}{section.1}% 12
+\BOOKMARK [3][-]{subsubsection.1.5.1}{Gaussian filter}{subsection.1.5}% 13
+\BOOKMARK [2][-]{subsection.1.6}{Derivative filters}{section.1}% 14

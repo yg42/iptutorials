@@ -1,0 +1,5 @@
+figure
+Bhisteq=histeq(B);
+subplot(131);imshow(B);title('original image');
+subplot(132);imshow(Benhance3);title('enhancement by laplacian');
+subplot(133);imshow(Bhisteq);title('histogram equalization enhancement);

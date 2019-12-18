@@ -1,0 +1,3 @@
+\begin{mremark}
+Note on the random uniform generation: \matlabregistered{} \minline{rand} generates a number between ]0;1[ (open interval). This should not be a problem in this simulation.
+\end{mremark}

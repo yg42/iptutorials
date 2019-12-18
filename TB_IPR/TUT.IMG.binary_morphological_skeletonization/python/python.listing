@@ -1,0 +1,20 @@
+def reconstruction_skeleton(S):
+    """
+    Reconstruction of the original image from the morphological skeleton
+    S: Skeleton, as constructed by morphological_skeleton
+
+    return: original image I
+    """
+    X = np.zeros(S.shape).astype("bool");
+    n = np.max(S);
+    se = ndimage.generate_binary_structure(2, 1);
+
+    for strel_size in range(int(n)):
+        Sn = S == strel_size+1;
+
+        # this is for preserving homothetic structuring elements
+        for k in range(strel_size):
+            Sn = ndimage.morphology.binary_dilation(Sn, se);
+
+        X = np.maximum(X, Sn);
+    return X;

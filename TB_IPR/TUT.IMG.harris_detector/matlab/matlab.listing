@@ -1,0 +1,7 @@
+stats = regionprops(corners, 'Centroid');
+
+if ~isempty(stats)
+    pts = cat(1, stats.Centroid);
+else
+    pts = [];
+end

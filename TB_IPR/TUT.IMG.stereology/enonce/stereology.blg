@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99d (TeX Live 2019/dev/Debian)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: stereology.aux
+The style file: plain.bst
+Database file #1: stereology.bib
+You've used 2 entries,
+            2118 wiz_defined-function locations,
+            514 strings with 4257 characters,
+and the built_in function-call counts, 578 in all, are:
+= -- 56
+> -- 20
+< -- 0
++ -- 8
+- -- 6
+* -- 40
+:= -- 103
+add.period$ -- 6
+call.type$ -- 2
+change.case$ -- 9
+chr.to.int$ -- 0
+cite$ -- 2
+duplicate$ -- 23
+empty$ -- 50
+format.name$ -- 6
+if$ -- 117
+int.to.chr$ -- 0
+int.to.str$ -- 2
+missing$ -- 3
+newline$ -- 13
+num.names$ -- 4
+pop$ -- 10
+preamble$ -- 1
+purify$ -- 7
+quote$ -- 0
+skip$ -- 14
+stack$ -- 0
+substring$ -- 35
+swap$ -- 2
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 6
+warning$ -- 0
+while$ -- 6
+width$ -- 3
+write$ -- 24

@@ -1,0 +1,31 @@
+\documentclass[]{emse-exo}
+
+\annee{}
+\module{Toolbox EFG}
+\matiere{}
+\type{Tutorial}
+\graphicspath{{../../../book/media/}}
+
+\newcount\colveccount
+\newcommand*\colvec[1]{
+        \global\colveccount#1
+        \begin{pmatrix}
+        \colvecnext
+}
+\def\colvecnext#1{
+        #1
+        \global\advance\colveccount-1
+        \ifnum\colveccount>0
+                \\
+                \expandafter\colvecnext
+        \else
+                \end{pmatrix}
+        \fi
+}
+
+\begin{document}
+\input{text.tex}
+\bibliographystyle{plain}
+\bibliography{stereology.bib}
+\end{document}
+

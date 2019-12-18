@@ -1,0 +1,8 @@
+\begin{matlab}
+function d=codediff(fcc,conn)
+\end{matlab}
+
+\begin{mremark}
+ Use \minline{circshift} for circularly shifting the freeman code array.
+ Use \minline{polyval} for transforming the array of values into a number, although rounding errors might occur, due to numerical approximation of floating numbers.
+\end{mremark}

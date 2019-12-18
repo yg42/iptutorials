@@ -1,0 +1,62 @@
+import Queue
+from scipy import misc
+import matplotlib.pyplot as plt
+import numpy as np
+
+def predicate(image, i, j, seed) :
+  f=image[i,j];
+  g=image[seed[0], seed[1]];
+  return abs(f-g)<20
+    
+
+def onpick(event):
+  #print 'x=%d, y=%d, xdata=%f, ydata=%f'%(
+  #      event.x, event.y, event.xdata, event.ydata)
+  # pixel d'origine
+  seed = np.array([int(event.ydata), int(event.xdata)]);
+  
+  queue = Queue.Queue();
+  queue.put(seed);
+  
+  # Visited matrix : result of segmentation
+  # this matrix will contain 1 if in the region, -1 if visited but not in the
+  # region, 0 if not visited
+  visited = np.zeros(lena.shape)
+  
+  #--------------------------------------------------------------------------
+  # Start of algorithm
+  visited[seed[0], seed[1]] = 1;
+  
+  while not queue.empty():
+    p = queue.get();
+    
+    for i in range(max(0,p[0]-1), min(lena.shape[0],p[0]+2)):
+      for j in range(max(0,p[1]-1), min(lena.shape[1],p[1]+2)):
+	if not visited[i,j]:
+	  if predicate(lena, i, j, seed) :
+	    visited[i,j] = 1;
+	    queue.put(np.array([i,j]));
+	  else :
+	    visited[i,j] = -1;
+  
+  # end of the algorithm: the visited matrix contains the segmentation result
+  #--------------------------------------------------------------------------
+  
+  # display results
+  ax=fig.add_subplot(212);
+  ax.imshow(visited==1);
+  fig.canvas.draw();
+  #plt.show();
+
+
+# debut du code
+fig = plt.figure();
+ax = fig.add_subplot(211);
+ax.set_title('Click on a point')
+
+# chargement de lena
+lena = misc.lena();
+ax.imshow(lena, picker=True,cmap=plt.gray());
+
+fig.canvas.mpl_connect('button_press_event', onpick)
+plt.show();

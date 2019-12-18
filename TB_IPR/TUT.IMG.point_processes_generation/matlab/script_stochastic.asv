@@ -1,0 +1,89 @@
+%% CORRECTION TP PROCESSUS DE POINTS - OPTION I&S
+
+%% 0 - Nettoyage
+clc; clear all; close all;
+
+%% 1 - Processus de Poisson
+[x,y]=semi_alea(200,0,100,0,100);
+plot(x,y,'*');title('processus de Poisson');
+axis square
+
+%% 2 - Processus de Neyman-Scott
+figure
+subplot(121)
+[x,y]=semi_NS(3,0,100,0,100,15,10);
+plot(x,y,'*');title('processus de Neyman-Scott');
+axis square
+subplot(122)
+[x,y]=semi_NS(10,0,100,0,100,5,5);
+plot(x,y,'*');title('processus de Neyman-Scott');
+axis square
+
+%% 3 - Processus de Gibbs
+figure
+subplot(241)
+[x1,y1]=semi_alea(200,0,100,0,100);
+plot(x1,y1,'*');title('processus de Poisson');
+axis square
+subplot(242)
+[x2,y2]=semis_inter(200,0,100,0,100,2,[5,10],[10,0],200);
+plot(x2,y2,'*');title('processus de Gibbs : régulier');
+axis square
+subplot(246)
+plot(0:10,zeros(1,11),'r','linewidth',2);hold on; 
+stairs([0,5,10],[10,0,0],'*-','linewidth',2);
+subplot(243)
+[x3,y3]=semis_inter(100,0,100,0,100,2,[2,5],[-10,10],100);
+plot(x3,y3,'*');title('processus de Gibbs : agrégé');
+axis square
+subplot(247)
+plot(0:10,zeros(1,11),'r','linewidth',2);hold on;
+stairs([0,2,5,10],[-10,10,0,0],'*-','linewidth',2);
+subplot(244)
+[x4,y4]=semis_inter(100,0,100,0,100,3,[3,5,10],[50,-10,5],100);
+plot(x4,y4,'*');title('processus de Gibbs : agrégé');
+axis square
+subplot(248)
+plot(0:10,zeros(1,11),'r','linewidth',2);hold on;
+stairs([0,2,5,10,15],[50,-10,5,0,0],'*-','linewidth',2);
+
+%% 4 - Fonction de Ripley
+figure
+d2=25;
+dt=1;
+[k1,l1]=ripley(x1,y1,0,100,0,100,d2,dt);
+plot(k1,'k-');hold on;
+[k2,l2]=ripley(x2,y2,0,100,0,100,d2,dt);
+plot(k2,'r-');hold on;
+[k3,l3]=ripley(x3,y3,0,100,0,100,d2,dt);
+plot(k3,'b-');hold on;
+legend('Poisson','régulier','agrégé');
+title('fonctions de Ripley');
+
+%% 5 - Processus de points marqués
+figure
+subplot(121)
+[x,y]=semi_alea(50,0,100,0,100);
+plot(x,y,'*');title('processus de Poisson');
+axis square
+axis([-20,120,-20,120]);
+subplot(122)
+r=mark(x,y,5,1);
+theta=0:0.01:2*pi;
+for i=1:length(x)
+    plot(x(i),y(i),'*'); 
+    xx=x(i)+r(i)*cos(theta);
+    yy=y(i)+r(i)*sin(theta);
+    hold on
+    plot(xx,yy,'r');
+end
+axis square
+axis([-20,120,-20,120]);
+
+%% Fonctions annexes
+readfile('semi_alea.m');
+readfile('alea.m');
+readfile('semi_NS');
+readfile('poisson.m');
+redafile('semi_inter')
+

@@ -1,0 +1,15 @@
+% first points
+n1 = randn(N,3);
+mynorm = sqrt(sum(n1.^2,2));
+n1 = R* n1 ./ repmat(mynorm,1,3);
+
+% second points
+n2 = randn(N,3);
+mynorm = sqrt(sum(n2.^2,2));
+n2 = R* n2 ./ repmat(mynorm,1,3);
+
+% evaluate half Euclidean distance
+r = sqrt(sum((n1-n2).^2, 2))/2;
+
+% probability
+proba = histcounts(r, nBins, 'normalization', 'probability');

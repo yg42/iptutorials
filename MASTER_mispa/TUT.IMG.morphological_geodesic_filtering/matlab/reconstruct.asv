@@ -1,0 +1,12 @@
+function B=reconstruct(A,M)
+M=min(M,A);
+err=sum(M(:));
+
+se=strel('disk',1);
+bool=0;
+while (r > 0)
+    
+    M=min(A, imdilate(M, se));
+    r=sum();
+end
+B=M;

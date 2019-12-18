@@ -1,0 +1,69 @@
+\documentclass[]{emse-exo}
+
+\annee{CIS}
+\module{MASTER MAVIM}
+\matiere{Traitement d'Image Avancé}
+\type{TP}
+
+
+\begin{document}
+
+\sujet{Filtrage morphologique}
+
+\note{Ce TP a pour objectif d'appréhender le filtrage morphologique et notamment les filtres géodésiques (par reconstruction).
+}
+
+\noindent Les différents traitements seront réalisés sur l'image suivante :
+\begin{figure}[h]
+\begin{center}\includegraphics[width=3.25cm]{lena.png}
+\end{center}
+\end{figure}
+\vspace*{-1cm}
+
+\begin{exo}{Centre morphologique}
+Le centre morphologique est un filtre auto-dual construit à partir d'une famille d'opérateurs $\{\psi_i\}_i$ :
+\begin{eqnarray}
+C(f)=(f \vee (\wedge\{\psi_i(f)\})) \wedge (\vee\{\psi_i(f)\})
+\end{eqnarray}
+
+\begin{enumerate}
+	\item Implémenter cette transformation avec la famille $\{\gamma\phi\gamma, \phi\gamma\phi\}$ où $\gamma$ désigne l'ouverture morphologique et $\phi$ la fermeture morphologique.
+	\item Tester cette transformation en faisant varier la taille de l'élément structurant.
+	\item Bruiter l'image 'Lena' avec un bruit 'poivre et sel' et comparer le centre morphologique avec le filtre médian.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Filtres alternés séquentiels (FAS)}
+Les FAS peuvent être construits à partir d'une famille d'ouvertures et de fermetures morphologiques :
+\begin{eqnarray}
+N_i(f)&=&\gamma_i\phi_i\circ\gamma_{i-1}\phi_{i-1}\dots\gamma_2\phi_2\circ\gamma_1\phi_1(f)\\
+M_i(f)&=&\phi_i\gamma_i\circ\phi_{i-1}\gamma_{i-1}\dots\phi_2\gamma_2\circ\phi_1\gamma_1(f)
+\end{eqnarray}
+où $\gamma_k$ (resp. $\phi_k$) désigne l'ouverture (resp. la, fermeture) morphologique avec un élément structurant de taille $k$.
+\begin{enumerate}
+	\item Implémenter ces deux transformations.
+	\item Tester cette transformation sur l'image bruitée en faisant varier la taille maximale $i$ de l'élément structurant.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Filtres par reconstruction}
+Rappelons tout d'abord l'opération de dilatation géodésique unitaire et de taille $n$ :
+\begin{eqnarray}
+\delta_f(g)&=&\wedge(\delta_{B_1}(g),f)\\
+\delta_f^{n}(g)&=&\delta_f(\delta_f\dots(\delta_f(g)))
+\end{eqnarray}
+où $\delta_{B_1}$ désigne la dilatation morphologique avec un disque de rayon $1$ pour élément structurant.
+L'ouverture et la fermeture par reconstruction sont alors définis de la manière suivante :
+\begin{eqnarray}
+\gamma_k^{rec}(f)&=&\vee\{\delta_f^{n}(\epsilon_{B_k}(f)),n>0\}\\
+\phi_k^{rec}(f)&=&M-\gamma_k^{rec}(M-f)
+\end{eqnarray}
+où $\epsilon_{B_k}$ désigne l'érosion morphologique avec un disque $B$ de rayon $k$ pour élément structurant.
+\begin{enumerate}
+	\item Implémenter ces deux transformations.
+	\item Tester cette transformation en faisant varier la taille $k$ de l'élément structurant.
+	\item Implémenter et tester, sur l'image bruitée, les filtres de centre morphologique et FAS avec ces opérateurs géodésiques et les comparer aux filtres usuels (notamment médian).
+\end{enumerate}
+\end{exo}
+
+\end{document}

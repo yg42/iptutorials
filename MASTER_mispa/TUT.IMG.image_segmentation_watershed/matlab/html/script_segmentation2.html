@@ -1,0 +1,287 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      -->
+      <title>CORRECTION TP SEGMENTATION (2) - OPTION I&amp;S</title>
+      <meta name="generator" content="MATLAB 7.5">
+      <meta name="date" content="2009-08-07">
+      <meta name="m-file" content="script_segmentation2"><style>
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head>
+   <body>
+      <div class="content">
+         <h1>CORRECTION TP SEGMENTATION (2) - OPTION I&amp;S</h1>
+         <introduction></introduction>
+         <h2>Contents</h2>
+         <div>
+            <ul>
+               <li><a href="#1">0 - Nettoyage</a></li>
+               <li><a href="#2">1 - LPE et carte de distances</a></li>
+               <li><a href="#3">2 - LPE et gradients</a></li>
+               <li><a href="#4">3 - LPE contrainte par des marqueurs</a></li>
+               <li><a href="#5">4 - Fonctions annexes</a></li>
+            </ul>
+         </div>
+         <h2>0 - Nettoyage<a name="1"></a></h2><pre class="codeinput">clear <span class="string">all</span>;close <span class="string">all</span>;clc
+</pre><h2>1 - LPE et carte de distances<a name="2"></a></h2>
+         <p>lecture image</p><pre class="codeinput">A=imread(<span class="string">'circles.tif'</span>);
+<span class="comment">% carte des distances</span>
+dist=bwdist(~A);
+<span class="comment">% watershed</span>
+watf=watershed(imcomplement(dist));
+watf=(watf==0);
+<span class="comment">% individualisation</span>
+B=A &amp; ~watf;
+<span class="comment">% visualisation</span>
+figure
+subplot(2,2,1);viewImage(A);title(<span class="string">'Image originale'</span>);
+subplot(2,2,2);viewImage(dist);title(<span class="string">'Carte des distances'</span>);
+subplot(2,2,3);viewImage(watf);title(<span class="string">'LPE'</span>);
+subplot(2,2,4);viewImage(B);title(<span class="string">'Individualisation des grains'</span>);
+</pre><img vspace="5" hspace="5" src="script_segmentation2_01.png"> <h2>2 - LPE et gradients<a name="3"></a></h2><pre class="codeinput"><span class="comment">% lecture image</span>
+A=imread(<span class="string">'gel.jpg'</span>);
+<span class="comment">% gradient</span>
+gradient=sobel(A);
+rm=imregionalmin(gradient);
+<span class="comment">% watershed</span>
+wat=watershed(gradient);
+wat=(wat==0);
+<span class="comment">% visualisation</span>
+figure
+subplot(2,2,1);viewImage(A);title(<span class="string">'Image originale'</span>);
+subplot(2,2,2);viewImage(gradient);title(<span class="string">'Image gradient'</span>);
+subplot(2,2,3);viewImage(rm);title(<span class="string">'Minima : image gradient'</span>);
+subplot(2,2,4);viewImage(wat);title(<span class="string">'LPE'</span>);
+
+<span class="comment">% LPE du gradient de l'image filtr&eacute;e</span>
+<span class="comment">% lecture image</span>
+A=imread(<span class="string">'gel.jpg'</span>);
+<span class="comment">% filtrage</span>
+se = strel(<span class="string">'disk'</span>,2);
+AA=imopen(A,se);
+f=imclose(AA,se);clear <span class="string">AA</span>;
+<span class="comment">% gradient</span>
+gradient=sobel(f);
+rm=imregionalmin(gradient);
+<span class="comment">% watershed</span>
+wat=watershed(gradient);
+wat=(wat==0);
+<span class="comment">% visualisation</span>
+figure
+subplot(2,2,1);viewImage(A);title(<span class="string">'Image originale'</span>);
+subplot(2,2,2);viewImage(f);title(<span class="string">'Image filtr&eacute;e'</span>);
+subplot(2,2,3);viewImage(rm);title(<span class="string">'Minima : gradient image filtr&eacute;e'</span>);
+subplot(2,2,4);viewImage(wat);title(<span class="string">'LPE'</span>);
+</pre><img vspace="5" hspace="5" src="script_segmentation2_02.png"> <img vspace="5" hspace="5" src="script_segmentation2_03.png"> <h2>3 - LPE contrainte par des marqueurs<a name="4"></a></h2><pre class="codeinput"><span class="comment">% marqueurs internes : minima image filtr&eacute;e</span>
+se = strel(<span class="string">'disk'</span>,2);
+AA=imopen(A,se);
+f=imclose(AA,se);clear <span class="string">AA</span>;
+rm=imregionalmin(f);
+<span class="comment">% marqueurs externes : watershed de l'image filtr&eacute;e</span>
+watf=watershed(f);
+watf=(watf==0);
+<span class="comment">% visualisation des marqueurs</span>
+figure
+subplot(1,2,1);viewImage(rm);title(<span class="string">'Marqueurs internes : minima image filtr&eacute;e'</span>);
+subplot(1,2,2);viewImage(watf);title(<span class="string">'Marqueurs externes : LPE image filtr&eacute;e'</span>);
+<span class="comment">% imposition des minima</span>
+gradient=sobel(f);
+mie=imimposemin(gradient, rm | watf);
+minima=max(rm,watf);
+<span class="comment">% watershed contraint</span>
+watc=watershed(mie);
+watc=(watc==0);
+<span class="comment">% superposition des images originale et segment&eacute;e</span>
+seg=A;
+seg(watc==1)=255;
+<span class="comment">% visualisation</span>
+figure
+subplot(2,2,1);viewImage(f);title(<span class="string">'Image filtr&eacute;e'</span>);
+subplot(2,2,2);viewImage(gradient);title(<span class="string">'Gradient image filtr&eacute;e'</span>);
+subplot(2,2,3);viewImage(minima);title(<span class="string">'Minima impos&eacute;s'</span>);
+subplot(2,2,4);viewImage(seg);title(<span class="string">'Segmentation'</span>);
+</pre><img vspace="5" hspace="5" src="script_segmentation2_04.png"> <img vspace="5" hspace="5" src="script_segmentation2_05.png"> <h2>4 - Fonctions annexes<a name="5"></a></h2><pre class="codeinput">readfile(<span class="string">'sobel.m'</span>);
+readfile(<span class="string">'viewImage.m'</span>);
+</pre><pre class="codeoutput">function B=sobel(A)
+C=double(A);
+h1=[1 2 1;0 0 0;-1 -2 -1];
+h2=h1';
+C1=filter2(h1,C,'same');
+C2=filter2(h2,C,'same');
+B=sqrt(C1.^2+C2.^2);
+ 
+function viewImage(A)
+B=double(A);
+mmax=max(max(B));
+mmin=min(min(B));
+if (mmax == mmin) B=0;
+else B=uint8(255*(B-min(min(B)))/(max(max(B))-min(min(B))));
+end
+colormap gray;axis image;
+imshow(B);
+ 
+</pre><p class="footer"><br>
+            Published with MATLAB&reg; 7.5<br></p>
+      </div>
+      <!--
+##### SOURCE BEGIN #####
+%% CORRECTION TP SEGMENTATION (2) - OPTION I&S
+
+%% 0 - Nettoyage
+
+clear all;close all;clc
+
+%% 1 - LPE et carte de distances
+% lecture image
+A=imread('circles.tif');
+% carte des distances
+dist=bwdist(~A);
+% watershed
+watf=watershed(imcomplement(dist));
+watf=(watf==0);
+% individualisation
+B=A & ~watf;
+% visualisation
+figure
+subplot(2,2,1);viewImage(A);title('Image originale');
+subplot(2,2,2);viewImage(dist);title('Carte des distances');
+subplot(2,2,3);viewImage(watf);title('LPE');
+subplot(2,2,4);viewImage(B);title('Individualisation des grains');
+
+%% 2 - LPE et gradients 
+
+% lecture image
+A=imread('gel.jpg');
+% gradient
+gradient=sobel(A);
+rm=imregionalmin(gradient);
+% watershed
+wat=watershed(gradient);
+wat=(wat==0);
+% visualisation
+figure
+subplot(2,2,1);viewImage(A);title('Image originale');
+subplot(2,2,2);viewImage(gradient);title('Image gradient');
+subplot(2,2,3);viewImage(rm);title('Minima : image gradient');
+subplot(2,2,4);viewImage(wat);title('LPE');
+
+% LPE du gradient de l'image filtrée
+% lecture image
+A=imread('gel.jpg');
+% filtrage
+se = strel('disk',2);
+AA=imopen(A,se);
+f=imclose(AA,se);clear AA;
+% gradient
+gradient=sobel(f);
+rm=imregionalmin(gradient);
+% watershed
+wat=watershed(gradient);
+wat=(wat==0);
+% visualisation
+figure
+subplot(2,2,1);viewImage(A);title('Image originale');
+subplot(2,2,2);viewImage(f);title('Image filtrée');
+subplot(2,2,3);viewImage(rm);title('Minima : gradient image filtrée');
+subplot(2,2,4);viewImage(wat);title('LPE');
+
+%% 3 - LPE contrainte par des marqueurs
+
+% marqueurs internes : minima image filtrée
+se = strel('disk',2);
+AA=imopen(A,se);
+f=imclose(AA,se);clear AA;
+rm=imregionalmin(f);
+% marqueurs externes : watershed de l'image filtrée
+watf=watershed(f);
+watf=(watf==0);
+% visualisation des marqueurs
+figure
+subplot(1,2,1);viewImage(rm);title('Marqueurs internes : minima image filtrée');
+subplot(1,2,2);viewImage(watf);title('Marqueurs externes : LPE image filtrée');
+% imposition des minima
+gradient=sobel(f);
+mie=imimposemin(gradient, rm | watf);
+minima=max(rm,watf);
+% watershed contraint
+watc=watershed(mie);
+watc=(watc==0);
+% superposition des images originale et segmentée
+seg=A;
+seg(watc==1)=255;
+% visualisation
+figure
+subplot(2,2,1);viewImage(f);title('Image filtrée');
+subplot(2,2,2);viewImage(gradient);title('Gradient image filtrée');
+subplot(2,2,3);viewImage(minima);title('Minima imposés');
+subplot(2,2,4);viewImage(seg);title('Segmentation');
+
+%% 4 - Fonctions annexes
+
+readfile('sobel.m');
+readfile('viewImage.m');
+##### SOURCE END #####
+-->
+   </body>
+</html>

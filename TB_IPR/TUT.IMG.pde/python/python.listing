@@ -1,0 +1,30 @@
+def degenerateDiffusion2(image, nbIter, dt):
+    # degenerate diffusion
+    # I: original image
+    # nbIter: number of iterations
+    # dt: step time
+    hW = np.array([[1,-1,0]]);
+    hE = np.array([[0, -1, 1]]);
+    hN = np.transpose(hW);
+    hS = np.transpose(hE);
+    Zdilation = image;
+    Zerosion  = image;
+
+    for i in range(nbIter):
+        gW = ndimage.convolve(Zdilation, hW, mode='constant');
+        gE = ndimage.convolve(Zdilation, hE, mode='constant');
+        gN = ndimage.convolve(Zdilation, hN, mode='constant');
+        gS = ndimage.convolve(Zdilation, hS, mode='constant');
+
+        jW = ndimage.convolve(Zerosion, hW, mode='constant');
+        jE = ndimage.convolve(Zerosion, hE, mode='constant');
+        jN = ndimage.convolve(Zerosion, hN, mode='constant');
+        jS = ndimage.convolve(Zerosion, hS, mode='constant');
+
+        g = np.sqrt( np.minimum(0, -gW)**2 + np.maximum(0, gE)**2 + np.minimum(0, -gN)**2 + np.maximum(0, gS)**2);
+        j = np.sqrt( np.maximum(0, -jW)**2 + np.minimum(0, jE)**2 + np.maximum(0, -jN)**2 + np.minimum(0, jS)**2);
+
+        Zdilation = Zdilation + dt * g;
+        Zerosion = Zerosion - dt * j;
+
+    return Zdilation, Zerosion

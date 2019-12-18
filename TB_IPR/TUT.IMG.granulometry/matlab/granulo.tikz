@@ -1,0 +1,202 @@
+% This file was created by matlab2tikz v0.4.7 running on MATLAB 8.3.
+% Copyright (c) 2008--2014, Nico Schlömer <nico.schloemer@gmail.com>
+% All rights reserved.
+% Minimal pgfplots version: 1.3
+% 
+% The latest updates can be retrieved from
+%   http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz
+% where you can also make suggestions and rate matlab2tikz.
+% 
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=2.08232323232323in,
+height=3.80333333333333in,
+scale only axis,
+xmin=0,
+xmax=40,
+ymin=0,
+ymax=100,
+name=plot1,
+title={Granulometry},
+legend style={draw=black,fill=white,legend cell align=left}
+]
+\addplot [color=red,solid,mark=x,mark options={solid}]
+  table[row sep=crcr]{%
+0	100\\
+1	100\\
+2	100\\
+3	100\\
+4	100\\
+5	100\\
+6	100\\
+7	100\\
+8	100\\
+9	100\\
+10	100\\
+11	92.7872582480091\\
+12	92.7872582480091\\
+13	92.7872582480091\\
+14	92.7872582480091\\
+15	92.7872582480091\\
+16	92.7872582480091\\
+17	92.7872582480091\\
+18	92.7872582480091\\
+19	92.7872582480091\\
+20	92.7872582480091\\
+21	64.1865756541524\\
+22	64.1865756541524\\
+23	64.1865756541524\\
+24	64.1865756541524\\
+25	64.1865756541524\\
+26	64.1865756541524\\
+27	64.1865756541524\\
+28	64.1865756541524\\
+29	64.1865756541524\\
+30	64.1865756541524\\
+31	0\\
+32	0\\
+33	0\\
+34	0\\
+35	0\\
+};
+\addlegendentry{area analysis};
+
+\addplot [color=blue,solid,mark=x,mark options={solid}]
+  table[row sep=crcr]{%
+0	100\\
+1	100\\
+2	100\\
+3	100\\
+4	100\\
+5	100\\
+6	100\\
+7	100\\
+8	100\\
+9	100\\
+10	100\\
+11	66.6666666666667\\
+12	66.6666666666667\\
+13	66.6666666666667\\
+14	66.6666666666667\\
+15	66.6666666666667\\
+16	66.6666666666667\\
+17	66.6666666666667\\
+18	66.6666666666667\\
+19	66.6666666666667\\
+20	66.6666666666667\\
+21	33.3333333333333\\
+22	33.3333333333333\\
+23	33.3333333333333\\
+24	33.3333333333333\\
+25	33.3333333333333\\
+26	33.3333333333333\\
+27	33.3333333333333\\
+28	33.3333333333333\\
+29	33.3333333333333\\
+30	33.3333333333333\\
+31	0\\
+32	0\\
+33	0\\
+34	0\\
+35	0\\
+};
+\addlegendentry{number analysis};
+
+\end{axis}
+
+\begin{axis}[%
+width=2.08232323232323in,
+height=3.80333333333333in,
+scale only axis,
+xmin=0,
+xmax=40,
+ymin=-0,
+ymax=70,
+at=(plot1.right of south east),
+anchor=left of south west,
+title={Finite differences},
+legend style={draw=black,fill=white,legend cell align=left}
+]
+\addplot [color=red,solid,mark=x,mark options={solid}]
+  table[row sep=crcr]{%
+0	-0\\
+1	-0\\
+2	-0\\
+3	-0\\
+4	-0\\
+5	-0\\
+6	-0\\
+7	-0\\
+8	-0\\
+9	-0\\
+10	7.2127417519909\\
+11	-0\\
+12	-0\\
+13	-0\\
+14	-0\\
+15	-0\\
+16	-0\\
+17	-0\\
+18	-0\\
+19	-0\\
+20	28.6006825938566\\
+21	-0\\
+22	-0\\
+23	-0\\
+24	-0\\
+25	-0\\
+26	-0\\
+27	-0\\
+28	-0\\
+29	-0\\
+30	64.1865756541524\\
+31	-0\\
+32	-0\\
+33	-0\\
+34	-0\\
+};
+\addlegendentry{area analysis};
+
+\addplot [color=blue,solid,mark=x,mark options={solid}]
+  table[row sep=crcr]{%
+0	-0\\
+1	-0\\
+2	-0\\
+3	-0\\
+4	-0\\
+5	-0\\
+6	-0\\
+7	-0\\
+8	-0\\
+9	-0\\
+10	33.3333333333333\\
+11	-0\\
+12	-0\\
+13	-0\\
+14	-0\\
+15	-0\\
+16	-0\\
+17	-0\\
+18	-0\\
+19	-0\\
+20	33.3333333333333\\
+21	-0\\
+22	-0\\
+23	-0\\
+24	-0\\
+25	-0\\
+26	-0\\
+27	-0\\
+28	-0\\
+29	-0\\
+30	33.3333333333333\\
+31	-0\\
+32	-0\\
+33	-0\\
+34	-0\\
+};
+\addlegendentry{number analysis};
+
+\end{axis}
+\end{tikzpicture}%

@@ -1,0 +1,24 @@
+function [k,l]=ripley(point_nb,x,y,xmin,xmax,ymin,ymax,t2,dt)
+% estimateur biaisée à cause des effets de bord
+for tt=1:t2
+    g(tt)=0;
+end
+
+for i=1:point_nb % pour chaque paire de points
+    for j=1:point_nb
+        if j~=i
+            d=sqrt((x(i)-x(j)^2+(y(i)-y(j)^2);
+            if d<t2*dt
+                tt=d/dt+1;
+                g(tt)=g(tt)+1;
+            end
+        end
+    end
+end
+
+g=g/point_nb;
+k(1)=g(1)
+for tt=2:t2
+   k(tt)=k(tt-1)+g(tt) 
+end
+    

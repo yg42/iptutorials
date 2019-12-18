@@ -1,0 +1,68 @@
+clear all; close all; clc;
+
+%% lecture image
+A=imread('ciment_ndg.bmp');
+A=double(imresize(A,0.5));
+
+
+%% centre morphologique
+n=2;
+se=strel('disk',n);
+coc=imclose(imopen(imclose(A,se),se),se);
+oco=imopen(imclose(imopen(A,se),se),se);
+cMin=min(oco,coc);
+cMax=max(oco,coc);
+B=min(max(A,cMin),cMax);
+figure;
+subplot(121);imshow(A/255);colormap gray
+subplot(122);imshow(B/255);
+title('centre morphologique');
+
+%% filtres alternés séquentiels
+n1=1;
+n2=2;
+n3=3;
+se1=strel('disk',n1);
+se2=strel('disk',n2);
+se3=strel('disk',n3);
+co1=imclose(imopen(A,se1),se1);
+co2=imclose(imopen(co1,se2),se2);
+co3=imclose(imopen(co2,se3),se3);
+
+figure;
+subplot(121);imshow(A/255);colormap gray
+subplot(122);imshow(co3/255);
+title('FAS')
+
+%% ouverture et fermeture par reconstruction
+D=openrec(A,2);
+E=closerec(A,2);
+subplot(131);imshow(A/255);colormap gray
+subplot(132);imshow(D/255);
+subplot(133);imshow(E/255);
+title('ouverture et fermeture par reconstruction')
+
+%% filtres alternés séquentiels par reconstruction
+n1=1;
+n2=2;
+n3=3;
+co1=closerec(openrec(A,n1),n1);
+co2=closerec(openrec(co1,n2),n2);
+co3=closerec(openrec(co2,n3),n3);
+
+figure;
+subplot(121);imshow(A/255);colormap gray
+subplot(122);imshow(co3/255);
+title('FAS par reconstruction')
+
+%% centre morphologique par reconstruction
+n=2;
+coc=closerec(openrec(closerec(A,n),n),n);
+oco=openrec(closerec(openrec(A,n),n),n);
+cMin=min(oco,coc);
+cMax=max(oco,coc);
+B=min(max(A,cMin),cMax);
+figure;
+subplot(121);imshow(A/255);colormap gray
+subplot(122);imshow(B/255);
+title('centre morphologique par re

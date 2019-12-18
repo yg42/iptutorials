@@ -1,0 +1,9 @@
+n=50;
+Points2=rand(n,2);
+
+figure
+plot(Points2(:,1),Points2(:,2),'*')
+axis equal
+Q=conv_hull(Points2);
+hold on;
+plot(Q(:,1),Q(:,2),'r')

@@ -1,0 +1,21 @@
+function code=freeman(A,r0,c0)
+
+% A est un contour
+% r0, c0 : coordonnées du premier point
+B=A;
+bool=0;
+point=[r0,c0];
+lut=[1 2 3;8 0 4; 7 6 5];
+lutx=[-1 -1 -1 0 1 1 1 0];
+luty=[-1 0 1 1 1 0 -1 -1];
+lutcode=[3 2 1 0 7 6 5 4];
+nbrepoints=sum(B(:));
+code=[];
+while bool==0
+    window=B(point(1)-1:point(1)+1,point(2)-1:point(2)+1);
+    window=window.*lut;
+    index=max(window(:));
+    point=[point(1)+lutx(index),point(2)+luty(index)];
+    code=[code,lutcode(index)];
+    bool=length(code(:))==(nbrepoints-1);
+end

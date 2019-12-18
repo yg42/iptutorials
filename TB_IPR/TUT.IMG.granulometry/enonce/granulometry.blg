@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99d (TeX Live 2017/Debian)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: granulometry.aux
+The style file: plain.bst
+Database file #1: granulometry.bib.bib
+You've used 1 entry,
+            2118 wiz_defined-function locations,
+            505 strings with 4160 characters,
+and the built_in function-call counts, 247 in all, are:
+= -- 22
+> -- 7
+< -- 0
++ -- 3
+- -- 2
+* -- 13
+:= -- 49
+add.period$ -- 3
+call.type$ -- 1
+change.case$ -- 4
+chr.to.int$ -- 0
+cite$ -- 1
+duplicate$ -- 12
+empty$ -- 23
+format.name$ -- 2
+if$ -- 50
+int.to.chr$ -- 0
+int.to.str$ -- 1
+missing$ -- 2
+newline$ -- 8
+num.names$ -- 2
+pop$ -- 6
+preamble$ -- 1
+purify$ -- 3
+quote$ -- 0
+skip$ -- 6
+stack$ -- 0
+substring$ -- 5
+swap$ -- 1
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 2
+warning$ -- 0
+while$ -- 2
+width$ -- 2
+write$ -- 14

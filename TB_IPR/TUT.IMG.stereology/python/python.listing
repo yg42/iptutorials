@@ -1,0 +1,11 @@
+# analytical values
+step = .05;
+r2 = np.arange(0, R, step);
+probaReal = 1./R * r2 / np.sqrt(R**2-r2**2);
+probaReal = probaReal * R / nBins; # approximation of the integral
+plt.scatter(r2, probaReal, 50);
+
+# display
+plt.legend(["random plane by 3 points on the sphere", "2 points on the sphere", "Analytical values"])
+plt.show();
+plt.savefig("section_sphere.pdf") # save as pdf file

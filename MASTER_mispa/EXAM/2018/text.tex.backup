@@ -1,0 +1,14 @@
+\note{All documents allowed. Code with matlab and send the result to debayle@emse.fr.}
+\sujet{Bone age}
+
+Definition from Wikipedia: bone age is the degree of maturation of a child's bones. The bones of the skeleton change in size and shape as a person grows. These changes can be seen by x-ray. The "bone age" of a child is the average age at which children reach this stage of bone maturation.
+
+The most commonly used method is based on a single x-ray of the left hand, fingers, and wrist (see Fig.\ref{fig:mispa:exam_2018:radio}).
+
+\begin{figure}[htbp]
+ \subfloat[1 year old child.]{\includegraphics[width=.4\linewidth]{hand_1_1.png}}\hfill
+ \subfloat[15 years old child.]{\includegraphics[width=.4\linewidth]{hand_15_1.png}}
+ 
+ \caption{X-ray radiographies of hands.}
+ \label{fig:mispa:exam_2018:radio}
+\end{figure}

@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99d (TeX Live 2017/Debian)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: shape_from_focus.aux
+The style file: plain.bst
+Database file #1: tp_sff.bib.bib
+You've used 7 entries,
+            2118 wiz_defined-function locations,
+            557 strings with 5310 characters,
+and the built_in function-call counts, 2272 in all, are:
+= -- 230
+> -- 94
+< -- 0
++ -- 38
+- -- 30
+* -- 178
+:= -- 391
+add.period$ -- 21
+call.type$ -- 7
+change.case$ -- 35
+chr.to.int$ -- 0
+cite$ -- 7
+duplicate$ -- 75
+empty$ -- 179
+format.name$ -- 30
+if$ -- 459
+int.to.chr$ -- 0
+int.to.str$ -- 7
+missing$ -- 6
+newline$ -- 38
+num.names$ -- 14
+pop$ -- 23
+preamble$ -- 1
+purify$ -- 29
+quote$ -- 0
+skip$ -- 50
+stack$ -- 0
+substring$ -- 184
+swap$ -- 7
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 28
+warning$ -- 0
+while$ -- 24
+width$ -- 8
+write$ -- 79

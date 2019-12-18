@@ -1,0 +1,6 @@
+\BOOKMARK [1][-]{section.1}{Graham scan}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{Lowest y-coordinate point}{section.1}% 2
+\BOOKMARK [2][-]{subsection.1.2}{Sort by angle}{section.1}% 3
+\BOOKMARK [2][-]{subsection.1.3}{Check angles: left or right turn?}{section.1}% 4
+\BOOKMARK [2][-]{subsection.1.4}{Left or right turn?}{section.1}% 5
+\BOOKMARK [2][-]{subsection.1.5}{Convex hull algorithm}{section.1}% 6

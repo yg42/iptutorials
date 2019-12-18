@@ -1,0 +1,86 @@
+\def\QRCODE{TB_IPR_TUT.IMG.granulometry_matlabqrcode.png}
+\def\QRPAGE{http://www.iptutorials.science/tree/master/TB_IPR/TUT.IMG.granulometry/matlab}
+
+\mcorrectionsection{Matlab correction}
+
+\subsection{Morphological granulometry}
+The code is straightforward from the definition. It consists on a loop over the different sizes of the structuring element. 
+\begin{matlab}
+% read image
+A=imread('simulation.bmp');
+A=logical(double(A)/255);
+
+% visualisation
+figure;imshow(A);
+title('Original simulated image');
+\end{matlab}
+
+Different structuring elements shapes can be used, the most classical one being the disk. In order to suppress small objects, the function \minline{imreconstruct} is used \iflabelexists{tut:binarymorpho:enonce}{(see tutorial \ref{tut:binarymorpho:enonce}).}{(see tutorial on morphological reconstruction).}
+\begin{matlab}
+% maximal radius size
+N=35;
+
+% array of areas and numbers 
+areas=zeros(N, 1);
+number=zeros(N,1);
+area0=sum(A(:));
+nbre0=bweuler(A);
+% loop over the different sizes
+for i=0:N
+   se = strel('disk', i, 0); % structuring element
+   C = imopen(A, se);        % 
+   C = imreconstruct(C,A);   % suppress small objects
+   areas(i) = sum(C(:))/area0*100;  % normalized area
+   number(i)=bweuler(C)/nbre0*100;% Euler number
+end
+\end{matlab}
+The results are displayed using the following commands, and reproduced in Fig. \ref{fig:granulometry:matlab:granulo}. The function \minline{diff} is used to evaluate a discrete derivative.
+
+\begin{matlab}
+% display the results
+figure;
+subplot(121);plot(0:N,areas,'-xr');title('Granulometry');
+hold on; plot(0:N,number,'-xb');legend('area analysis','number analysis');
+% finite difference analysis
+diff_areas = -diff(areas);
+diff_number = -diff(number);
+subplot(122);
+plot(0:N-1,diff_areas,'-xr');title('Finite differences');
+hold on; plot(0:N-1,diff_number,'-xb');
+legend('area analysis','number analysis');
+\end{matlab}
+
+\begin{figure}[htbp]
+\centering
+ \input{granulo.tikz}
+ \caption{Granulometry and finite differences for the synthetic image of disks.}
+ \label{fig:granulometry:matlab:granulo}
+\end{figure}
+
+\subsection{Real application}
+The code is exactly the same as the previous one, taking a binary image as input. The powder image is segmented using a threshold at value 74, and applying some filtering processes (see result in Fig. \ref{fig:granulometry:matlab:segmented}).
+
+\begin{matlab}
+B=imread('poudre.bmp');
+% threshold
+imThresh=(B>74);
+% fill holes
+imHoles=imfill(imTresh,'holes');
+% suppress small objects
+se = strel('disk',1);
+C = imopen(imHoles,se);
+imSegmented=imreconstruct(C,imHoles);
+% visualisation images
+figure;
+subplot(121);imshow(B,[]);colormap('gray');title('Original image of silicium');
+subplot(122);imshow(imSegmented);colormap('gray');title('Segmented image');
+\end{matlab}
+\begin{figure}[htbp]
+ \centering
+ \subfloat[Segmented image.]{\includegraphics[width=.4\linewidth]{poudre_segmentation.png}}\hfill
+ \subfloat[Original image.]{\includegraphics[width=.4\linewidth]{poudre.png}}
+ 
+ \subfloat[Granulometry evaluation on the powder image.]{\includegraphics[width=\linewidth]{granulo_poudre.pdf}}
+ \caption{Illustration of grain analysis, in size and number, on a powder image.}
+ \label{fig:granulometry:matlab:segmented}
+\end{figure}

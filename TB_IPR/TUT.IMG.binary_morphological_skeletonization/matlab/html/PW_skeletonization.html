@@ -1,0 +1,221 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>PW skeletonization - Solution</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2013-10-15"><meta name="DC.source" content="PW_skeletonization.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>PW skeletonization - Solution</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Cleaning and reading image</a></li><li><a href="#2">Hit-or-miss transformation</a></li><li><a href="#3">Thinning and thickening</a></li><li><a href="#4">Topological skeleton</a></li><li><a href="#5">Morphological skeleton</a></li><li><a href="#6">Useful functions</a></li></ul></div><h2>Cleaning and reading image<a name="1"></a></h2><pre class="codeinput">clear <span class="string">all</span>; close <span class="string">all</span>; clc;
+
+A=imread(<span class="string">'mickey.bmp'</span>);
+</pre><h2>Hit-or-miss transformation<a name="2"></a></h2><pre class="codeinput">T=[1,1,1;0,1,0;-1,-1,-1];
+B=hitormiss(A,T);
+figure;colormap <span class="string">gray</span>;
+subplot(121);imshow(A);
+subplot(122);imshow(B);
+</pre><img vspace="5" hspace="5" src="PW_skeletonization_01.png" alt=""> <h2>Thinning and thickening<a name="3"></a></h2><pre class="codeinput">TT=cell(1,8);
+TT{1}=[-1,-1,-1;0,1,0;1,1,1];
+TT{2}=[0,-1,-1;1,1,-1;0,1,0];
+TT{3}=[1,0,-1;1,1,-1;1,0,-1];
+TT{4}=[0,1,0;1,1,-1;0,-1,-1];
+TT{5}=[1,1,1;0,1,0;-1,-1,-1];
+TT{6}=[0,1,0;-1,1,1;-1,-1,0];
+TT{7}=[-1,0,1;-1,1,1;-1,0,1];
+TT{8}=[-1,-1,0;-1,1,1;0,1,0];
+<span class="comment">% figure;colormap gray</span>
+<span class="comment">% subplot(2,4,1);imagesc(TT{1});</span>
+<span class="comment">% subplot(2,4,2);imagesc(TT{2});</span>
+<span class="comment">% subplot(2,4,3);imagesc(TT{3});</span>
+<span class="comment">% subplot(2,4,4);imagesc(TT{4});</span>
+<span class="comment">% subplot(2,4,5);imagesc(TT{5});</span>
+<span class="comment">% subplot(2,4,6);imagesc(TT{6});</span>
+<span class="comment">% subplot(2,4,7);imagesc(TT{7});</span>
+<span class="comment">% subplot(2,4,8);imagesc(TT{8});</span>
+
+B=thinning(A,TT);
+B=thinning(B,TT);
+
+C=1-thinning(1-A,TT);
+C=1-thinning(1-C,TT);
+
+figure;colormap <span class="string">gray</span>;
+subplot(131);imshow(A);
+subplot(132);imshow(B);
+subplot(133);imshow(C);
+</pre><img vspace="5" hspace="5" src="PW_skeletonization_02.png" alt=""> <h2>Topological skeleton<a name="4"></a></h2><pre class="codeinput">B2=A;
+B=~B2;
+<span class="keyword">while</span> (isequal(B,B2)~=1)
+    B=B2;
+    B2=thinning(B,TT);
+<span class="keyword">end</span>
+
+figure
+subplot(121);imshow(A);colormap <span class="string">gray</span>
+subplot(122);imshow(B);colormap <span class="string">gray</span>
+</pre><img vspace="5" hspace="5" src="PW_skeletonization_03.png" alt=""> <h2>Morphological skeleton<a name="5"></a></h2><pre class="codeinput">S=zeros(size(A));
+r=0;
+pred=true;
+<span class="keyword">while</span> pred
+    r=r+1;
+    E=imerode(A,strel(<span class="string">'disk'</span>,r));
+    <span class="keyword">if</span> sum(E(:))==0
+        pred=false;
+    <span class="keyword">end</span>
+    S=max(S,E-imopen(E,strel(<span class="string">'disk'</span>,1)));
+<span class="keyword">end</span>
+
+figure
+subplot(121);imshow(A);colormap <span class="string">gray</span>
+subplot(122);imshow(S);colormap <span class="string">gray</span>
+</pre><img vspace="5" hspace="5" src="PW_skeletonization_04.png" alt=""> <h2>Useful functions<a name="6"></a></h2><pre class="codeinput">type <span class="string">'hitormiss.m'</span>
+type <span class="string">'thinning.m'</span>
+</pre><pre class="codeoutput">
+function B=hitormiss(A,T)
+
+T1=(T == 1);
+T2=(T == -1);
+B=min(imerode(A,T1),imerode(1-A,T2));
+
+function B=thinning(A,TT)
+
+B=A;
+B=B-hitormiss(B,TT{1});
+B=B-hitormiss(B,TT{2});
+B=B-hitormiss(B,TT{3});
+B=B-hitormiss(B,TT{4});
+B=B-hitormiss(B,TT{5});
+B=B-hitormiss(B,TT{6});
+B=B-hitormiss(B,TT{7});
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
+##### SOURCE BEGIN #####
+%% PW skeletonization - Solution
+
+%% Cleaning and reading image
+clear all; close all; clc;
+
+A=imread('mickey.bmp');
+
+%% Hit-or-miss transformation
+T=[1,1,1;0,1,0;-1,-1,-1];
+B=hitormiss(A,T);
+figure;colormap gray;
+subplot(121);imshow(A);
+subplot(122);imshow(B);
+
+%% Thinning and thickening
+TT=cell(1,8);
+TT{1}=[-1,-1,-1;0,1,0;1,1,1];
+TT{2}=[0,-1,-1;1,1,-1;0,1,0];
+TT{3}=[1,0,-1;1,1,-1;1,0,-1];
+TT{4}=[0,1,0;1,1,-1;0,-1,-1];
+TT{5}=[1,1,1;0,1,0;-1,-1,-1];
+TT{6}=[0,1,0;-1,1,1;-1,-1,0];
+TT{7}=[-1,0,1;-1,1,1;-1,0,1];
+TT{8}=[-1,-1,0;-1,1,1;0,1,0];
+% figure;colormap gray
+% subplot(2,4,1);imagesc(TT{1});
+% subplot(2,4,2);imagesc(TT{2});
+% subplot(2,4,3);imagesc(TT{3});
+% subplot(2,4,4);imagesc(TT{4});
+% subplot(2,4,5);imagesc(TT{5});
+% subplot(2,4,6);imagesc(TT{6});
+% subplot(2,4,7);imagesc(TT{7});
+% subplot(2,4,8);imagesc(TT{8});
+
+B=thinning(A,TT);
+B=thinning(B,TT);
+
+C=1-thinning(1-A,TT);
+C=1-thinning(1-C,TT);
+
+figure;colormap gray;
+subplot(131);imshow(A);
+subplot(132);imshow(B);
+subplot(133);imshow(C);
+
+%% Topological skeleton
+B2=A;
+B=~B2;
+while (isequal(B,B2)~=1)
+    B=B2;
+    B2=thinning(B,TT);
+end
+
+figure
+subplot(121);imshow(A);colormap gray
+subplot(122);imshow(B);colormap gray
+
+%% Morphological skeleton
+S=zeros(size(A));
+r=0;
+pred=true;
+while pred
+    r=r+1;
+    E=imerode(A,strel('disk',r));
+    if sum(E(:))==0
+        pred=false;
+    end
+    S=max(S,E-imopen(E,strel('disk',1))); 
+end
+
+figure
+subplot(121);imshow(A);colormap gray
+subplot(122);imshow(S);colormap gray
+
+%% Useful functions
+type 'hitormiss.m'
+type 'thinning.m'
+
+##### SOURCE END #####
+--></body></html>

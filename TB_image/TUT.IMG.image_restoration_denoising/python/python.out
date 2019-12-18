@@ -1,0 +1,9 @@
+\BOOKMARK [1][-]{section.1}{Python correction}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{Generation of random noises}{section.1}% 2
+\BOOKMARK [3][-]{subsubsection.1.1.1}{Uniform noise}{subsection.1.1}% 3
+\BOOKMARK [3][-]{subsubsection.1.1.2}{Gaussian noise}{subsection.1.1}% 4
+\BOOKMARK [3][-]{subsubsection.1.1.3}{Salt and pepper noise}{subsection.1.1}% 5
+\BOOKMARK [3][-]{subsubsection.1.1.4}{Exponential noise}{subsection.1.1}% 6
+\BOOKMARK [2][-]{subsection.1.2}{Noise estimation}{section.1}% 7
+\BOOKMARK [2][-]{subsection.1.3}{Image restoration by spatial filtering}{section.1}% 8
+\BOOKMARK [3][-]{subsubsection.1.3.1}{Adaptive median filter}{subsection.1.3}% 9

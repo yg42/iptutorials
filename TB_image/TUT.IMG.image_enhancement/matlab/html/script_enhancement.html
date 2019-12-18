@@ -1,0 +1,192 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>CORRECTION TP REHAUSSEMENT - OPTION I&amp;S</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2013-10-04"><meta name="DC.source" content="script_enhancement.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>CORRECTION TP REHAUSSEMENT - OPTION I&amp;S</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">0 - Nettoyage</a></li><li><a href="#2">1 - Transformations d'intensit&eacute;s</a></li><li><a href="#3">2 - Egalisation d'histogramme</a></li><li><a href="#4">3 - Appariement d'histogramme</a></li><li><a href="#5">4 - Fonctions annexes</a></li></ul></div><h2>0 - Nettoyage<a name="1"></a></h2><pre class="codeinput">clear <span class="string">all</span>;close <span class="string">all</span>;clc
+</pre><h2>1 - Transformations d'intensit&eacute;s<a name="2"></a></h2><p>lecture et visualisation de l'image A;</p><pre class="codeinput">A=imread(<span class="string">'osteoblaste.tif'</span>);
+A=double(A);
+A=A/255;
+<span class="comment">% transformations gamma</span>
+figure
+subplot(2,2,1);viewImage(A);title(<span class="string">'originale'</span>);
+Ar=imadjust(A,[min(min(A)) max(max(A))],[0 1],1);
+subplot(2,2,2);viewImage(Ar);title(<span class="string">'r&eacute;hauss&eacute;e, g=1'</span>);
+Ar=imadjust(A,[0.25 0.75],[0 1],0.5);
+subplot(2,2,3);viewImage(Ar);title(<span class="string">'r&eacute;hauss&eacute;e, g=0.5'</span>);
+Ar=imadjust(A,[0.25 0.5],[0 1],2);
+subplot(2,2,4);viewImage(Ar);title(<span class="string">'r&eacute;hauss&eacute;e, g=2'</span>);
+<span class="comment">% &eacute;tirement de contraste</span>
+m=mean(mean(A));
+figure
+subplot(2,2,1);viewImage(A);title(<span class="string">'originale'</span>);
+Ar=1./(1+(m./(A+eps)).^5);
+subplot(2,2,2);viewImage(Ar);title(<span class="string">'contraste &eacute;tir&eacute; : E=10'</span>);
+Ar=1./(1+(m./(A+eps)).^10);
+subplot(2,2,3);viewImage(Ar);title(<span class="string">'contraste &eacute;tir&eacute; : E=20'</span>);
+Ar=1./(1+(m./(A+eps)).^1000);
+subplot(2,2,4);viewImage(Ar);title(<span class="string">'contraste &eacute;tir&eacute; : E=1000'</span>);
+</pre><img vspace="5" hspace="5" src="script_enhancement_01.png" alt=""> <img vspace="5" hspace="5" src="script_enhancement_02.png" alt=""> <h2>2 - Egalisation d'histogramme<a name="3"></a></h2><p>&eacute;galisation d'histogramme</p><pre class="codeinput">A=imread(<span class="string">'osteoblaste.tif'</span>);
+Ar=histeq(A);
+figure
+subplot(3,2,1);viewImage(A);title(<span class="string">'image originale'</span>);
+subplot(3,2,2);viewImage(Ar);title(<span class="string">'&eacute;galisation histogramme'</span>);
+subplot(3,2,3);imhist(A);title(<span class="string">'histogramme initial'</span>);
+subplot(3,2,4);imhist(Ar);title(<span class="string">'histogramme &eacute;galis&eacute;'</span>);
+hnorm = imhist(A)./numel(A);
+cdf=255.*cumsum(hnorm);
+subplot(3,2,5);plot(1:1:256,cdf);title(<span class="string">'LUT'</span>);
+axis([0 255 0 255]);
+</pre><img vspace="5" hspace="5" src="script_enhancement_03.png" alt=""> <h2>3 - Appariement d'histogramme<a name="4"></a></h2><p>&eacute;galisation d'histogramme</p><pre class="codeinput">A=imread(<span class="string">'phobos.tif'</span>);
+<span class="comment">%A=double(A);</span>
+Ar=histeq(A,256);
+figure
+subplot(2,2,1);viewImage(A);title(<span class="string">'image originale'</span>);
+subplot(2,2,2);viewImage(Ar);title(<span class="string">'&eacute;galisation histogramme'</span>);
+subplot(2,2,3);imhist(A);title(<span class="string">'histogramme initial'</span>);
+subplot(2,2,4);imhist(Ar);title(<span class="string">'histogramme &eacute;galis&eacute;'</span>);
+<span class="comment">% histogramme mod&egrave;le</span>
+p=twomodegauss(0.05,0.1,0.8,0.2,0.04,0.01,0.002);
+<span class="comment">% appariement</span>
+Ar=uint8(histeq(A,p));
+figure
+subplot(3,2,6);plot(p);title(<span class="string">'histogramme bi-modal mod&egrave;le'</span>);
+xlim([0 255])
+subplot(3,2,1);viewImage(A);title(<span class="string">'image originale'</span>);
+subplot(3,2,2);viewImage(Ar);title(<span class="string">'image r&eacute;sultante'</span>);
+subplot(3,2,3);imhist(A,256);title(<span class="string">'histogramme initial'</span>);
+subplot(3,2,4);imhist(Ar,256);title(<span class="string">'histogramme appari&eacute;'</span>);
+</pre><img vspace="5" hspace="5" src="script_enhancement_04.png" alt=""> <img vspace="5" hspace="5" src="script_enhancement_05.png" alt=""> <h2>4 - Fonctions annexes<a name="5"></a></h2><pre class="codeinput">readfile(<span class="string">'twomodegauss.m'</span>)
+readfile(<span class="string">'viewImage.m'</span>)
+</pre><pre class="codeoutput">Undefined function 'readfile' for input arguments of type 'char'.
+
+Error in script_enhancement (line 70)
+readfile('twomodegauss.m')
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
+##### SOURCE BEGIN #####
+%% CORRECTION TP REHAUSSEMENT - OPTION I&S
+
+%% 0 - Nettoyage
+
+clear all;close all;clc
+
+%% 1 - Transformations d'intensités
+% lecture et visualisation de l'image A;
+A=imread('osteoblaste.tif');
+A=double(A);
+A=A/255;
+% transformations gamma
+figure
+subplot(2,2,1);viewImage(A);title('originale');
+Ar=imadjust(A,[min(min(A)) max(max(A))],[0 1],1);
+subplot(2,2,2);viewImage(Ar);title('réhaussée, g=1');
+Ar=imadjust(A,[0.25 0.75],[0 1],0.5);
+subplot(2,2,3);viewImage(Ar);title('réhaussée, g=0.5');
+Ar=imadjust(A,[0.25 0.5],[0 1],2);
+subplot(2,2,4);viewImage(Ar);title('réhaussée, g=2');
+% étirement de contraste
+m=mean(mean(A));
+figure
+subplot(2,2,1);viewImage(A);title('originale');
+Ar=1./(1+(m./(A+eps)).^5);
+subplot(2,2,2);viewImage(Ar);title('contraste étiré : E=10');
+Ar=1./(1+(m./(A+eps)).^10);
+subplot(2,2,3);viewImage(Ar);title('contraste étiré : E=20');
+Ar=1./(1+(m./(A+eps)).^1000);
+subplot(2,2,4);viewImage(Ar);title('contraste étiré : E=1000');
+
+%% 2 - Egalisation d'histogramme
+% égalisation d'histogramme
+A=imread('osteoblaste.tif');
+Ar=histeq(A);
+figure
+subplot(3,2,1);viewImage(A);title('image originale');
+subplot(3,2,2);viewImage(Ar);title('égalisation histogramme');
+subplot(3,2,3);imhist(A);title('histogramme initial');
+subplot(3,2,4);imhist(Ar);title('histogramme égalisé');
+hnorm = imhist(A)./numel(A);
+cdf=255.*cumsum(hnorm);
+subplot(3,2,5);plot(1:1:256,cdf);title('LUT');
+axis([0 255 0 255]);
+
+%% 3 - Appariement d'histogramme
+% égalisation d'histogramme
+A=imread('phobos.tif');
+%A=double(A);
+Ar=histeq(A,256);
+figure
+subplot(2,2,1);viewImage(A);title('image originale');
+subplot(2,2,2);viewImage(Ar);title('égalisation histogramme');
+subplot(2,2,3);imhist(A);title('histogramme initial');
+subplot(2,2,4);imhist(Ar);title('histogramme égalisé');
+% histogramme modèle
+p=twomodegauss(0.05,0.1,0.8,0.2,0.04,0.01,0.002);
+% appariement
+Ar=uint8(histeq(A,p));
+figure
+subplot(3,2,6);plot(p);title('histogramme bi-modal modèle');
+xlim([0 255])
+subplot(3,2,1);viewImage(A);title('image originale');
+subplot(3,2,2);viewImage(Ar);title('image résultante');
+subplot(3,2,3);imhist(A,256);title('histogramme initial');
+subplot(3,2,4);imhist(Ar,256);title('histogramme apparié');
+
+%% 4 - Fonctions annexes
+
+readfile('twomodegauss.m')
+readfile('viewImage.m')
+##### SOURCE END #####
+--></body></html>

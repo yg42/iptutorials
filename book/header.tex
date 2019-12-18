@@ -1,0 +1,183 @@
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage{libertine}
+\usepackage{tikz}
+\usetikzlibrary{fit,arrows,shapes,backgrounds}
+\usepackage{emselip}
+\widowpenalty10000
+\clubpenalty10000
+\brokenpenalty=10000
+
+\usepackage{comment}
+\usepackage{float}
+\usepackage{microtype}
+
+\usepackage{etoolbox}
+
+% definit un booleen pour inclure ou non les corrections
+% par defaut a true
+\newtoggle{includematlabcorrection}
+\toggletrue{includematlabcorrection}
+\newtoggle{includepythoncorrection}
+\toggletrue{includepythoncorrection}
+\newtoggle{matlabbook}
+\toggletrue{matlabbook}
+\newtoggle{pythonbook}
+\toggletrue{pythonbook}
+
+
+\newcommand{\inputmatlabcorrection}[1]{\iftoggle{includematlabcorrection}{\input{#1}}{}
+}
+\newcommand{\inputpythoncorrection}[1]{\iftoggle{includepythoncorrection}{\input{#1}}{}
+}
+\newcommand{\ifmatlab}[1]{\iftoggle{matlabbook}{#1}{}
+}
+\newcommand{\ifpython}[1]{\iftoggle{pythonbook}{#1}{}
+}
+
+\newcommand{\matlabregistered}{MATLAB\textsuperscript{\textregistered}}
+\input{couleurs.tex}
+
+\usepackage{pdfpages}
+
+\usepackage[%           % Fine in most cases
+            pdfpagelabels,hypertexnames=true,
+            plainpages=false,
+            naturalnames=false,
+            pdftitle={Image Processing Tutorials},
+				backref=page,
+				linktoc=all,
+				hidelinks
+  			]{hyperref}
+
+\hypersetup{colorlinks,
+            linkcolor=c_section,
+            anchorcolor=c_section,
+            citecolor=c_section}
+
+    
+\include{listings_conf}
+\usepackage{subfig}
+
+%\usepackage{subcaption}
+%\usepackage[table]{xcolor}
+
+% display frame
+%\usepackage{showframe}
+
+% maths
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[cm]{fullpage}
+\usepackage[boxed]{algorithm2e}
+%\pdfsuppresswarningpagegroup=1
+
+\input{structure.tex}
+
+\setcounter{tocdepth}{0}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% NOUVEAUX ENVIRONNEMENTS %%
+%% DONNEES PREAMBULE %%
+\def\Dannee{~}
+\def\Dmodule{~}
+\def\Dmatiere{~}
+\def\Dtype{~}
+\newcommand{\annee}[1]{\def\Dannee{#1}}
+\newcommand{\module}[1]{\def\Dmodule{#1}}
+\newcommand{\matiere}[1]{\def\Dmatiere{#1}}
+\newcommand{\type}[1]{\def\Dtype{#1}}
+
+\makeatletter
+\def\sujet{\@ifnextchar[{\@sujetwith}{\@sujetwithout}}
+\def\@sujetwith[#1]#2{\chapter[#1]{#2}}
+\def\@sujetwithout#1{\chapter{#1}}
+\makeatother
+%\newcommand{\sujet}[2]{\ifthenelse{\equal{#2}{}}{\chapter{#1}}{\chapter[#2]{#1}}}
+%{\vspace*{0.0cm}\begin{center}{\LARGE{\bfseries \Dtype : #1}}\end{center}\vspace{0.75cm}}
+
+\tikzstyle{mybox} = [draw=c_section_colframe, fill=c_section_colback, very thick,
+    rectangle, rounded corners, inner sep=10pt, inner ysep=20pt]
+\tikzstyle{fancytitle} =[fill=c_section_colframe, text=white]
+
+% \newcommand{\note}[1]
+% {\begin{tikzpicture}%
+% \node [mybox, text width=.9\textwidth, align=justify] (box){%
+%   %  \begin{minipage}{.95\textwidth}%
+%      \color{c_section}{#1} %
+%   %  \end{minipage}%
+%     };%
+% \node[fancytitle, right=10pt] at (box.north west) {Note};%
+% \end{tikzpicture}%
+% \vspace*{0.5cm}}
+
+
+\newtcolorbox{note}[1][]{%
+  colback=c_section_colback,colframe=c_section_colframe,
+  #1}
+
+\newtcolorbox{rmq}[1][]{%
+  colback=lightgray,colframe=black,
+  #1}
+
+
+\newcounter{exonumber}[chapter]
+\newenvironment{exo}[1]
+{\par\stepcounter{exonumber}\noindent
+{\pagebreak[1]\\
+\rule[0ex]{\textwidth}{0.1mm}\\
+\noindent\bf\uppercase{Exercice} \theexonumber.}\quad{\bfseries\itshape
+  #1\\
+\rule[2ex]{\textwidth}{0.1mm}}\noindent
+\begin{samepage}}
+{\end{samepage}}
+
+\newcounter{questionnumber}
+\newenvironment{question}[1]
+{\par\stepcounter{questionnumber}\noindent
+{\bf\uppercase{Question} \thequestionnumber.}\quad{\bfseries\itshape #1}\par\begin{maliste}}
+{\end{maliste}\bigskip}
+
+\newenvironment{maliste}%
+{ \begin{list}%
+	{$\square$}%
+	{}}%
+{ \end{list} }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\divergence}{div}
+\DeclareMathOperator*{\grad}{grad}
+
+\newcount\colveccount
+\newcommand*\colvec[1]{
+        \global\colveccount#1
+        \begin{pmatrix}
+        \colvecnext
+}
+\def\colvecnext#1{
+        #1
+        \global\advance\colveccount-1
+        \ifnum\colveccount>0
+                \\
+                \expandafter\colvecnext
+        \else
+                \end{pmatrix}
+        \fi
+}
+
+% ensembles mathématiques
+\def\E{{\mathbb{E}}}
+\def\fft{{\mathcal{F}}}
+
+\usepackage{pdf14}
+\pdfminorversion=4
+\setlength{\headheight}{15pt}
+\usepackage{makeidx}
+\input{commandes.tex}

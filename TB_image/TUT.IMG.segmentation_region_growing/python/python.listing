@@ -1,0 +1,5 @@
+def predicate3(image, i, j, seed, visited):
+    f = int(image[i, j]);
+    m = np.mean(image[visited==1]);
+    s = np.std(image[visited==1]);
+    return abs (f - m) < 20 * (1-s/m)

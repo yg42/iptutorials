@@ -1,0 +1,235 @@
+\def\QRCODE{TB_IPR_TUT.IMG.freeman_pythonqrcode.png}
+\def\QRPAGE{http://www.iptutorials.science/tree/master/TB_IPR/TUT.IMG.freeman/python}
+\pcorrectionsection{Python correction}
+
+\begin{python}
+import matplotlib.pyplot as plt
+import numpy as np
+from skimage.morphology import binary_erosion,disk,rectangle
+from skimage.measure import perimeter
+\end{python}
+
+\subsection{Shape contours}
+To generate a simple object, here is an example:
+\begin{python}
+A = np.zeros((20,20)).astype('bool');
+A[4:14, 9:17] = True;
+A[1:18,11:16]=True;
+\end{python}
+
+
+The contours are computed in 4- or 8-connectivity, see Fig.\ref{fig:freeman:python:sampleimage}. This function uses the mathematical morphology in order to get the contour.
+
+\begin{python}
+def bwperim(I, connectivity=8):
+    """
+    Morphological inner contour, in 4 or 8 connectivity
+    I: binary image
+    return: binary image representing the contour
+    """
+    if connectivity==8:
+        SE = disk(1);
+    else:
+        SE = rectangle(3,3);
+        
+    E = binary_erosion(I, selem=SE);
+    
+    return I^E;
+    
+# compute the contours
+contours8 = bwperim(A, 4);
+contours4 = bwperim(A, 8);
+\end{python}
+
+\begin{figure}[htbp]
+ \centering
+ 
+ \subfloat[Sample object.]{\includegraphics[width=.3\linewidth]{sampleimage.python.png}}\hfill
+ \subfloat[Contour in 4-connectivity.]{\includegraphics[width=.3\linewidth]{contours4.python.png}}\hfill
+  \subfloat[Contour in 8-connectivity.]{\includegraphics[width=.3\linewidth]{contours8.python.png}}
+ \caption{Simple object and its contours in 4- or 8-connectivity.}
+ \label{fig:freeman:python:sampleimage}
+\end{figure}
+
+\subsection{Freeman chain code}
+\subsubsection{First point of the shape}
+The important thing is to find one point in the contour. The Freeman chain code is sensitive to this choice, but several methods can transform this code so that this first choice does not have any importance.
+
+\begin{python}
+def firstPoint(C):
+    """
+    find first point of contour
+    returns point (as array)
+    """
+    p = np.argwhere(C);
+    return p[0];
+\end{python}
+
+\begin{sh}
+>>[r0,c0]=firstPoint(A)
+
+r0 =
+     5
+c0 =
+    10
+\end{sh}
+
+\subsubsection{Freeman chain code}
+The principle is to follow the contour, delete each pixel at each step, and find the direction of the next pixel.
+\begin{python}
+def freeman(C, p, connectivity=8):
+    def getIndex(contour, point, connectivity):
+        """ subfunction for getting the local direction
+        """   
+        if connectivity==8:
+            lut= np.array([[1, 2, 3], [8, 0, 4], [7, 6, 5]]);
+        else:
+            lut= np.array([[0, 2, 0], [8, 0, 4], [0, 6, 0]]);
+
+        window = contour[point[0]-1:point[0]+2, point[1]-1:point[1]+2];
+        window = window * lut;
+        index  = np.max(window);
+        return index-1;
+    
+    
+    # Be careful that these LUTs consider coordinates from left to right, top to bottom    
+    lutx = np.array([-1, -1, -1, 0, 1, 1, 1, 0]);
+    luty = np.array([-1, 0, 1, 1, 1, 0, -1, -1]);
+    lutcode = np.array([3, 2, 1, 0, 7, 6, 5, 4]);
+    
+    nbrpoints = np.sum(C);
+    code=[];
+    point = p.copy();
+    C2 = C.copy();
+
+    for i in np.arange(nbrpoints):
+        C2[point[0], point[1]] = 0;
+
+        index = getIndex(C2, point, connectivity);
+        
+        if (index==0):
+            C2[p[0], p[1]] = 1;
+            index = getIndex(C2, point, connectivity);
+            
+        # new point
+        point[0] = point[0] + lutx[index];
+        point[1] = point[1] + luty[index];
+        
+        # add code
+        code.append(lutcode[index]);
+    
+    return code;
+\end{python}
+
+\begin{python}
+code = freeman(C8, p);
+\end{python}
+
+\begin{sh}
+code = array([6, 6, 5, 4, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 7, 6, 6, 6, 0, 0, 0, 0, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 4, 4, 4, 4])
+\end{sh}
+
+
+\subsection{Normalization}
+\subsubsection{Differential code}
+This is the first step towards independence from the first point.
+
+\begin{python}
+def codediff(fcc, connectivity=8):
+    sr = np.roll(fcc, 1);
+    d = fcc - sr;
+    return d%connectivity;
+\end{python}
+
+\subsubsection{Normalization}
+The differential code is then normalized, in order to get a rotation invariant code. All the circular shifts are evaluated, and a criterion (the minimum value) is established to be able to always find the same result, for every position of the first point.
+
+\begin{python}
+def minmag(code):    
+    # high value for min computing
+    codemin = np.max(code)* np.ones(code.shape);
+    nb = len(code);
+    for i in np.arange(len(code)):
+        C = np.roll(code, i);
+        
+        for j in np.arange(nb):
+            if C[j] > codemin[j]:
+                break;
+            elif C[j] < codemin[j]:
+                codemin = C;
+                break;
+            if j == nb:        
+                codemin = C;
+        
+    return codemin;
+\end{python}
+
+The differential code is evaluated in \minline{d8}, the normalization gives \minline{shapenumber8}:
+\begin{python}
+c = codediff(code, 8);
+shapenumber8 = minmag(c);
+\end{python}
+
+\begin{sh}
+c= array([2, 0, 7, 7, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 7, 7, 0, 0, 2, 0, 0, 0, 2, 0, 0, 7, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 7, 0, 2, 0, 0, 0])
+
+shapenumber8= array([0, 0, 0, 0, 0, 0, 0, 0, 1, 7, 0, 2, 0, 0, 0, 2, 0, 7, 7, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 7, 7, 0, 0, 2, 0, 0, 0, 2, 0, 0, 7, 1])
+\end{sh}
+
+\subsubsection{Validation}
+This validation shows the effect on a different starting point.
+
+\begin{python}
+p = np.array([4, 9]);
+\end{python}
+
+Another test is to verify the result after a rotation. To prevent discretization problems, we use 90 degrees and take the transpose of the matrix.
+
+\begin{python}
+% check for rotation by 90 deg
+contours8rot=contours8';
+\end{python}
+
+The same code should be found in both cases.
+
+\subsection{Geometrical characterization}
+\subsubsection{Perimeter for 8-connectivity}
+We first need to extract the codes in the diagonal directions and apply a $\sqrt{2}$ factor, then add the number of codes in vertical and horizontal directions.
+
+\begin{python}
+def Perimeter(fcode):
+    """
+    fcode: Freeman code
+    """
+    nb_diag = np.sum(np.array(fcode)%2);
+    perim = nb_diag*np.sqrt(2) + len(fcode)-nb_diag;
+    return perim;
+\end{python}
+
+The perimeter is evaluated in the same way in \pinline{skimage}.
+\begin{sh}Perimeter:  43.65685424949238
+skimage.measure.perimeter:  43.65685424949238
+\end{sh}
+
+
+\subsubsection{Area for 8-connectivity}
+
+\begin{python}
+def Area(fcode):
+    """
+    """
+    area = 0;
+    B = 0;
+    lutB = np.array([0, 1, 1, 1, 0, -1, -1, -1]);
+    for i in np.arange(len(fcode)):
+        lutArea = np.array([-B, -(B+0.5), 0, (B+0.5), B, (B-0.5), 0, -(B-0.5)]);
+        area = area + lutArea[fcode[i]];
+        B = B + lutB[fcode[i]];
+    return area;
+\end{python}
+
+Notice that the area evaluated by this way is different from the number of pixels.
+\begin{sh}
+Area:  93.0
+Number of pixels (area):  115
+\end{sh}

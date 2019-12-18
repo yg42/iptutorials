@@ -1,0 +1,66 @@
+\def\QRCODE{TB_IPR_TUT.IMG.integral_geometry_matlabqrcode.png}
+\def\QRPAGE{http://www.iptutorials.science/tree/master/TB_IPR/TUT.IMG.integral_geometry/matlab}
+\mcorrectionsection{Matlab correction}
+
+\subsection{Cell configuration}
+
+For intrapixels representation, the following values are (manually) counted: 
+\begin{eqnarray*}
+ f^{intra}=50 \\
+ e^{intra}=158 \\
+ v^{intra}=107
+\end{eqnarray*}
+
+For interpixels representation, the following values are (manually) counted: 
+\begin{eqnarray*}
+ f^{inter}=4 \\
+ e^{inter}=42 \\
+ v^{inter}=50
+\end{eqnarray*}
+
+Then, it is easy to compute the following values:
+
+\begin{eqnarray*}
+A&=&f^{intra}=50\\
+P&=&-4f^{intra}+2e^{intra}=116\\
+\chi_8&=&v^{intra}-e^{intra}+f^{intra}=-1\\
+\chi_4&=&v^{inter}-e^{inter}+f^{inter}=12
+\end{eqnarray*}
+
+\subsection{Neighborhood configuration}
+The configuration is computed using the convolution function \minline{conv2}.
+\begin{matlab}
+F = [1 4; 2 8];
+XF = conv2(double(X),F,'same');
+h = hist(XF(:),16);
+bar(0:15,h);
+\end{matlab}
+
+Then, the functionals are computed with the following lines. One should get the same values as previously counted.
+\begin{matlab}
+f_intra = [0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1];
+e_intra = [0 2 1 2 1 2 2 2 0 2 1 2 1 2 2 2];
+v_intra = [0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1];
+EulerNb8 = h*v_intra' - h*e_intra' + h*f_intra'
+f_inter = [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1];
+e_inter = [0 0 0 1 0 1 0 2 0 0 0 1 0 1 0 2];
+v_inter = [0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1];
+EulerNb4 = h*v_inter' - h*e_inter' + h*f_inter'
+Area = h*f_intra'
+Perimeter = -4*h*f_intra' + 2*h*e_intra'
+\end{matlab}
+
+\subsection{Crofton perimeter}
+The Crofton perimeter is computed with the same strategy in 2 and 4 directions, respectively:
+\begin{matlab}
+Perimeter4 = [0 pi/2 0 0 0 pi/2 0 0 pi/2 pi 0 0 pi/2 pi 0 0];
+P4 = h*Perimeter4'
+Perimeter8 = [0 pi/4*(1+1/(sqrt(2))) pi/(4*sqrt(2)) pi/(2*sqrt(2)) 0 pi/4*(1+1/(sqrt(2))) 0 pi/(4*sqrt(2)) pi/4 pi/2 pi/(4*sqrt(2)) pi/(4*sqrt(2)) pi/4 pi/2 0 0];
+P8 = sumh*Perimeter8'
+\end{matlab}
+The obtained values are:
+\begin{mwindow}
+P4 =   91.1062
+P8 =   77.7640
+\end{mwindow}
+

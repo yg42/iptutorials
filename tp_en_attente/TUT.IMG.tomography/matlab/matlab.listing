@@ -1,0 +1,16 @@
+%% reconstruction: simple back-projection
+R1=backprojection(S, theta, 0);
+
+imshow(R1, []);
+
+%% Filtered back-projection
+R2=backprojection(S, theta, 1);
+imshow(R2, []);
+
+%% matlab built-in functions
+s=radon(I, theta);
+imshow(s, []);
+
+r=iradon(s, theta);
+figure();
+imshow(r, []);

@@ -1,0 +1,448 @@
+% common part of book
+\makeatletter
+\def\sujet{\@ifnextchar[{\@sujetwith}{\@sujetwithout}}
+\def\@sujetwith[#1]#2{\chapter[#1]{#2}}
+\def\@sujetwithout#1{\chapter{#1}}
+ 
+\makeatother
+\ifmatlab{\title{Image Processing tutorials with \matlabregistered}}
+\ifpython{\title{Image Processing tutorials with python}}
+\author{Yann Gavet and Johan Debayle}
+
+
+\makeindex
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\graphicspath{
+	{./media/}
+	{../TB_image/TUT.IMG.introduction/enonce/}
+	{../TB_image/TUT.IMG.introduction/python/}
+	{../TB_image/TUT.IMG.introduction/matlab/}
+  {../TB_image/TUT.IMG.image_filtering_convolution/enonce/}
+  {../tp_en_attente/TUT.IMG.tomography/enonce/}{../tp_en_attente/TUT.IMG.tomography/matlab/}{../tp_en_attente/TUT.IMG.tomography/python/}
+  {../TB_image/TUT.IMG.cornea_fourier/enonce/}
+  {../TB_image/TUT.IMG.cornea_fourier/matlab/}
+  {../TB_image/TUT.IMG.cornea_fourier/python/}
+  {../TB_image/TUT.IMG.image_restoration_denoising/enonce/} 
+  {../TB_image/TUT.IMG.image_restoration_denoising/matlab/}
+  {../TB_image/TUT.IMG.image_restoration_denoising/python/}
+  {../TB_image/TUT.IMG.image_restoration_deblurring/enonce/}
+  {../TB_image/TUT.IMG.image_restoration_deblurring/matlab/}
+  {../TB_image/TUT.IMG.image_restoration_deblurring/python/}
+  {../TB_image/TUT.IMG.image_enhancement/enonce/}
+  {../TB_image/TUT.IMG.image_enhancement/matlab/}
+  {../TB_image/TUT.IMG.image_enhancement/python/}
+  {../TB_image/TUT.IMG.image_segmentation_histogram_clustering/enonce/}
+  {../TB_image/TUT.IMG.image_segmentation_histogram_clustering/matlab/}
+  {../TB_image/TUT.IMG.image_segmentation_histogram_clustering/python/}
+  {../TB_image/TUT.IMG.segmentation_region_growing/enonce/}  {../TB_image/TUT.IMG.segmentation_region_growing/matlab/}  {../TB_image/TUT.IMG.segmentation_region_growing/python/}
+  {../TB_image/TUT.IMG.image_segmentation_follicule/enonce/}
+  {../TB_image/TUT.IMG.image_segmentation_follicule/matlab/}
+  {../TB_image/TUT.IMG.image_segmentation_follicule/python/}
+  {../TB_image/TUT.IMG.machine_learning/enonce/}
+  {../TB_image/TUT.IMG.machine_learning/matlab/}
+  {../TB_image/TUT.IMG.machine_learning/python/}
+  {../TB_image/TUT.IMG.image_characterization/enonce/}
+  {../TB_image/TUT.IMG.image_characterization/matlab/}
+  {../TB_image/TUT.IMG.image_characterization/python/}
+  {../tp_en_attente/TUT.IMG.python/enonce/}
+  {../tp_en_attente/TUT.IMG.python/python/}
+  {../TB_IPR/TUT.IMG.hough/enonce/}
+  {../TB_IPR/TUT.IMG.hough/matlab/}
+  {../TB_IPR/TUT.IMG.hough/python/}
+  {../TB_IPR/TUT.IMG.harris_detector/enonce/}
+  {../TB_IPR/TUT.IMG.harris_detector/matlab/}
+  {../TB_IPR/TUT.IMG.harris_detector/python/}
+  {../MASTER_mispa/TUT.IMG.shape_from_focus/enonce/}
+  {../MASTER_mispa/TUT.IMG.shape_from_focus/matlab/}
+  {../MASTER_mispa/TUT.IMG.shape_from_focus/python/}
+  {../MASTER_mispa/TUT.IMG.gaussian_random_fields/enonce/}
+  {../MASTER_mispa/TUT.IMG.gaussian_random_fields/matlab/}
+  {../MASTER_mispa/TUT.IMG.gaussian_random_fields/python/}
+  {../TB_IPR/TUT.IMG.convexhull/enonce/}
+  {../TB_IPR/TUT.IMG.convexhull/matlab/}
+  {../TB_IPR/TUT.IMG.convexhull/python/}
+  {../TB_IPR/TUT.IMG.freeman/enonce/}  {../TB_IPR/TUT.IMG.freeman/matlab/} {../TB_IPR/TUT.IMG.freeman/python/}
+  {../MASTER_mispa/TUT.IMG.lip/enonce/}
+  {../MASTER_mispa/TUT.IMG.lip/matlab/}
+  {../MASTER_mispa/TUT.IMG.lip/python/}
+  {../MASTER_mispa/TUT.IMG.colip/enonce/}
+  {../MASTER_mispa/TUT.IMG.colip/matlab/}
+  {../MASTER_mispa/TUT.IMG.colip/python/}
+  {../MASTER_mispa/TUT.IMG.ganip/enonce/}
+  {../MASTER_mispa/TUT.IMG.ganip/matlab/}
+  {../MASTER_mispa/TUT.IMG.ganip/python/}
+  {../MASTER_mispa/TUT.IMG.wavelets/enonce/}
+  {../MASTER_mispa/TUT.IMG.wavelets/matlab/}
+  {../MASTER_mispa/TUT.IMG.wavelets/python/}
+  {../MASTER_mispa/TUT.IMG.active_contours/enonce/}
+  {../MASTER_mispa/TUT.IMG.active_contours/matlab/}
+  {../MASTER_mispa/TUT.IMG.active_contours/python/}
+  {../MASTER_mispa/TUT.IMG.morphological_geodesic_filtering/enonce/}
+  {../MASTER_mispa/TUT.IMG.morphological_geodesic_filtering/matlab/}
+  {../MASTER_mispa/TUT.IMG.morphological_geodesic_filtering/python/}
+  {../MASTER_mispa/TUT.IMG.morphological_attribute_filtering/enonce/}
+  {../MASTER_mispa/TUT.IMG.morphological_attribute_filtering/matlab/}
+  {../MASTER_mispa/TUT.IMG.morphological_attribute_filtering/python/}
+  {../MASTER_mispa/TUT.IMG.lbp/enonce/}  
+  {../MASTER_mispa/TUT.IMG.lbp/matlab/} 
+  {../MASTER_mispa/TUT.IMG.lbp/python/}  
+  {../MASTER_mispa/TUT.IMG.image_segmentation_watershed/enonce/}
+  {../MASTER_mispa/TUT.IMG.image_segmentation_watershed/matlab/}
+  {../MASTER_mispa/TUT.IMG.image_segmentation_watershed/python/}
+  {../TB_IPR/TUT.IMG.pde/python/}{../TB_IPR/TUT.IMG.pde/matlab/}
+  {../TB_image/TUT.IMG.multiscale/enonce/}
+  {../TB_image/TUT.IMG.multiscale/matlab/}
+  {../TB_image/TUT.IMG.multiscale/python/}
+  {../TB_IPR/TUT.IMG.binary_morphological_reconstruction/enonce/}
+  {../TB_IPR/TUT.IMG.binary_morphological_reconstruction/python/}
+  {../TB_IPR/TUT.IMG.binary_morphological_reconstruction/matlab/}
+  {../TB_IPR/TUT.IMG.binary_morphological_skeletonization/enonce/}
+  {../TB_IPR/TUT.IMG.binary_morphological_skeletonization/matlab/}
+  {../TB_IPR/TUT.IMG.binary_morphological_skeletonization/python/}
+  {../TB_IPR/TUT.IMG.stereology/enonce/}
+  {../TB_IPR/TUT.IMG.stereology/matlab/}
+  {../TB_IPR/TUT.IMG.stereology/python/}
+  {../TB_IPR/TUT.IMG.boolean_models/enonce/}
+  {../TB_IPR/TUT.IMG.boolean_models/matlab/}
+  {../TB_IPR/TUT.IMG.boolean_models/python/}
+  {../TB_IPR/TUT.IMG.pixel_topological_description/enonce/}
+  {../TB_IPR/TUT.IMG.pixel_topological_description/matlab/}
+  {../TB_IPR/TUT.IMG.pixel_topological_description/python/}
+  {../TB_IPR/TUT.IMG.integral_geometry/enonce/}
+  {../TB_IPR/TUT.IMG.integral_geometry/matlab/}
+  {../TB_IPR/TUT.IMG.integral_geometry/python/}
+  {../TB_IPR/TUT.IMG.shape_diagrams/enonce/}
+  {../TB_IPR/TUT.IMG.shape_diagrams/matlab/}
+  {../TB_IPR/TUT.IMG.shape_diagrams/python/}
+  {../TB_image/TUT.IMG.image_registration/enonce/}
+  {../TB_image/TUT.IMG.image_registration/matlab/}
+  {../TB_image/TUT.IMG.image_registration/python/}
+  {../TB_IPR/TUT.IMG.granulometry/python/} 
+  {../TB_IPR/TUT.IMG.granulometry/matlab/}
+  {../TB_IPR/TUT.IMG.granulometry/enonce/}
+  {../TB_IPR/TUT.IMG.point_processes_generation/enonce/}
+  {../TB_IPR/TUT.IMG.point_processes_generation/matlab/}
+  {../TB_IPR/TUT.IMG.point_processes_generation/python/}
+  {../TB_IPR/TUT.IMG.point_processes_voronoi/enonce/}
+  {../TB_IPR/TUT.IMG.point_processes_voronoi/matlab/}
+  {../TB_IPR/TUT.IMG.point_processes_voronoi/python/}
+  {../O5_seminaire_photoshop/TUT.PHOTO.introduction/enonce/}
+  {../O5_seminaire_photoshop/TUT.PHOTO.panorama/enonce/}
+  {../O5_seminaire_photoshop/TUT.PHOTO.dehazing/enonce/}
+  {../O5_seminaire_photoshop/TUT.PHOTO.dehazing/matlab/}
+  {../O5_seminaire_photoshop/TUT.PHOTO.dehazing/python/}
+  {../O5_seminaire_photoshop/TUT.PHOTO.inpainting/enonce/}
+  {../O5_seminaire_photoshop/TUT.PHOTO.photomosaic/enonce/}
+  {../O5_seminaire_photoshop/TUT.PHOTO.seam_carving/enonce/}
+  {../O5_seminaire_photoshop/TUT.PHOTO.exposure_fusion/enonce/}
+  {../TB_image/EXAMS/2016_pratique/}  
+  {../TB_image/EXAMS/2016_theorique/}
+  {../TB_image/EXAMS/2017_theorique/}
+}
+
+%\renewcommand{\cftpartbreak}{\addpenalty{-4000}}
+
+% la commande suivante permet d'ajouter des chemins de recherche lorsque des fichiers sont inclus par la commande input (par exemple, fichiers tikz)
+\makeatletter
+\def\input@path{{../TB_IPR/TUT.IMG.stereology/enonce/}{../TB_IPR/TUT.IMG.stereology/matlab/}{../TB_IPR/TUT.IMG.granulometry/matlab/}{../TB_IPR/TUT.IMG.boolean_models/enonce/}}
+%or: \def\input@path{{/path/to/folder}{/path/to/other/folder}}
+\makeatother
+
+
+% definition de la difficulte
+\def\difficulty{0}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%\maketitle
+\ifmatlab{\includepdf[pages={1},fitpaper]{media/TUT_pagedegarde_16x24.pdf}}
+\ifpython{\includepdf[pages={1},fitpaper]{media/TUT_pagedegarde_python_16x24.pdf}}
+\includepdf[pages={1},fitpaper]{media/license_16x24.pdf}
+\input{credits}
+
+\pagestyle{empty} % No headers
+
+\tableofcontents % Print the table of contents itself
+
+\cleardoublepage % Forces the first chapter to start on an odd page so it's on the right
+
+\pagestyle{fancy} % Print headers again
+ 
+ \include{authors}
+ \include{read}
+
+%\part[Introduction]{Basics of image pro\-ces\-sing} 
+
+% introduction to python language
+%\input{../tp_en_attente/TUT.IMG.python/enonce/text.tex}
+%\inputpythoncorrection{../tp_en_attente/TUT.IMG.python/python/python.tex}
+
+% introduction to \matlabregistered{} language
+
+%%%%%%%%%%%%%%%%%%%
+% both languages are used below in the corrections
+
+
+\part{Enhancement and Restoration}
+% introduction to image processing
+\input{../TB_image/TUT.IMG.introduction/enonce/text.tex}
+\newpage
+\inputmatlabcorrection{../TB_image/TUT.IMG.introduction/matlab/text.tex}
+\inputpythoncorrection{../TB_image/TUT.IMG.introduction/python/text.tex}
+
+
+
+
+\input{../TB_image/TUT.IMG.image_enhancement/enonce/text.tex}\newpage
+\inputmatlabcorrection{../TB_image/TUT.IMG.image_enhancement/matlab/text.tex}
+\inputpythoncorrection{../TB_image/TUT.IMG.image_enhancement/python/text.tex}
+
+
+\input{../TB_image/TUT.IMG.cornea_fourier/enonce/text.tex}
+\newpage
+\inputmatlabcorrection{../TB_image/TUT.IMG.cornea_fourier/matlab/text.tex}
+\inputpythoncorrection{../TB_image/TUT.IMG.cornea_fourier/python/text.tex}
+
+\input{../MASTER_mispa/TUT.IMG.wavelets/enonce/text.tex}
+\newpage
+\inputmatlabcorrection{../MASTER_mispa/TUT.IMG.wavelets/matlab/text.tex}
+\inputpythoncorrection{../MASTER_mispa/TUT.IMG.wavelets/python/text.tex}
+
+\input{../TB_image/TUT.IMG.image_restoration_denoising/enonce/text.tex}
+\newpage
+\inputmatlabcorrection{../TB_image/TUT.IMG.image_restoration_denoising/matlab/text.tex}
+\inputpythoncorrection{../TB_image/TUT.IMG.image_restoration_denoising/python/text.tex}
+
+\input{../TB_image/TUT.IMG.image_restoration_deblurring/enonce/text.tex}\newpage
+\inputmatlabcorrection{../TB_image/TUT.IMG.image_restoration_deblurring/matlab/text.tex}
+\inputpythoncorrection{../TB_image/TUT.IMG.image_restoration_deblurring/python/text.tex}
+
+
+\input{../MASTER_mispa/TUT.IMG.shape_from_focus/enonce/text.tex}\newpage
+\inputmatlabcorrection{../MASTER_mispa/TUT.IMG.shape_from_focus/matlab/text.tex}
+\inputpythoncorrection{../MASTER_mispa/TUT.IMG.shape_from_focus/python/text.tex}
+
+\input{../MASTER_mispa/TUT.IMG.lip/enonce/text.tex}\newpage
+\inputmatlabcorrection{../MASTER_mispa/TUT.IMG.lip/matlab/text.tex}
+\inputpythoncorrection{../MASTER_mispa/TUT.IMG.lip/python/text.tex}
+
+\input{../MASTER_mispa/TUT.IMG.colip/enonce/text.tex}\newpage
+\inputmatlabcorrection{../MASTER_mispa/TUT.IMG.colip/matlab/text.tex}
+\inputpythoncorrection{../MASTER_mispa/TUT.IMG.colip/python/text.tex}
+
+\input{../MASTER_mispa/TUT.IMG.ganip/enonce/text.tex}\newpage
+\inputmatlabcorrection{../MASTER_mispa/TUT.IMG.ganip/matlab/text.tex}
+\inputpythoncorrection{../MASTER_mispa/TUT.IMG.ganip/python/text.tex}
+
+\input{../TB_IPR/TUT.IMG.pde/enonce/text.tex}\newpage
+\inputmatlabcorrection{../TB_IPR/TUT.IMG.pde/matlab/text.tex}
+\inputpythoncorrection{../TB_IPR/TUT.IMG.pde/python/text.tex}
+
+
+\input{../TB_image/TUT.IMG.multiscale/enonce/text.tex}\newpage
+\inputmatlabcorrection{../TB_image/TUT.IMG.multiscale/matlab/text.tex}
+\inputpythoncorrection{../TB_image/TUT.IMG.multiscale/python/text.tex}
+
+\input{../tp_en_attente/TUT.IMG.tomography/enonce/text.tex}\newpage
+\inputmatlabcorrection{../tp_en_attente/TUT.IMG.tomography/matlab/text.tex}
+\inputpythoncorrection{../tp_en_attente/TUT.IMG.tomography/python/text.tex}
+
+
+\newpage
+\part{Mathematical Morphology}
+
+\input{../TB_IPR/TUT.IMG.binary_morphological_reconstruction/enonce/text.tex}
+\newpage
+\inputmatlabcorrection{../TB_IPR/TUT.IMG.binary_morphological_reconstruction/matlab/text.tex}
+\inputpythoncorrection{../TB_IPR/TUT.IMG.binary_morphological_reconstruction/python/text.tex}
+
+\input{../MASTER_mispa/TUT.IMG.morphological_geodesic_filtering/enonce/text.tex}
+\newpage
+\inputmatlabcorrection{../MASTER_mispa/TUT.IMG.morphological_geodesic_filtering/matlab/text.tex}
+\inputpythoncorrection{../MASTER_mispa/TUT.IMG.morphological_geodesic_filtering/python/text.tex}
+
+\input{../MASTER_mispa/TUT.IMG.morphological_attribute_filtering/enonce/text.tex}
+\newpage
+\inputmatlabcorrection{../MASTER_mispa/TUT.IMG.morphological_attribute_filtering/matlab/text.tex}
+\inputpythoncorrection{../MASTER_mispa/TUT.IMG.morphological_attribute_filtering/python/text.tex}
+
+
+\input{../TB_IPR/TUT.IMG.binary_morphological_skeletonization/enonce/text.tex}
+\newpage
+\inputmatlabcorrection{../TB_IPR/TUT.IMG.binary_morphological_skeletonization/matlab/text.tex}
+\inputpythoncorrection{../TB_IPR/TUT.IMG.binary_morphological_skeletonization/python/text.tex}
+
+
+\input{../TB_IPR/TUT.IMG.granulometry/enonce/text.tex}\newpage
+\inputmatlabcorrection{../TB_IPR/TUT.IMG.granulometry/matlab/text.tex}
+\inputpythoncorrection{../TB_IPR/TUT.IMG.granulometry/python/text.tex}
+
+\part{Registration and Segmentation}
+\input{../TB_image/TUT.IMG.image_segmentation_histogram_clustering/enonce/text.tex}
+\newpage
+\inputmatlabcorrection{../TB_image/TUT.IMG.image_segmentation_histogram_clustering/matlab/text.tex}
+\inputpythoncorrection{../TB_image/TUT.IMG.image_segmentation_histogram_clustering/python/text.tex}
+
+\input{../TB_image/TUT.IMG.segmentation_region_growing/enonce/text.tex}
+\newpage
+\inputmatlabcorrection{../TB_image/TUT.IMG.segmentation_region_growing/matlab/text.tex}
+\inputpythoncorrection{../TB_image/TUT.IMG.segmentation_region_growing/python/text.tex}
+
+% transformée de Hough
+\input{../TB_IPR/TUT.IMG.hough/enonce/text.tex}
+\newpage
+\inputmatlabcorrection{../TB_IPR/TUT.IMG.hough/matlab/text.tex}
+\inputpythoncorrection{../TB_IPR/TUT.IMG.hough/python/text.tex}
+
+% active contours
+\input{../MASTER_mispa/TUT.IMG.active_contours/enonce/text.tex}
+\newpage
+\inputmatlabcorrection{../MASTER_mispa/TUT.IMG.active_contours/matlab/text.tex}
+\inputpythoncorrection{../MASTER_mispa/TUT.IMG.active_contours/python/text.tex}
+
+
+% watershed
+\input{../MASTER_mispa/TUT.IMG.image_segmentation_watershed/enonce/text.tex}
+\newpage
+\inputmatlabcorrection{../MASTER_mispa/TUT.IMG.image_segmentation_watershed/matlab/text.tex}
+\inputpythoncorrection{../MASTER_mispa/TUT.IMG.image_segmentation_watershed/python/text.tex}
+
+% segmentation de follicules
+\input{../TB_image/TUT.IMG.image_segmentation_follicule/enonce/text.tex}
+\newpage
+\inputmatlabcorrection{../TB_image/TUT.IMG.image_segmentation_follicule/matlab/text.tex}
+\inputpythoncorrection{../TB_image/TUT.IMG.image_segmentation_follicule/python/text.tex}
+
+
+\input{../TB_image/TUT.IMG.image_registration/enonce/text.tex}
+\newpage
+\inputmatlabcorrection{../TB_image/TUT.IMG.image_registration/matlab/text.tex}
+\inputpythoncorrection{../TB_image/TUT.IMG.image_registration/python/text.tex}
+
+
+
+\part{Stochastic Analysis}
+\input{../TB_IPR/TUT.IMG.point_processes_generation/enonce/text.tex}
+\newpage
+\inputmatlabcorrection{../TB_IPR/TUT.IMG.point_processes_generation/matlab/text.tex}
+\inputpythoncorrection{../TB_IPR/TUT.IMG.point_processes_generation/python/text.tex}
+
+
+\input{../TB_IPR/TUT.IMG.boolean_models/enonce/text.tex}\newpage
+\inputmatlabcorrection{../TB_IPR/TUT.IMG.boolean_models/matlab/text.tex}
+\inputpythoncorrection{../TB_IPR/TUT.IMG.boolean_models/python/text.tex}
+
+\input{../MASTER_mispa/TUT.IMG.gaussian_random_fields/enonce/text.tex}\newpage
+\inputmatlabcorrection{../MASTER_mispa/TUT.IMG.gaussian_random_fields/matlab/text.tex}
+\inputpythoncorrection{../MASTER_mispa/TUT.IMG.gaussian_random_fields/python/text.tex}
+
+\input{../TB_IPR/TUT.IMG.stereology/enonce/text.tex}
+\newpage
+\inputmatlabcorrection{../TB_IPR/TUT.IMG.stereology/matlab/text.tex}
+\inputpythoncorrection{../TB_IPR/TUT.IMG.stereology/python/text.tex}
+
+
+\input{../TB_IPR/TUT.IMG.convexhull/enonce/text.tex}
+\newpage
+\inputmatlabcorrection{../TB_IPR/TUT.IMG.convexhull/matlab/text.tex}
+\inputpythoncorrection{../TB_IPR/TUT.IMG.convexhull/python/text.tex}
+
+
+\input{../TB_IPR/TUT.IMG.point_processes_voronoi/enonce/text.tex}\newpage
+\inputmatlabcorrection{../TB_IPR/TUT.IMG.point_processes_voronoi/matlab/text.tex}
+\inputpythoncorrection{../TB_IPR/TUT.IMG.point_processes_voronoi/python/text.tex}
+
+
+\part{Image Characterization and Pattern Analysis}
+
+
+\input{../TB_IPR/TUT.IMG.integral_geometry/enonce/text.tex} \newpage
+\inputmatlabcorrection{../TB_IPR/TUT.IMG.integral_geometry/matlab/text.tex}
+\inputpythoncorrection{../TB_IPR/TUT.IMG.integral_geometry/python/text.tex}
+
+\input{../TB_IPR/TUT.IMG.pixel_topological_description/enonce/text.tex}\newpage
+\inputmatlabcorrection{../TB_IPR/TUT.IMG.pixel_topological_description/matlab/text.tex}
+\inputpythoncorrection{../TB_IPR/TUT.IMG.pixel_topological_description/python/text.tex}
+
+\input{../TB_image/TUT.IMG.image_characterization/enonce/text.tex}
+\newpage
+\inputmatlabcorrection{../TB_image/TUT.IMG.image_characterization/matlab/text.tex}
+\inputpythoncorrection{../TB_image/TUT.IMG.image_characterization/python/text.tex}
+
+\input{../TB_IPR/TUT.IMG.shape_diagrams/enonce/text.tex}
+\newpage
+\inputmatlabcorrection{../TB_IPR/TUT.IMG.shape_diagrams/matlab/text.tex}
+\inputpythoncorrection{../TB_IPR/TUT.IMG.shape_diagrams/python/text.tex}
+
+\input{../TB_IPR/TUT.IMG.freeman/enonce/text.tex}
+\newpage
+\inputmatlabcorrection{../TB_IPR/TUT.IMG.freeman/matlab/text.tex}
+\inputpythoncorrection{../TB_IPR/TUT.IMG.freeman/python/text.tex}
+
+
+% machine learning
+\input{../TB_image/TUT.IMG.machine_learning/enonce/text.tex}
+\newpage
+\inputmatlabcorrection{../TB_image/TUT.IMG.machine_learning/matlab/text.tex}
+\inputpythoncorrection{../TB_image/TUT.IMG.machine_learning/python/text.tex}
+ 
+
+\input{../TB_IPR/TUT.IMG.harris_detector/enonce/text.tex}
+\newpage
+\inputmatlabcorrection{../TB_IPR/TUT.IMG.harris_detector/matlab/text.tex}
+\inputpythoncorrection{../TB_IPR/TUT.IMG.harris_detector/python/text.tex}
+
+\input{../MASTER_mispa/TUT.IMG.lbp/enonce/text.tex}
+\newpage
+\inputmatlabcorrection{../MASTER_mispa/TUT.IMG.lbp/matlab/text.tex}
+\inputpythoncorrection{../MASTER_mispa/TUT.IMG.lbp/python/text.tex}
+
+
+% \part{Computational photography}
+% \input{../O5_seminaire_photoshop/TUT.PHOTO.panorama/enonce/text.tex}
+% \newpage
+% \inputmatlabcorrection{../O5_seminaire_photoshop/TUT.PHOTO.panorama/matlab/text.tex}
+% 
+% \input{../O5_seminaire_photoshop/TUT.PHOTO.dehazing/enonce/text.tex}
+% \newpage
+% \inputmatlabcorrection{../O5_seminaire_photoshop/TUT.PHOTO.dehazing/matlab/text.tex}
+% \inputpythoncorrection{../O5_seminaire_photoshop/TUT.PHOTO.dehazing/python/text.tex}
+% 
+% \input{../O5_seminaire_photoshop/TUT.PHOTO.inpainting/enonce/text.tex}
+% \inputmatlabcorrection{../O5_seminaire_photoshop/TUT.PHOTO.inpainting/matlab/text.tex}
+% 
+% \input{../O5_seminaire_photoshop/TUT.PHOTO.photomosaic/enonce/text.tex}
+% \inputmatlabcorrection{../O5_seminaire_photoshop/TUT.PHOTO.photomosaic/matlab/text.tex}
+% 
+% \input{../O5_seminaire_photoshop/TUT.PHOTO.seam_carving/enonce/text.tex}
+% \newpage
+% \inputmatlabcorrection{../O5_seminaire_photoshop/TUT.PHOTO.seam_carving/matlab/text.tex}
+% 
+% \input{../O5_seminaire_photoshop/TUT.PHOTO.exposure_fusion/enonce/text.tex}
+% \inputmatlabcorrection{../O5_seminaire_photoshop/TUT.PHOTO.exposure_fusion/matlab/text.tex}
+
+
+\part{Exams}
+\def\difficulty{0}
+\chapter{Practical exam 2016}
+\input{../TB_image/EXAMS/2016_pratique/text.tex}
+
+\chapter{Theoretical exam 2016}
+\input{../TB_image/EXAMS/2016_theorique/text.tex}
+
+\chapter{Theoretical exam 2017}
+\input{../TB_image/EXAMS/2017_theorique/text.tex}
+
+\printindex
+
+
+%\apppart{References}
+\bibliographystyle{abbrv}
+\bibliography{tutorials.bib}
+
+\newpage
+\input{4th_cov_python.tex}
+
+\end{document}
+

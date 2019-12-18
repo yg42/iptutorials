@@ -1,0 +1,258 @@
+\def\QRCODE{MASTER_mispa_TUT.IMG.ganip_pythonqrcode.png}
+\def\QRPAGE{http://www.iptutorials.science/tree/master/MASTER_mispa/TUT.IMG.ganip/python}
+\pcorrectionsection{Python correction}
+
+\begin{python}
+import numpy as np
+import skimage.morphology
+import skimage.io
+import skimage.measure
+import matplotlib.pyplot as plt
+import scipy.ndimage.filters
+\end{python}
+
+
+\subsection{GAN}
+In order to show the General Adaptive Neighborhood (GAN) of one image point, the following function is implemented.
+Note that the function is given within the Classical Linear Image Processing (CLIP) framework, i.e. with the usual addition, subtraction and scalar multiplication. But the function could be generalized to other models such as the Logarithmic Image Processing (LIP).
+
+\begin{python}
+def GAN(A, p, m):
+    """
+    GAN construction 
+    A: grayscale image
+    p: point
+    m: tolerance
+    """
+    RES = np.zeros(A.shape);
+    RES[p[0], p[1]] = 1;
+    s = A[p[0], p[1]];
+    thresh = np.logical_and(A>= s-m, A<=s+m);
+    SE = np.ones((3,3));
+    RES = skimage.morphology.reconstruction(RES, thresh, selem=SE);
+    return RES;
+\end{python}
+
+\noindent In this way, we can visualize the GAN of any point of the 'Lena' image: 
+\begin{python}
+I = skimage.io.imread('lena.png');
+p=[100,200];
+for m in 5,50,75:
+    RES = GAN(I, p, m);
+    plt.imshow(RES, cmap='gray');
+    plt.show()
+\end{python}
+
+
+
+\subsection{GAN Choquet filtering}
+In order to compute the GAN mean filtering, the basic idea is to make a loop on the image points, compute the GAN of the current point and then calculate the mean intensity of the points within the GAN. But this is time computing in the sense that two points with the same intensity can have exactly the same GAN (when one point is included in the GAN of the second point with same intensity). Therefore, a more effective way is to make a loop on the gray levels of the image.
+The GAN mean filtering is then implemented as:
+
+\begin{figure}[H]
+	\centering\caption{GAN of a specific point of the 'Lena' image using different homogeneity tolerances $m$ within the CLIP framework.}
+	\subfloat[Original image.]{\includegraphics[height=.3\linewidth]{lena.png}}\hspace{1cm}
+	\subfloat[Point location.]{\includegraphics[height=.3\linewidth]{lenaPoint.png}}
+	
+	\subfloat[GAN (m=5).]{\includegraphics[height=.3\linewidth]{GAN5.python.png}}\hfill
+	\subfloat[GAN (m=50).]{\includegraphics[height=.3\linewidth]{GAN50.python.png}}\hfill
+	\subfloat[GAN (m=75).]{\includegraphics[height=.3\linewidth]{GAN75.python.png}}
+	\vspace*{-8pt}
+\end{figure}
+
+\vspace*{-0.9\baselineskip}
+
+\begin{python}
+def GANmean(A, m):
+    """
+    GAN mean filter
+    Apply mean value of the adaptive neighborhood to result
+    A: original image
+    m: homogeneity tolerance
+    return: GAN mean filter
+    """
+    RES = np.zeros(A.shape).astype('float');   
+    SE = np.ones((3,3));
+    for s in np.arange(256):
+        thresh = np.logical_and(A>=s-m, A<=s+m);
+        seed = A==s;
+        thresh = skimage.morphology.reconstruction(seed, thresh, selem=SE);
+        L,n = skimage.measure.label(thresh, connectivity=2, return_num=True);
+        for l in np.arange(1, n+1):
+            currentLabel = L==l;
+            values = A[currentLabel];
+            meanValues = np.mean(values);
+            result = meanValues * np.logical_and(seed,currentLabel).astype('float');
+            RES = RES + result;
+    return RES;
+\end{python}
+
+\noindent\textls[-10]{Looking at this function, for the first loop on the gray levels $s$, we detect the GANs of the pixels with gray level $s$. So 'thresh' contains all these connected components (GANs), where some points with identical gray levels $s$ can have the same GAN. 'label' enables the different GANs to be labeled. For the second loop on these GANs, we extract for each GAN its gray levels which are stored in 'values'. Afterwards, we take the mean value 'meanVaue'  that is stored as the resulting gray level for pixels inside the GAN with the same gray level~$s$.}
+
+
+We can compare this GAN filtering with the classical one using a fixed operational window.
+
+\begin{python}
+B=scipy.ndimage.filters.uniform_filter(I, size=5);
+m=30;
+C = GANmean(I, m);
+\end{python}
+
+\begin{figure}[htbp]
+\centering\caption{Classical ($r=5$) vs. GAN ($m=30$) mean filtering of the 'Lena' image.}
+ \subfloat[Original image.]{\includegraphics[height=.3\linewidth]{lena.png}}\hfill
+ \subfloat[Classical filtering ($r=5$).]{\includegraphics[height=.3\linewidth]{lena_classicalMean.python.png}}\hfill
+  \subfloat[GAN filtering ($m=30$).]{\includegraphics[height=.3\linewidth]{lena_GANMean.python.png}}
+ \end{figure}
+
+\noindent You can see the blurring effect caused by the classical filtering, contrary to the adaptive GAN filtering where the transitions are much more preserved while smoothing the image. 
+
+\subsubsection{GAN morphological filtering}
+The following codes enable the GAN dilation and erosion to be computed. As previously mentioned, it is based on a loop on the gray levels and not on the image points. Note that the GANs ae computed on the criterion image (it is important for satisfying the good properties of opening and closing, such as idempotence).
+Please notice that this function as well as the following will have the same parameters:
+\begin{python}
+"""
+A: original image
+criterion: criterion image
+m: tolerance
+"""
+\end{python}
+
+\begin{python}
+def GANdilation(A, criterion, m):
+    RES = np.zeros(A.shape).astype('float');
+    SE = np.ones((3,3));
+    for s in np.arange(256):
+        thresh = np.logical_and(criterion>=s-m, criterion<=s+m);
+        seed = criterion==s;
+        thresh = skimage.morphology.reconstruction(seed, thresh, selem=SE);
+        L,n = skimage.measure.label(thresh, connectivity=2, return_num=True);
+        for l in np.arange(1, n+1):
+            currentLabel = L==l;
+            values = A[currentLabel];
+            values.sort();
+            result = currentLabel.astype('float') * values[-1];
+            RES = np.maximum(RES, result);
+    return RES;
+
+\end{python}
+
+\begin{python}
+def GANerosion(A, criterion, m):
+    RES = 255 * np.ones(A.shape).astype('float');
+    SE = np.ones((3,3));
+    for s in np.arange(256):
+        thresh = np.logical_and(criterion>=s-m, criterion<=s+m);
+        seed = criterion==s;
+        thresh = skimage.morphology.reconstruction(seed, thresh, selem=SE);
+        L,n = skimage.measure.label(thresh, connectivity=2, return_num=True);
+        for l in np.arange(1, n+1):
+            currentLabel = L==l;
+            values = A[currentLabel];
+            values.sort();
+            result = currentLabel.astype('float') * values[0] + 255*np.logical_not(currentLabel.astype('float'));
+            RES = np.minimum(RES, result);
+    return RES;
+
+\end{python}
+
+The following script shows the difference between classical and adaptive morphology.
+
+\begin{python}
+Cdil = GANdilation(I, m);
+Cero = GANerosion(I, m);
+se =skimage.morphology.disk(2);
+Bdil = skimage.morphology.dilation(I, selem=se);
+Bero = skimage.morphology.erosion(I, selem=se);
+\end{python}
+
+\begin{figure}[htbp]
+\centering\caption{Classical ($r=2$) vs. GAN ($m=30$) morphological filtering of the 'Lena' image.}%
+ \subfloat[Original image.]{\includegraphics[height=.3\linewidth]{lena.png}}\hfill
+ \subfloat[Classical erosion ($r=2$).]{\includegraphics[height=.3\linewidth]{lena_classicalErosion.python.png}}\hfill
+  \subfloat[Classical dilation ($r=2$).]{\includegraphics[height=.3\linewidth]{lena_classicalDilation.python.png}}
+  
+  \hspace{.3\linewidth}\hfill
+  \subfloat[GAN erosion ($m=30$).]{\includegraphics[height=.3\linewidth]{lena_GANErosion.python.png}}\hfill
+    \subfloat[GAN dilation ($m=30$).]{\includegraphics[height=.3\linewidth]{lena_GANDilation.python.png}}
+ \end{figure}
+
+\noindent As previously mentioned with the Choquet filtering, you can see the blurring effect caused by the classical filtering, contrary to the adaptive GAN filtering where the transitions are much more preserved while smoothing the image.
+
+Now, we can compute the GAN opening and closing as combined operators of dilation and erosion.
+
+\begin{python}
+def GANopening(A, criterion, m):
+    """   
+    """
+    temp = GANerosion(A, criterion, m);
+    RES  = GANdilation(temp, criterion, m);
+    return RES;
+\end{python}
+
+\begin{python}
+def GANclosing(A, criterion, m):
+    """    
+    """
+    temp = GANdilation(A, criterion, m);
+    RES  = GANerosion(temp, criterion, m);
+    return RES;
+\end{python}
+
+It is very important to use the same criterion $h$ when combining these two operators of GAN dilation and erosion. It means that we compute the GANs at the beginning and therefater we use these same GANs for computing dilation and erosion. It enables the idempotence, extensivity/anti-extensivity of the GAN opening and GAN closing to be satisfied.
+
+\begin{python}
+Copen=GANopening(I, I, m);
+Cclose=GANclosing(I, I, m);
+
+# classical open close
+Bopen = skimage.morphology.opening(I, selem=se);
+Bclose= skimage.morphology.closing(I, selem=se);
+\end{python}
+
+\noindent The result of such morphological filters is presented in Fig.\ref{fig:ganip:python:openingclosing}.
+
+\begin{figure}[htbp]
+\centering\caption{GAN ($m=30$) opening and closing of the 'Lena' image.}%
+ \subfloat[Original image.]{\includegraphics[height=.3\linewidth]{lena.png}}\hfill
+  \subfloat[GAN opening ($m=30$).]{\includegraphics[height=.3\linewidth]{lena_GANOpening.python.png}}\hfill
+    \subfloat[GAN closing ($m=30$).]{\includegraphics[height=.3\linewidth]{lena_GANClosing.python.png}}%
+ \label{fig:ganip:python:openingclosing}
+\end{figure}
+
+We can check some properties of these morphological filters such as extensivity/anti-extensivity and idempotence:
+
+\begin{python}
+Copen2 = GANopening(Copen, I, m);
+Cclose2= GANclosing(Cclose, I, m);
+if np.max(np.abs(Copen2-Copen))==0:
+    print("OK: idempotence in opening");
+else:
+    print("error in opening");
+    
+if np.max(np.abs(Cclose2-Cclose))==0:
+    print("OK: idempotence in closing");
+else:
+    print("error in opening");
+\end{python}
+
+\begin{python}
+#%% check extensivity and anti-extensivity
+if np.all(Copen<=I):
+    print("OK: extensivity");
+else:
+    print("error in extensivity");
+
+if np.all(Cclose>=I):
+    print("OK: anti-extensivity");
+else:
+    print("error in anti-extensivity");
+\end{python}
+
+Result verifies these properties.
+\begin{sh}
+OK: idempotence in opening
+OK: idempotence in closing
+OK: extensivity
+OK: anti-extensivity
+\end{sh}

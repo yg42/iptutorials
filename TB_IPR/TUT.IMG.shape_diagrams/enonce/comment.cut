@@ -1,0 +1,3 @@
+\begin{premark}
+The function \pinline{scipy.ndimage.morphology.distance_transform_cdt} computes the distance map of a binary image (chamfer distance transform).
+\end{premark}

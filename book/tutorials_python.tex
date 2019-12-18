@@ -1,0 +1,15 @@
+\documentclass[a4paper,11pt,table]{book}
+
+\input{header.tex}
+
+\togglefalse{matlabbook}
+\toggletrue{pythonbook}
+% ADDS corrections (or not) in python or matlab
+\togglefalse{includematlabcorrection}
+\toggletrue{includepythoncorrection}
+
+
+\includecomment{pcomment}
+\excludecomment{mcomment}
+
+\input{tutorials.tex}

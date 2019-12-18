@@ -1,0 +1,106 @@
+\def\difficulty{1}
+\sujet{Segmentation by region growing}
+\begin{note}This tutorial proposes to program the region growing algorithm.\end{note}
+\label{tutorial:regiongrowing}
+\index{Segmentation!Region Growing}
+
+\vspace*{-10pt}
+\section{Introduction}
+The region growing segmentation method starts from a seed. The initial region first contains this seed and then grows according to 
+\begin{itemize}
+ \item a growth mechanism (in this tutorial, the $N_8$ will be considered)
+ \item an homogeneity rule (predicate function)
+\end{itemize}
+
+The algorithm is simple and barely only needs a predicate function:
+
+\begin{algorithm}[H]
+      \KwData{$I$: image}
+      \KwData{seed: starting point}
+      \KwData{queue: queue of points to considere}
+      \KwResult{visited: boolean matrix, same size as $I$}
+    \Begin{
+      queue.enqueue( seed )\;
+      
+      \While{queue is not empty}{
+	$p$ = queue.dequeue()\;
+	
+	\ForEach{neighbor of $p$}{
+	  \If{not visited($p$) \textbf{ and} neighbor verifies predicate}{
+	    queue.enqueue( neighbor )\;
+	    visited( neighbor ) = true\;
+	  }
+	}
+      }
+      
+      \Return visited
+    }\caption{}
+  \end{algorithm}%
+
+  \begin{mcomment}
+    
+The difficulty of the code lays in the presence of a queue structure. For the purpose of simplicity, it is advised to use the java class \lstinline!java.util.LinkedList!, which is allowed within matlab:
+\begin{matlab}
+% create the queue structure by a Java object
+queue = java.util.LinkedList;
+
+% test it
+p = [1;2];
+queue.add(p);
+
+r = queue.remove()
+
+% test if queue is empty
+if queue.isEmpty()
+    % queue is empty
+end
+\end{matlab}
+
+For picking up the coordinates of a pixel with the mouse in \matlabregistered{}, you can use the \minline{ginput} function:
+\begin{matlab}
+I = double(imread('cameraman.tif'));
+[Sx, Sy] = size(I);
+imshow(I,[]);
+
+% seed
+[x, y]=ginput(1);
+seed = round([y;x]); % beware of inversion of coordinates
+\end{matlab}
+\end{mcomment}
+
+\begin{pcomment}
+To get the coordinate of the mouse click, use the matplotlib connect utilities. Define a function \pinline{def onpick}.
+\begin{python}
+# start by displaying a figure, 
+# ask for mouse input (click)
+fig = plt.figure ();
+ax = fig.add_subplot (211);
+ax.set_title ('Click on a point')
+# load image
+img = misc.ascent ();
+ax.imshow (img, picker = True, cmap = plt.gray ());
+# connect click on image to onpick function
+fig.canvas.mpl_connect ('button_press_event', onpick);
+plt.show ();
+def onpick(event):
+    """ connector """
+\end{python}
+\end{pcomment}
+
+
+\section{Region growing implementation}
+\begin{qbox}
+The seed pixel is denoted $s$.
+\begin{itemize}
+ \item Code the predicate function: for an image $f$ and a pixel $p$, $p$ is in the same segment as $s$ implies $|f(s)-f(p)|\leq T$.
+ \item Code a function that performs region growing, from a starting pixel (seed).
+ \item Try others predicate functions like:
+ \begin{itemize}
+  \item pixel $p$ intensity is close to the region mean value, i.e.: $$ |I(p)-m_s|\leq T$$
+  \item Threshold value $T_i$ varies depending on the region $R_i$ and the intensity of the pixel $I(p)$.It can be chosen this way:
+$$T_i=(1-\frac{\sigma_i}{m_i})\cdot T$$
+ \end{itemize}
+
+\end{itemize}
+
+\end{qbox}

@@ -1,0 +1,31 @@
+def amf(I, Smax):
+    """
+    Adaptive median filter
+    I: grayscale image
+    Smax: maximal size of neighborhood. Limits the effect of median filter
+    """
+    f = np.copy(I);
+    nx, ny = I.shape;
+
+    sizes = np.arange(1, Smax, 2);
+    zmin = np.zeros((nx, ny, len(sizes)));
+    zmax = np.zeros((nx, ny, len(sizes)));
+    zmed = np.zeros((nx, ny, len(sizes)));
+
+    for k,s in enumerate(sizes):
+        zmin[:,:,k] = ndimage.minimum_filter(I, s);
+        zmax[:,:,k] = ndimage.maximum_filter(I, s);
+        zmed[:,:,k] =  ndimage.median_filter(I, s);
+
+    isMedImpulse = np.logical_or(zmin==zmed,zmax==zmed);
+
+    for i in range(nx):
+        for j in range(ny):
+            k = 0;
+            while k<len(sizes)-1 and isMedImpulse[i,j,k] :
+                k+=1;
+
+            if I[i,j] == zmin[i,j,k] or I[i,j]==zmax[i,j,k] or k==len(sizes):
+                f[i,j] = zmed[i,j,k];
+    return f;
+

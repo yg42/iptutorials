@@ -1,0 +1,124 @@
+\mcorrectionsection{Python correction}
+
+\begin{python}
+from scipy import ndimage
+import numpy as np
+
+import imageio
+import matplotlib.pyplot as plt
+\end{python}
+
+\subsection{Hit or miss transform}
+\begin{python}
+def hitormiss(X, T):
+    """
+    hit or miss transform
+    X: binary image
+    T: structuring element (values -1, 0 and 1)
+    
+    return: result of hit or miss transform (binary image)
+    """
+    T1 = (T==1);
+    T2 = (T==-1);
+    E1 = ndimage.morphology.binary_erosion(X, T1);
+    E2 = ndimage.morphology.binary_erosion(np.logical_not(X), T2);
+    B = np.minimum(E1, E2);
+    return B;
+
+\end{python}
+
+\subsection{Thinning and thickening}
+The code is split into 2 elementary operations of thinning and thickening, so that the thinning consists in iterating this operation. 
+\begin{python}
+def elementary_thinning(X, T):
+    """
+    thinning function
+    X: binary image
+    T: structuring element (values -1, 0 and 1)
+    
+    return: result of thinning
+    """
+    B = np.minimum(X, np.logical_not(hitormiss(X, T)));
+    return B;
+\end{python}
+\begin{python}
+def elementary_thickening(X, T):
+    """
+    thickening function
+    X: binary image
+    T: structuring element (values -1, 0 and 1)
+    
+    return: result of thickening
+    """
+    B = not(elementary_thinning(not(X), T));
+    return B;
+\end{python}
+
+\begin{python}
+def thinning(X, TT):
+    """
+    morphological thinning
+    TT is a configuration of 8 pairs of structuring elements
+    """
+    for T in TT:
+        X = elementary_thinning(X, T);
+
+    return X;
+\end{python}
+
+\subsection{Skeletons}
+The topological skeleton is the iteration of the operation of thinning, for structuring elements defined like:
+\begin{python}
+TT = [];
+TT.append(np.array([[-1,-1,-1],[0,1,0],[1,1,1]]));
+TT.append(np.array([[0,-1,-1],[1,1,-1],[0,1,0]]));
+TT.append(np.array([[1,0,-1],[1,1,-1],[1,0,-1]]));
+TT.append(np.array([[0,1,0],[1,1,-1],[0,-1,-1]]));
+TT.append(np.array([[1,1,1],[0,1,0],[-1,-1,-1]]));
+TT.append(np.array([[0,1,0],[-1,1,1],[-1,-1,0]]));
+TT.append(np.array([[-1,0,1],[-1,1,1],[-1,0,1]]));
+TT.append(np.array([[-1,-1,0],[-1,1,1],[0,1,0]]));
+\end{python}
+
+\begin{python}
+def topological_skeleton(X, TT):
+    """
+    Topological skeleton: preserves topology
+    X: binary image to be transformed
+    TT: set of pairs of structuring elements
+    return skeleton
+    """
+    B = np.logical_not(np.copy(X));
+    while not(np.all(X == B)):
+        B = X;
+        X = thinning(X, TT);
+    return B;
+\end{python}
+
+The morphological skeleton does not preserve the connexity of the branches.
+\begin{python}
+def morphological_skeleton(X):
+    """ 
+    morphological skeleton 
+    X: binary image
+    using disk structuring elements
+    
+    in order to perform the reconstruction from the skeleton, one has to store 
+    the value of S for each size of structuring element
+    
+    return: S, morphological skeleton, grayscale image
+    """
+    strel_size = 0;
+    pred = True;
+    S = np.zeros(X.shape);
+    while pred:
+        strel_size+=1;
+        strel = disk(strel_size);
+        E = ndimage.morphology.binary_erosion(X, strel);
+        if np.all(E==0):
+            pred = False;
+        O = ndimage.morphology.binary_opening(E, disk(1));
+        S = np.maximum(S, np.minimum(E, np.logical_not(O)));
+        
+    return S;
+\end{python}

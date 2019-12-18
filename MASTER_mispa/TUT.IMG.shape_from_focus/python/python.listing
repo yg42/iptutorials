@@ -1,0 +1,12 @@
+def varianceTenengrad(I, N):
+    """
+    SFF measure, variance of Tenengrad
+    I: image
+    N: neiborhood size
+    returns: SFF measure for each pixel
+    """
+    Sx = ndimage.sobel(I, axis=0);
+    Sy = ndimage.sobel(I, axis=1);
+    S = np.hypot(Sx, Sy);
+    vt = variance(S, N);
+    return vt;

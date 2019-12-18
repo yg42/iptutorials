@@ -1,0 +1,19 @@
+def rla(g, psf, n_iter):
+    """
+    Richardson Lucy algorithm
+    g: noisy image
+    psf: point spread function
+    n_iter: number of iterations
+    """
+    H = psf2otf(psf, g.shape);
+    # init iterations
+    fr = g.copy();
+
+    bar = progressbar.ProgressBar()
+    for iter in bar(range(n_iter)):
+        estimation = np.fft.ifft2(H * np.fft.fft2(fr));
+        M = np.real(np.fft.ifft2(np.conjugate(H) * np.fft.fft2(g / estimation)));
+        fr= fr * M;
+        fr[fr<0] = 0;
+
+    return fr;

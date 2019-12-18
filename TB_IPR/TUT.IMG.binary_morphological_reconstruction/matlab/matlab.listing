@@ -1,0 +1,5 @@
+A=imread('cells.bmp');
+C=A<98;
+B=closeHoles(C);
+B=killBorders(B);
+B=killSmall(B,5);

@@ -1,0 +1,18 @@
+h = waitbar(0, 'snake converging...');
+% iterations
+for index = 1:iterations,
+    % interpolate values of forces
+    fex = interp2(Fx, x, y, 'linear');
+    fey = interp2(Fy, x, y);
+
+    x = AA\(x+gamma*fex);
+    y = AA\(y+gamma*fey);
+    % display
+    if mod(index,10)==0
+        plot([x;x(1)], [y;y(1)], 'b');
+    end
+    waitbar(index/iterations);
+end
+plot([x;x(1)], [y;y(1)], 'r', 'linewidth', 3);
+close(h)
+

@@ -1,0 +1,13 @@
+function n=poisson(lambda)
+% simulation d'une loi de Poisson
+
+p=alea(9999);
+n=0.0;
+
+pp1=exp(-lambda); % loi de Poisson pour n=0
+pp=pp1;
+while (p>10000*pp)
+    n=n+1; 
+    pp1=pp1*lambda/n; % loi de Poisson pour n
+    pp=pp+pp1; % proba cumulée
+end

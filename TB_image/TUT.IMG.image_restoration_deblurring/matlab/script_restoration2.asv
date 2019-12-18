@@ -1,0 +1,83 @@
+%% CORRECTION TP RESTAURATION 2 - OPTION I&S
+
+%% 0 - Nettoyage
+
+clear all;close all;clc
+
+%% 1 - Fonction de dégradation
+
+f=checkerboard(8);
+imwrite(f,'chessboard.jpg'
+psf=fspecial('motion',7,45);
+gb=imfilter(f,psf,'circular');
+noise=imnoise(zeros(size(f)),'gaussian',0,0.001);
+g=gb+noise;
+
+figure;
+subplot(2,2,1);viewImage(f);title('image originale');
+subplot(2,2,2);viewImage(gb);title('flou de mouvement');
+subplot(2,2,3);viewImage(recadre(noise));title('bruit gaussien');
+subplot(2,2,4);viewImage(g);title('image dégradée');
+
+%% 2 - Filtrage direct inverse et filtrage de Wiener
+
+fr1=deconvwnr(g,psf);
+
+SpecPuissNoise=abs(fft2(noise)).^2;
+PuissMoyNoise=sum(SpecPuissNoise(:))/numel(noise);
+SpecPuissImageOrig=abs(fft2(f)).^2;
+PuissMoyImageOrig=sum(SpecPuissImageOrig(:))/numel(f);
+ratio=PuissMoyNoise/PuissMoyImageOrig;
+
+fr2=deconvwnr(g,psf,ratio);
+
+figure
+subplot(2,2,1);viewImage(f);title('image originale');
+subplot(2,2,2);viewImage(gb);title('image dégradée');
+subplot(2,2,3);viewImage(fr1);title('filtrage inverse');
+subplot(2,2,4);viewImage(fr2);title('filtrage wiener');
+
+%% 3 - Filtrage de Lucy-Richardson et déconvolution aveugle
+
+f=checkerboard(8);
+psf=fspecial('gaussian',7,10);
+sd=0.01;
+g=imnoise(imfilter(f,psf),'gaussian',0,sd^2);
+dampar=10*sd;
+lim=ceil(size(psf,1)/2);
+weight=zeros(size(g));
+weight(lim+1:end-lim,lim+1:end-lim)=1;
+
+fr3_5=deconvlucy(g,psf,5,dampar,weight);
+fr3_10=deconvlucy(g,psf,10,dampar,weight);
+fr3_20=deconvlucy(g,psf,20,dampar,weight);
+fr3_100=deconvlucy(g,psf,100,dampar,weight);
+figure
+subplot(2,3,1);viewImage(f);title('image originale');
+subplot(2,3,2);viewImage(gb);title('image dégradée');
+subplot(2,3,3);viewImage(fr3_5);title('Lucy-Richardson : 5');
+subplot(2,3,4);viewImage(fr3_10);title('Lucy-Richardson : 10');
+subplot(2,3,5);viewImage(fr3_20);title('Lucy-Richardson : 20');
+subplot(2,3,6);viewImage(fr3_100);title('Lucy-Richardson : 100');
+
+taille=7;
+initpsf=ones(taille,taille);
+lim=ceil(taille/2);
+weight=zeros(size(g));
+weight(lim+1:end-lim,lim+1:end-lim)=1;
+[fr4_5,psfe]=deconvblind(g,initpsf,5,dampar,weight);
+[fr4_10,psfe]=deconvblind(g,initpsf,10,dampar,weight);
+[fr4_20,psfe]=deconvblind(g,initpsf,20,dampar,weight);
+[fr4_100,psfe]=deconvblind(g,initpsf,100,dampar,weight);
+figure
+subplot(2,3,1);viewImage(f);title('image originale');
+subplot(2,3,2);viewImage(gb);title('image dégradée');
+subplot(2,3,3);viewImage(fr4_5);title('déconvolution aveugle : 5');
+subplot(2,3,4);viewImage(fr4_10);title('déconvolution aveugle : 10');
+subplot(2,3,5);viewImage(fr4_20);title('déconvolution aveugle : 20');
+subplot(2,3,6);viewImage(fr4_100);title('déconvolution aveugle : 100');
+
+%% 4 - Fonctions annexes
+
+readfile('recadre.m');
+readfile('viewImage.m');

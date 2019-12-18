@@ -1,0 +1,12 @@
+% fe: fréquence d'échantillonnage
+% f : fréquence du signal observé
+function C=cercle(fe,f)
+
+t=0:1/fe:1/2*pi;
+
+C=zeros(size(t,2));
+for i=1:size(t,2);
+    for j=1:size(t,2);
+        C(i,j)=sin(2*pi*f*sqrt(t(i)^2+t(j)^2));
+    end
+end

@@ -1,0 +1,15 @@
+def KBmultiscale(I, levels, r=1):
+    """
+    Kramer and Bruckner multiscale decomposition
+
+    I: original image, float32
+    pyrD: pyramid of Dilations
+    pyrE: pyramid of Erosions
+
+    returns: MKB: Kramer/Bruckner filters
+    """
+    MKB = [];
+    MKB.append(I);
+    for i in range(levels):
+        MKB.append(kb(MKB[i-1], r));
+    return MKB

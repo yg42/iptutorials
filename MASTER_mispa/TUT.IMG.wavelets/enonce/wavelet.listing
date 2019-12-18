@@ -1,0 +1,2 @@
+[C,L] = wavedec(signal, scale, 'wavelet_name')
+[C,L] = wavedec(signal, scale, ld, hd)

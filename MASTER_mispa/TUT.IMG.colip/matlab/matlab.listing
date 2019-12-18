@@ -1,0 +1,13 @@
+function ARGYBchap = ARGYBtildetoARGYBchap(ARGYBtilde)
+% function for conversion, takes absolute value
+Max = getColipM0();
+
+ARGYBchap(:,:,1) = invphi(ARGYBtilde(:,:,1), Max);
+
+for c=2:3
+    tmp =  abs(ARGYBtilde(:,:,c));
+
+    ARGYBchap(:,:,c) = sign(ARGYBtilde(:,:,c)) .* invphi(tmp, Max);
+end
+
+end

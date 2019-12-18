@@ -1,0 +1,24 @@
+function [x,y]=semi_NS(point_nb,xmin,xmax,ymin,ymax,npere,rfils,nfils)
+% simule un processu de Neyman-Scott
+
+x=[];
+y=[];
+%point_nb2=point_nb;
+for i=1:npere
+    xp=xmin+alea(xmax-xmin); % points père
+    yp=ymin+alea(ymax-ymin);
+    nf=poisson(nfils);
+    % nf=nfils; % si on souhiate fixer le nbre de fils
+    for j=1:nf
+        dx=alea(2*rfils)-rfils;
+        dy=alea(2*rfils)-rfils;
+        while (dx^2+dy^2)>rfils % pour s'assurer que le point sera dans un disque
+            dx=alea(2*rfils)-rfils;
+            dy=alea(2*rfils)-rfils;
+        end
+        xxx=xp+dx;
+        yyy=yp+dy;
+        x=[x,xxx];
+        y=[y,yyy];
+    end
+end

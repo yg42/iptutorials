@@ -1,0 +1,39 @@
+figure
+subplot(121)
+% generates Poisson process
+nb_points=50;
+xmin=0;
+xmax=100;
+ymin=0;
+ymax=100;
+[x,y]=semi_alea(nb_points,xmin, xmax, ymin, ymax);
+plot(x,y,'*');title('Poisson process');
+axis square
+axis([-20,120,-20,120]);
+
+% Generates radii with mean mu and stddev sigma
+sigma=1;
+mu = 5;
+r = sigma*randn(length(x), 1) + mu;
+
+% generates plot with disks
+subplot(122)
+plot(x,y,'*');
+hold on
+theta=0:0.01:2*pi;
+xx = zeros(length(theta), 1);
+yy = xx;
+
+% the second mark (color) can be generated as this
+nb_colors = 10;
+m2 = randi(nb_colors, nb_points, 1);
+cmap =  hsv(nb_colors);
+
+for i=1:length(x)
+    xx=x(i)+r(i)*cos(theta);
+    yy=y(i)+r(i)*sin(theta);
+    plot(xx,yy,'LineWidth', 2, 'Color', cmap(m2(i),:));
+end
+
+axis square
+axis([-20,120,-20,120]);

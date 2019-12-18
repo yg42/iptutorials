@@ -1,0 +1,29 @@
+\begin{thebibliography}{1}
+
+\bibitem{Gavet2015}
+Yann Gavet, Johan Debayle, and Jean-Charles Pinoli.
+\newblock The color logarithmic image processing (colip) antagonist space.
+\newblock In {\em Color Image and Video Enhancement}, pages 155--182. Springer
+  International Publishing, 2015.
+
+\bibitem{Gavet2015a}
+Yann Gavet, Johan Debayle, and Jean-Charles Pinoli.
+\newblock The color logarithmic image processing (colip) antagonist space and
+  chromaticity diagram.
+\newblock In {\em International Workshop on Computational Color Imaging}, pages
+  131--138. Springer International Publishing, 2015.
+
+\bibitem{Gouinaud2013}
+H{\'e}l{\`e}ne Gouinaud.
+\newblock {\em Traitement logarithmique d’images couleur}.
+\newblock PhD thesis, Ecole Nationale Sup{\'e}rieure des Mines de
+  Saint-Etienne, 2013.
+
+\bibitem{Gouinaud2011}
+H{\'e}l{\`e}ne Gouinaud, Yann Gavet, Johan Debayle, and Jean-Charles Pinoli.
+\newblock Color correction in the framework of color logarithmic image
+  processing.
+\newblock In {\em Image and Signal Processing and Analysis (ISPA), 2011 7th
+  International Symposium on}, pages 129--133. IEEE, 2011.
+
+\end{thebibliography}

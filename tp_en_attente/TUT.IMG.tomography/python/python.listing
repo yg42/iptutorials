@@ -1,0 +1,11 @@
+# Performs unfiltered backprojection
+ubp = backprojection(P, theta, False);
+plt.figure();
+plt.imshow(ubp, cmap='gray');
+plt.show()
+
+# Performs filtered backprojection
+fbp = backprojection(P, theta, True);
+plt.figure();
+plt.imshow(fbp, cmap='gray');
+plt.show()

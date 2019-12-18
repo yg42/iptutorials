@@ -1,0 +1,164 @@
+\def\QRCODE{TB_IPR_TUT.IMG.point_processes_voronoi_pythonqrcode.png}
+\def\QRPAGE{http://www.iptutorials.science/tree/master/TB_IPR/TUT.IMG.point_processes_voronoi/python}
+\pcorrectionsection{Python correction}
+
+
+\begin{python}
+from scipy.spatial import Voronoi, voronoi_plot_2d, Delaunay, distance
+import numpy as np
+
+import matplotlib.pyplot as plt
+from shapely import geometry # for polygons, area and perimeter
+from  scipy.sparse import csgraph # minimum spanning tree
+\end{python}
+
+\subsection{Random tessellations}
+Random tessellations are generated following normal standard and uniform distribution. A regular pattern is also employed. They are illustrated in Fig.\ref{fig:point_processes_voronoi:python:patterns}.
+
+\begin{python}
+def dist_poisson(N=100):
+    points = np.random.rand(N, 2)
+    return points
+
+def dist_gaussienne(N=100):
+    points = np.random.randn(N, 2)
+    return points
+
+def dist_regular(N=100):
+    c = np.floor(np.sqrt(N));
+    x2, y2 = np.meshgrid(range(int(c)), range(int(c)));
+    points = np.vstack([x2.ravel(), y2.ravel()])
+    return points.transpose();
+\end{python}
+
+\begin{figure}[H]
+ \centering\caption{Different point patterns.}%
+ \subfloat[Uniform distribution.]{\includegraphics[width=.3\linewidth]{uniform.pdf}}\hfill
+ \subfloat[Gaussian distribution.]{\includegraphics[width=.3\linewidth]{gaussian.pdf}}\hfill
+ \subfloat[Regular distribution.]{\includegraphics[width=.3\linewidth]{regular.pdf}}%
+ \label{fig:point_processes_voronoi:python:patterns}%
+\end{figure}
+
+\subsection{Voronoi diagram and analysis}
+
+The Voronoi diagram is simply generated via the following command, with \pinline{points} being generated with the previous functions:
+\begin{python}
+vor = Voronoi(points);
+\end{python}
+
+The two characterization functions RFH and AD are defined on the Voronoi cells.
+
+\begin{python}
+def RFH(vor):
+    """
+    Evaluates Round Factor Homogeneity from voronoi diagram
+    """
+    rfs=[];
+    for cell in vor.regions:
+        if cell and -1 not in cell:
+            poly = geometry.Polygon([(vor.vertices[p-1]) for p in cell]);
+            rfs.append(4*np.pi*poly.area/(poly.length**2));
+    res = 1 - np.std(rfs) / np.mean(rfs);            
+    return res;
+\end{python}
+
+\begin{python}
+def AD(vor):
+    """
+    Evaluates Area Disorder from voronoi diagram
+    """
+    areas=[];
+    for cell in vor.regions:
+        if cell and -1 not in cell:
+            poly = geometry.Polygon([(vor.vertices[p-1]) for p in cell]);
+            areas.append(poly.area);
+    res = 1 - 1/(1+np.std(areas) / np.mean(areas));            
+    return res;
+\end{python}
+
+\subsection{Delaunay triangulation and minimum spanning tree}
+The Delaunay triangulation is computed with 
+\begin{python}
+tri = delaunay(points);
+\end{python}
+Then, the characterization of the triangulation is done by measuring the distances of the edges.
+\begin{python}
+def characterization(tri):
+    """
+    Characterization of the Delaunay triangulation (mean and std dev of edges)
+    """
+    M = triToMat(tri);
+    m = np.mean(M[M>0]);
+    s = np.std(M[M>0]);
+    return m, s;
+def triToMat(tri, value=0.):
+    """
+    Transforms the triangulation into a matrix representation, 
+    for simplicity
+    """
+    M = np.full((tri.npoints, tri.npoints), value);
+    d = distance.pdist(tri.points);
+    distances = distance.squareform(d);
+    for s in tri.simplices:
+        M[s[0], s[1]] = distances[s[0], s[1]];
+        M[s[1], s[2]] = distances[s[1], s[2]];
+        M[s[2], s[0]] = distances[s[2], s[0]];
+    return M;
+\end{python}
+
+\subsection{Characterization of different realizations}
+$n$ realizations of the two distributions (uniform and Gaussian) are simulated. Then, the Voronoi diagram and the Delaunay  triangulation are computed and characterized. The results are presented in Fig.\ref{fig:point_processes_voronoi:python:characterization}. 
+% 
+% \begin{python}
+% def analyse_distributions(n=100):
+%     means=[];
+%     sigmas=[];
+%     mean=[];
+%     sigma=[];
+%     rfh=[];
+%     ad=[];
+%     all_points=[]; 
+%     colors = plt.cm.get_cmap('Set1', 8);
+%     N = 500;
+%     for i in range(n):
+%         all_points.append(dist_uniform(N));
+%         all_points.append(dist_gaussian(N));
+%         for idx, points in enumerate(all_points):
+%             vor = Voronoi(points);
+%             tri = Delaunay(points);
+%             ms, ss = mst(tri);
+%             means.append(ms);
+%             sigmas.append(ss);
+%             
+%             m, s = characterization(tri);
+%             mean.append(m);
+%             sigma.append(s);
+%             
+%             rfh.append(RFH(vor));
+%             ad.append(AD(vor));
+%             plt.figure(0);
+%             plt.plot(means, sigmas, 'o', c=colors(idx));
+%             means.clear()
+%             sigmas.clear()
+%             
+%             plt.figure(1);
+%             plt.plot(mean, sigma, 'o', c=colors(idx));
+%             mean.clear()
+%             sigma.clear()
+%      
+%             plt.figure(2);
+%             plt.plot(ad, rfh, 'o', c=colors(idx));
+%             rfh.clear()
+%             ad.clear()
+%         
+%         all_points.clear()
+% \end{python}
+
+\begin{figure}[H]
+ \centering\caption{Characterization of several point processes. Each color represent a different process, and each point represent one realization. These characterizations can enhance a difference between the spatial distributions of the points.}%
+ \subfloat[Characterization by the mean and standard deviation of the lengths of the Delaunay triangulation.]{\includegraphics[width=.45\linewidth]{charac_diagrams.pdf}}\hfill
+ \subfloat[Characterization of the minimum spanning tree of the Delaunay triangulation by the mean and standard deviation of the lengths of the MST.]{\includegraphics[width=.45\linewidth]{charac_mst.pdf}}
+ 
+ \subfloat[AD and RFH on the Voronoi diagram.]{\includegraphics[width=.45\linewidth]{ad_rfh.pdf}}%
+ \label{fig:point_processes_voronoi:python:characterization}%
+\end{figure}

@@ -1,0 +1,37 @@
+% commandes communes entre book et tutorials
+
+\makeatletter
+% commande utilisée pour faire une référence croisée entre tutoriels
+\newcommand{\iflabelexists}[3]{\@ifundefined{r@#1}{#3}{#2}}
+\makeatother
+\usepackage{placeins}
+
+\usepackage{pgfplots}
+  \pgfplotsset{compat=newest}
+  %% the following commands are sometimes needed
+  \usetikzlibrary{plotmarks}
+  \usepackage{grffile}
+  \usepackage{amsmath}
+  
+ % package pour l'insertion d'un espace intelligent
+\usepackage{xspace}
+% tilde in math mode
+\renewcommand{\t}[1]{\ensuremath{\mathop{\tilde{#1}}\nolimits}}
+\newcommand{\h}[1]{\ensuremath{\mathop{\hat{#1}}\nolimits}}
+\newcommand{\lab}{$L^*a^*b^*$\xspace}
+\newcommand{\argyb}{$(a,rg,yb)$\xspace}
+\newcommand{\targyb}{$(\tilde{a},\tilde{rg},\tilde{yb})$\xspace} % tilde
+\newcommand{\cargyb}{$(\h{a},\h{rg},\h{yb})$\xspace} % espace chapeau
+% TIKZ and diagrams
+\usepackage{pgf,tikz}
+\usetikzlibrary{arrows,shapes,matrix,positioning}
+% styles de block pour diagrammes
+\tikzset{decision/.style={diamond, draw, fill=blue!20, text width=1.5cm, text badly centered, inner sep=0pt, minimum width=3.5cm}}
+\tikzset{block/.style={rectangle, draw, fill=blue!20, text width=3cm, text badly centered, rounded corners,
+minimum width=3cm}}
+\tikzset{dligne/.style={draw, latex-latex}}
+\tikzset{ligne/.style={draw, -latex}}
+
+\tikzset{title/.style={font=\fontsize{6}{6}\color{black!50}\ttfamily}}
+\tikzset{typetag/.style={rectangle, draw=black!50, font=\scriptsize\ttfamily, anchor=west}}
+

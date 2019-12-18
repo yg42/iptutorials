@@ -1,0 +1,8 @@
+\BOOKMARK [1][-]{section.1}{Python correction}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{Damage modeling}{section.1}% 2
+\BOOKMARK [3][-]{subsubsection.1.1.1}{Optical Transfer Function: OTF}{subsection.1.1}% 3
+\BOOKMARK [2][-]{subsection.1.2}{Simple case: no noise}{section.1}% 4
+\BOOKMARK [2][-]{subsection.1.3}{Iterative filters}{section.1}% 5
+\BOOKMARK [3][-]{subsubsection.1.3.1}{Van-Cittert iterative filter}{subsection.1.3}% 6
+\BOOKMARK [3][-]{subsubsection.1.3.2}{Richardson-Lucy iterative filter}{subsection.1.3}% 7
+\BOOKMARK [2][-]{subsection.1.4}{Astronomy images}{section.1}% 8

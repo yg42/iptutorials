@@ -1,0 +1,69 @@
+\RequirePackage{xkeyval}
+\RequirePackage{tikz}
+\RequirePackage{amssymb}
+%TODO USE TCOLORBOX 
+\ClassWarning{helpbox.sty}{Deprecated. Please see listings_conf.tex instead}
+
+\define@key{boxedhelp}{titlecolor}{\def\titlecolor{#1}}
+\define@key{boxedhelp}{titlebackground}{\def\titlebackground{#1}}
+\define@key{boxedhelp}{background}{\def\background{#1}}
+\define@key{boxedhelp}{titleboxcolor}{\def\titleboxcolor{#1}}
+\define@key{boxedhelp}{boxcolor}{\def\boxcolor{#1}}
+\define@key{boxedhelp}{thcounter}{\def\thcounter{#1}}
+\define@key{boxedhelp}{size}{\def\size{#1}}
+\presetkeys{boxedhelp}{titlecolor = black, titlebackground = white, background = white,%
+                         titleboxcolor = black, boxcolor = black, thcounter=, size = .9\textwidth}{}
+
+\newcommand{\couleurs}[1][]{%
+    \setkeys{boxedhelp}{#1}
+    \tikzstyle{fancytitle} =[draw=\titleboxcolor, rounded corners, fill=\titlebackground,
+                            text= \titlecolor]
+    \tikzstyle{mybox} = [draw=\boxcolor, fill=\background, very thick,
+                        rectangle, rounded corners, inner sep=10pt, inner ysep=20pt, text=\titlecolor]
+}
+
+
+%Commande générique pour faire un joli encadré
+\newsavebox{\helpbox}
+\newcommand{\titre}{Titre}
+\newcommand{\logo}{Logo}
+
+% nouvel environnement
+% #1: couleurs
+% #2: titre
+% #3: logo
+\newenvironment{boite}[3][]%
+    {%
+    \renewcommand{\titre}{#2}
+    \renewcommand{\logo}{#3}
+    \couleurs[#1]
+    \begin{lrbox}{\helpbox}%
+     \begin{minipage}[!h]{\size}
+    }%
+    {%
+     \end{minipage}
+    \end{lrbox}
+    \begin{center}
+    \begin{tikzpicture}
+    \node [mybox] (box){\usebox{\helpbox}};
+    \node[fancytitle, right=12pt] at (box.north west) {\includegraphics[height=12pt]{\logo} \titre};
+    \end{tikzpicture}
+    \end{center}
+    }
+
+
+\newcommand{\newboxedhelp}[5][]{%
+    \couleurs[#1]
+    \@ifnotempty{#4}{%
+      \@ifundefined{the#4}{\@ifundefined{\thcounter}{\newcounter{#4}}{%
+      \newcounter{#4}[\thcounter ] } } { }%
+    }
+    \newenvironment{#2}[1][]{%
+    \@ifnotempty{#4}{\refstepcounter{#4}}
+    \begin{boite}[#1]{\textbf{#3\@ifnotempty{#4}{ \csname the#4\endcsname}}\@ifnotempty{##1}{
+    (##1)}}{#5}
+    }%
+    {%
+    \end{boite}
+    }
+}

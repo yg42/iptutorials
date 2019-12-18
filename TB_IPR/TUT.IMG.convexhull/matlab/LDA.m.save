@@ -1,0 +1,191 @@
+classdef LDA
+    
+    properties
+        edges
+        face_values
+        delaunay
+        alpha = inf
+        circumradius
+        min_circumradius
+        visible_edges
+        dimension
+    end
+    
+    methods
+        function obj = LDA(x,y,z)
+            if nargin == 0
+                %obj.delaunay = DelaunayTri();
+                M = load('/media/4D87-F2F5/Travail/Recherche/Conférences/Présentation Saint Etienne 2011/points/lezard.txt');      
+                obj.delaunay = DelaunayTri(M(:,1),M(:,2));
+            elseif nargin == 1
+                if isa(x, 'char')
+                    M = load(x);
+                    if size(M,2) == 2
+                        obj.delaunay = DelaunayTri(M(:,1),M(:,2));
+                        obj.dimension = 2;
+                    elseif size(M,2) == 3
+                        obj.delaunay = DelaunayTri(M(:,1),M(:,2),M(:,3));
+                        obj.dimension = 3;
+                    end
+                else    
+                    obj.dimension = size(x,2);
+                    if obj.dimension < 2 || obj.dimension > 3
+                        error('wrong dimension : must be 2 or 3');
+                    end
+                    obj.delaunay = DelaunayTri(x);                    
+                end
+            elseif nargin == 2
+                if size(x,2) ~= 1 || size(y,2) ~= 1
+                        error('wrong dimension : must be 2 or 3');
+                end
+                obj.delaunay = DelaunayTri(x,y);
+                obj.dimension = 2;
+            elseif nargin == 3
+                if size(x,2) ~= 1 || size(y,2) ~= 1 || size(z,2) ~= 1
+                        error('wrong dimension : must be 2 or 3');
+                end
+                obj.delaunay = DelaunayTri(x,y,z);
+                obj.dimension = 3;
+            end
+        end
+        
+        function plot(obj) 
+            %triplot(obj.delaunay);
+            ne = size(obj.edges,1);
+            for i = 1:ne
+                if obj.visible_edges(i)
+                    a = [obj.delaunay.X(obj.edges(i,2),:); obj.delaunay.X(obj.edges(i,1),:)];
+                    plot(a(:,1),a(:,2));
+                    hold on;
+                end
+            end
+            hold off
+        end
+        
+        function obj = set.delaunay(obj, delaunay)
+            obj.delaunay = delaunay;
+            obj.edges = delaunay.edges;
+            obj.circumradius = obj.circumRadius();
+            obj.min_circumradius = obj.valueToVertices();
+            obj.face_values = obj.faceValues();
+            obj.visible_edges = obj.visibleEdges();
+        end
+        
+        function alpha = get.alpha(obj)
+            alpha = obj.alpha;
+        end
+        
+        function obj = set.alpha(obj, alpha)
+            obj.alpha = alpha;
+            obj.visible_edges = obj.visibleEdges();
+        end
+    end
+    
+    methods(Access=private)
+        
+        function facevalue = faceValues(obj)          
+           nf = size(obj.delaunay.Triangulation, 1);
+           facevalue = zeros(nf,1);
+           for i = 1:nf
+               
+               v1 = obj.delaunay.Triangulation(i,1);
+               v2 = obj.delaunay.Triangulation(i,2);
+               v3 = obj.delaunay.Triangulation(i,3);
+               facevalue(i) = max([obj.min_circumradius(v1) obj.min_circumradius(v2) obj.min_circumradius(v3)]);
+           end
+             
+           
+        end
+        
+        function d = visibleEdges(obj)             
+            %edges = obj.delaunay.edges;
+            ne = size(obj.edges,1);
+            d = zeros(ne,1);
+            for i = 1:ne
+                cf = obj.delaunay.edgeAttachments(obj.edges(i,:));
+                if numel(cf{1}) == 1
+                    f1 = cf{1}(1);
+                    %if obj.circumradius(f1) > obj.alpha*obj.face_values(f1)
+                    %    d(i) = 0;
+                    %else
+                    %    d(i) = 1;
+                    %end
+                    d(i) = obj.circumradius(f1) <= obj.alpha*obj.face_values(f1);
+                    
+                else
+                    f1 = cf{1}(1);
+                    f2 = cf{1}(2);
+                    %if xor(obj.circumradius(f1) > obj.alpha*obj.face_values(f1), obj.circumradius(f2) > obj.alpha*obj.face_values(f2))
+                    %    d(i) = 0;
+                    %else
+                    %    d(i) = 1;
+                    %end
+                        
+                    d(i) = xor(obj.circumradius(f1) <= obj.alpha*obj.face_values(f1), obj.circumradius(f2) <= obj.alpha*obj.face_values(f2));
+                end              
+            end
+        end
+        
+        function d = valueToVertices(obj) 
+            nv = size(obj.delaunay.X,1);
+            d = ones(nv, 1)*inf;
+            nf = size(obj.delaunay.Triangulation, 1);
+            for i = 1 : nf
+                face = obj.delaunay.Triangulation(i,:);                 
+                d(face(1)) = min(d(face(1)), obj.circumradius(i));                 
+                d(face(2)) = min(d(face(2)), obj.circumradius(i));                 
+                d(face(3)) = min(d(face(3)), obj.circumradius(i));
+            end
+        end
+                
+        function d = circumRadius(obj, f) 
+            if nargin == 2
+                center = obj.delaunay.circumcenters(f);
+                d = (obj.squared_dist(obj.delaunay.Triangulation(f,1), center(1), center(2)));%^0.5;                
+            elseif nargin == 1
+                n = size(obj.delaunay.circumcenters, 1);
+                d = zeros(n, 1);
+                for i = 1 : n
+                    %d = [d; obj.squared(i)];
+                    d(i) = obj.circumRadius(i);
+                end
+            end
+        end
+                
+        % Distance au carré entre deux vertex
+        %   a et b les numéros de deux vertex
+        % ou entre un vertex et un point
+        %   a le numéro d'un vertex et b et c les coordonnées du point
+        function d = squared_dist(obj, a, b, c) 
+            if nargin == 3
+                v1x = obj.delaunay.X(a, 1);
+                v1y = obj.delaunay.X(a, 2); 
+                v2x = obj.delaunay.X(b, 1); 
+                v2y = obj.delaunay.X(b, 2);
+            elseif nargin == 4
+                v1x = obj.delaunay.X(a, 1);
+                v1y = obj.delaunay.X(a, 2);                
+                v2x = b;
+                v2y = c;
+            end
+            d = LDA.squared_dist_two_coords(v1x, v1y, v2x, v2y);
+        end
+        
+    end
+        
+    methods(Static)
+        
+        function d = squared_dist_two_points(p1,p2)
+            d = LDA.squared_dist_two_coords(p1(1), p1(2), p2(1), p2(2));
+        end
+        
+        function d = squared_dist_two_coords(x1,y1,x2,y2)
+            d = (x1-x2)^2+(y2-y1)^2;
+        end
+    end
+        
+   
+    
+    
+end
+

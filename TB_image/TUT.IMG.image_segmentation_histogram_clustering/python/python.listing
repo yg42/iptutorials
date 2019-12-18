@@ -1,0 +1,16 @@
+from mpl_toolkits.mplot3d import Axes3D # 3D scatter plot
+
+# plot
+colors = ['#4EACC5', '#FF9C34', '#4E9A06']
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+# Plot scatter points
+for k, col in zip(range(n), colors):
+    my_members = k_means_labels == k
+    cluster_center = k_means_cluster_centers[k]
+    ax.scatter(data[my_members, 0], data[my_members, 1],
+					data[my_members, 2], c=col)
+    ax.scatter(cluster_center[0], cluster_center[1],
+					cluster_center[2], s=30, c=col)

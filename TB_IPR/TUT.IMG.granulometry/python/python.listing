@@ -1,0 +1,18 @@
+## Granulometry of real image
+I = imageio.imread("poudre.bmp");
+
+# segmentation
+BW = I>74;
+BW = ndimage.morphology.binary_fill_holes(BW);
+
+# suppress small objects
+se = ndimage.generate_binary_structure(2, 1);
+m = ndimage.morphology.binary_opening(BW);
+# opening by reconstruction
+BW=ndimage.morphology.binary_propagation(m, mask=BW);
+
+imageio.imwrite("segmentation.png", BW);
+plt.imshow(BW)
+plt.show()
+
+granulometry(BW, 20);

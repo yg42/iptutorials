@@ -1,0 +1,4 @@
+function B=hitormiss(A,T1,T2)
+
+T=
+B=min(imerode(A,T1),imerode(1-A,T2));

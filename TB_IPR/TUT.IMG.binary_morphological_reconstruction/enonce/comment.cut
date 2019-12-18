@@ -1,0 +1,4 @@
+\begin{premark}
+The morphological reconstruction function to use is
+\pinline{binary_propagation} in the module \pinline{ndimage.morphology}.
+\end{premark}

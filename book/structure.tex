@@ -1,0 +1,255 @@
+\usepackage{tikz}
+\usetikzlibrary{shapes,backgrounds,shapes.misc}
+% packages de mise en page
+\usepackage[newparttoc]{titlesec} % Allows customization of titles
+\usepackage{etoolbox}
+
+%%%%%%%%%%%%%%
+% cette partie est due à un bug de texlive
+\makeatletter
+\patchcmd{\ttlh@hang}{\parindent\z@}{\parindent\z@\leavevmode}{}{}
+\patchcmd{\ttlh@hang}{\noindent}{}{}{}
+\makeatother
+
+%------------------------------------------------------------------------------
+%	MAIN TABLE OF CONTENTS
+%------------------------------------------------------------------------------
+
+\usepackage{titletoc} % Required for manipulating the table of contents
+
+\contentsmargin{0cm} % Removes the default margin
+% 
+% \titleformat{\part}[display]{\center\normalfont\huge\bfseries}
+%                             {\partname\ \thepart}{20pt}{\Huge} 
+
+\makeatletter
+\renewcommand\contentsname{Table of Contents}
+\renewcommand\tableofcontents{%
+    \if@twocolumn
+      \@restonecoltrue\onecolumn
+    \else
+      \@restonecolfalse
+    \fi
+    \chapter*{{\color{c_title}\textsc{\contentsname}}% change here the formatting
+        \@mkboth{%
+           \MakeUppercase\contentsname}{\MakeUppercase\contentsname}}%
+    \@starttoc{toc}%
+    \if@restonecol\twocolumn\fi
+    }
+    \makeatother
+    
+% titlecontents: style for table of contents
+% % % Part text styling
+% \titlecontents{part}[1.25cm] % left
+% {\addvspace{15pt}\huge\sffamily\bfseries} % above-code
+% {\color{c_title}\contentslabel[\huge\thecontentslabel]{1.25cm}\color{c_title}} % numbered-entry-format
+% {}  % numberless-entry-format
+% {\color{c_title}\huge\titlerule*[1pc]{.}\thecontentspage} % filler-page-format
+% [] % below-code
+\usepackage{framed}
+\renewenvironment{leftbar}
+  {\def\FrameCommand{\hspace{6em}%
+    {\color{c_title}\vrule width 2pt depth 6pt}\hspace{1em}}%
+    \MakeFramed{\parshape 1 0cm \dimexpr\textwidth-6em\relax\FrameRestore}\vskip2pt%
+  }
+ {\endMakeFramed}
+ 
+
+\titlecontents{part}
+  [0em]{\vspace*{2\baselineskip}}
+  {\parbox{4.5em}{%
+    \hfill\Huge\sffamily\bfseries\color{c_title}\thecontentspage}%
+   \vspace*{-2.3\baselineskip}\leftbar\textsc{\color{c_title}\bfseries\partname~\thecontentslabel}\\\sffamily\bfseries\huge}
+  {}{\endleftbar}
+  
+ %% this is used to put the references as a part in the TOC
+\makeatletter
+\newcommand{\apppart}[1]{%
+  \begingroup
+  \patchcmd{\@chapter}
+   {\addcontentsline{toc}{chapter}}
+   {\addcontentsline{toc}{part}}
+   {}{}
+  \patchcmd{\@chapter}
+   {\addcontentsline{toc}{chapter}}
+   {\addcontentsline{toc}{part}}
+   {}{}
+  \part{#1}
+  \endgroup
+}
+\makeatother
+%
+% chapter
+\titlecontents{chapter}[2.5cm] % Indentation
+{\large\sffamily\bfseries} % Spacing and font options for chapters
+{\color{c_title}\contentslabel[\Large\thecontentslabel]{.75cm}\color{c_title}} % Chapter number
+{} 
+{\color{c_rule}\normalsize\sffamily\bfseries\;\titlerule*[.5pc]{.}\;\color{c_title}\thecontentspage} % Page number
+[]
+
+% Section text styling
+\titlecontents{section}[1.25cm] % Indentation
+{\addvspace{5pt}\sffamily\bfseries} % Spacing and font options for sections
+{\color{c_title}\contentslabel[\thecontentslabel]{1.25cm}} % Section number
+{}
+{\color{c_rule}\normalsize\sffamily\bfseries\;\titlerule*[.5pc]{.}\;\color{c_page}\thecontentspage} % Page number
+[]
+
+% Subsection text styling
+\titlecontents{subsection}[1.25cm] % Indentation
+{\addvspace{1pt}\sffamily\small} % Spacing and font options for subsections
+{\color{c_section}\contentslabel[\thecontentslabel]{1.25cm}} % Subsection number
+{}
+{\color{c_page}\sffamily\;\titlerule*[.5pc]{.}\;\thecontentspage} % Page number
+[] 
+% 
+% % subsubsection text styling
+% \titlecontents{subsubsection}[1.25cm] % Indentation
+% {\addvspace{1pt}\sffamily\small} % Spacing and font options for subsections
+% {\color{blueemse!60}\contentslabel[\thecontentslabel]{1.5cm}} % Subsection number
+% {}
+% {\color{blueemse!60}\sffamily\;\titlerule*[.5pc]{.}\;\thecontentspage} % Page number
+% [] 
+\usepackage{tcolorbox}
+
+\titleformat{\section}%
+	{\normalfont\huge\bfseries\color{c_section}}
+	{\llap{\tcbox[colback=c_section_colback, colframe=c_section_colframe, coltext=white, on line, boxsep=0pt, left=4pt, right=4pt, top=4pt, bottom=4pt]{\thesection}}}
+	{1em}
+	{}
+
+% Section text styling
+\titleformat{\subsection}% Indentating
+{\Large\sffamily\color{c_section}} % Font settings
+{\llap{\thesubsection}}
+{0.2em} % sep
+{} % before
+
+% Subsection text styling
+\titleformat{\subsubsection}% Indentation
+{\normalfont\sffamily\color{c_section}} % Font settings
+{\thesubsubsection}
+{1em}
+{}
+% 
+ % Part text styling
+\titleformat{\part}% Indentation
+{\Huge\bfseries\color{c_title}} % Font settings
+{Part \thepart}
+{1em}
+{}
+
+%----------------------------------------------------------------------------------------
+%	PAGE HEADERS
+%----------------------------------------------------------------------------------------
+\usepackage[papersize={16.64cm,24.64cm},layoutwidth=16cm, layoutheight=24cm, layouthoffset=0.32cm,layoutvoffset=0.32cm, top=1.5cm,bottom=1.5cm,left=1.7cm,right=1.5cm,headsep=1cm]{geometry} % Page margins
+%% format Roman
+%\usepackage[papersize={6.25in,9.25in},layoutwidth=6in, layoutheight=9in, layouthoffset=0.125in,layoutvoffset=0.125in, top=1.5cm,bottom=1.5cm,left=1.7cm,right=2cm,headsep=1cm]{geometry} % Page margins
+%\usepackage[top=2cm,bottom=2cm,left=2.8cm,right=2.8cm,headsep=1cm]{geometry} % Page margins
+
+\usepackage[]{fancyhdr}
+\pagestyle{fancyplain}
+
+\renewcommand{\chaptermark}[1]{\markboth{\sffamily\normalsize\bfseries\color{white} #1}{}} % Chapter text font settings
+\renewcommand{\sectionmark}[1]{\markright{\sffamily\normalsize\bfseries\thesection\hspace{5pt}\color{white}#1}{}} % Section text font settings
+\fancyhf{} 
+%\fancyhead[LE,RO]{\sffamily\normalsize\color{c_section}\thepage} % Font setting for the page number in the header
+%\fancyhead[LO]{\color{c_section}\rightmark} % Print the nearest section name on the left side of odd pages
+%\fancyhead[RE]{\color{c_section}\leftmark} % Print the current chapter name on the right side of even pages
+\renewcommand{\headrulewidth}{0pt} % Width of the rule under the header: 0pt means no rule
+\addtolength{\headheight}{2.5pt} % Increase the spacing around the header slightly
+\renewcommand{\footrulewidth}{0pt} % Removes the rule in the footer
+\fancyhead[LE]{%
+  \tikz[remember picture,overlay,baseline]
+    \fill[c_qbox_colframe](current page.north west|-0,-\dp\strutbox)
+    rectangle(current page.north east);%
+  \color{white}\leftmark}
+  
+\fancyhead[LO]{%
+  \tikz[remember picture,overlay,baseline]
+    \fill[c_qbox_colframe](current page.north west|-0,-\dp\strutbox)
+    rectangle(current page.north east);%
+  \color{white}\rightmark}
+%\fancyhead[C]{\color{white}Middle part}
+
+\fancyhead[R]{\color{white}\thepage}
+\fancypagestyle{plain}{\fancyhead{}\renewcommand{\headrulewidth}{0pt}} % Style for when a plain pagestyle is specified
+\usepackage{etoolbox}
+
+\makeatletter
+\patchcmd{\@fancyhead}{\rlap}{\color{c_section}\rlap}{}{}
+\patchcmd{\headrule}{\hrule}{\color{c_rule}\hrule}{}{}
+\patchcmd{\@fancyfoot}{\rlap}{\color{c_section}\rlap}{}{}
+\patchcmd{\footrule}{\hrule}{\color{c_rule}\hrule}{}{}
+\makeatother
+
+% Removes the header from odd empty pages at the end of chapters
+\makeatletter
+\renewcommand{\cleardoublepage}{
+\clearpage\ifodd\c@page\else
+\hbox{}
+\vspace*{\fill}
+\thispagestyle{empty}
+\newpage
+\fi}
+
+
+\usepackage{amsmath,amsfonts,amssymb,amsthm} % For including math equations, theorems, symbols, etc
+
+\def\QRCODE{qrcode}
+\def\QRPAGE{qrpage}
+
+\def\difficulty{0}
+\def\@makechapterhead#1{
+\thispagestyle{empty}
+{\centering \normalfont\sffamily
+\ifnum \c@secnumdepth >\m@ne
+\if@mainmatter
+\startcontents
+\begin{tikzpicture}[remember picture, overlay]
+\node at (current page.north west)
+{
+\begin{tikzpicture}[remember picture,overlay]
+
+\node (dummy)[anchor=north west]  at (-2cm, -2.5cm){}; % pour faire continuer le cadre a l'exterieur
+\node (number)[anchor=north west] at (2cm, -2.5cm) {\huge\sffamily\bfseries\textcolor{c_section} {\thechapter}};
+\ifthenelse{\difficulty>0}{
+\foreach \i in {1,...,\difficulty}{
+  \node [star,fill=c_title,anchor=north east,scale=0.5] at (2cm - 0.3*\i cm, -2.5cm) {};
+  }
+}{TEST}
+\node (section) [anchor=north west, text width=\textwidth-1.5cm] at (3.5cm, -2.5cm) {\huge\sffamily\bfseries\textcolor{c_section} {#1}};%\vphantom{plPQq}
+ \node (exterieur) [anchor=west,rounded corners=25pt,draw=c_section,draw opacity=1,line width=2pt,inner sep=12pt,fit={(dummy) (number) (section)}] {};
+
+\end{tikzpicture}};
+\end{tikzpicture}}\par\vspace*{2cm}
+\fi
+\fi
+}
+
+\newcommand{\genericcorrectionsection}[2]{%
+\vspace{1cm}
+\noindent\begin{tikzpicture}[remember picture,overlay]
+\node (dummy)[anchor=text]  at (-5cm, 0cm){}; % pour faire continuer le cadre a l'exterieur
+\node (section) [anchor=text] {\Large\sffamily\bfseries\textcolor{c_section} {\stepcounter{section}\thesection. #1}};
+\node (qr) [right=of section,anchor=west] {\href{\QRPAGE}{\includegraphics[height=1.5cm]{\QRCODE}}};
+\node (logo) [anchor=text] at (-1.5cm, -0.1cm) {\includegraphics[height=1cm]{#2}};
+\begin{scope}[on background layer]\node (exterieur) [anchor=text,rounded corners=10pt,fill=c_section_colback, draw=c_section_colframe,draw opacity=1,line width=2pt,inner sep=4pt,fit={(dummy) (section) (qr)}] {};
+\end{scope}
+
+\end{tikzpicture}
+\phantom{#1}
+\vspace{.6cm}
+%\noindent\makebox[\linewidth]{\color{orange}\rule{\textwidth}{2pt}} 
+}
+
+\newcommand{\correctionsection}[1]{%
+\genericcorrectionsection{#1}{interrogation.pdf}
+}
+\newcommand{\mcorrectionsection}[1]{%
+\genericcorrectionsection{#1}{matlab-logo.png}
+}
+\newcommand{\pcorrectionsection}[1]{%
+\genericcorrectionsection{#1}{python-logo.pdf}
+}
+

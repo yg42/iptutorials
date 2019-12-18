@@ -1,0 +1,124 @@
+\NeedsTeXFormat{LaTeX2e}[2013/01/01]
+\ProvidesPackage{emselip}[2014/06/01 EMSE LIP package]
+
+% fichier de commandes lip
+%
+% usage: ajouter \input{operateursLip} dans le préambule
+%
+% S'utilisent dans le mode maths, de cette façon:
+% $$5\lipplus 6 \lipmoins{scale=2} FD \lipdivise{} \lipfois{} $$
+%
+% le paramètre d'échelle permet de changer la taille, au cas où...
+\RequirePackage{pgf,tikz}
+
+% triangle seul
+\DeclareRobustCommand\lip[1]{%
+  \ensuremath{\mathop{%
+    \begin{tikzpicture}[line width=0.1ex,-,#1]
+      \pgfsetbaseline{-0.575ex}
+      \useasboundingbox (-1.15ex, -1.15ex) rectangle (1.15ex, 1.15ex);
+      \draw (90 :0.7ex) -- (210:0.7ex) -- (330:0.7ex) -- cycle;
+    \end{tikzpicture}%
+  }\nolimits}
+}
+
+\DeclareRobustCommand\lipplus[1]{%
+  \ensuremath{\mathop{%
+    \begin{tikzpicture}[line width=0.1ex,-,#1]
+      \pgfsetbaseline{-0.575ex}
+      \useasboundingbox (-1.15ex, -1.15ex) rectangle (1.15ex, 1.15ex);
+      \draw (90 :0.7ex) -- (210:0.7ex) -- (330:0.7ex) -- cycle;
+      \draw (180 : .25ex) -- (0:.25ex);
+      \draw (90 : .25ex) -- (270: .25ex);
+    \end{tikzpicture}%
+  }\nolimits}
+}
+\DeclareRobustCommand\lippluschap[1]{%
+  \ensuremath{\mathop{%
+    \begin{tikzpicture}[line width=0.1ex,-,#1]
+      \pgfsetbaseline{-0.575ex}
+      \useasboundingbox (-1.15ex, -1.15ex) rectangle (1.15ex, 1.15ex);
+      \draw (90 :0.7ex) -- (210:0.7ex) -- (330:0.7ex) -- cycle;
+      \draw (180 : .25ex) -- (0:.25ex);
+      \draw (90 : .25ex) -- (270: .25ex);
+      
+      \draw (-.3ex, .9ex) -- (0, 1.1ex) -- (.3ex, .9ex);
+    \end{tikzpicture}%
+  }\nolimits}
+}
+
+\DeclareRobustCommand\lipmoins[1]{%
+  \ensuremath{\mathop{%
+    \begin{tikzpicture}[line width=0.1ex,-,#1]
+      \pgfsetbaseline{-0.575ex}
+      \useasboundingbox (-1.15ex, -1.15ex) rectangle (1.15ex, 1.15ex); 
+      \draw (90 :0.7ex) -- (210:0.7ex) -- (330:0.7ex) -- cycle;
+      \draw (180 : .25ex) -- (0:.25ex);
+    \end{tikzpicture}%
+  }\nolimits}
+}
+\DeclareRobustCommand\lipmoinschap[1]{%
+  \ensuremath{\mathop{%
+    \begin{tikzpicture}[line width=0.1ex,-,#1]
+      \pgfsetbaseline{-0.575ex}
+      \useasboundingbox (-1.15ex, -1.15ex) rectangle (1.15ex, 1.15ex); 
+      \draw (90 :0.7ex) -- (210:0.7ex) -- (330:0.7ex) -- cycle;
+      \draw (180 : .25ex) -- (0:.25ex);
+      
+      \draw (-.3ex, .9ex) -- (0, 1.1ex) -- (.3ex, .9ex);
+    \end{tikzpicture}%
+  }\nolimits}
+}
+
+\DeclareRobustCommand\lipdivise[1]{%
+  \ensuremath{\mathop{%
+    \begin{tikzpicture}[line width=0.1ex,-,#1]
+      \pgfsetbaseline{-0.575ex}
+      \useasboundingbox (-1.15ex, -1.15ex) rectangle (1.15ex, 1.15ex); 
+      \draw (90 :0.7ex) -- (210:0.7ex) -- (330:0.7ex) -- cycle;
+      \draw (180 : .25ex) -- (0:.25ex);
+      \fill (90: .2ex) circle[radius=.05ex];
+      \fill (270: .2ex) circle[radius=.05ex];
+    \end{tikzpicture}%
+  }\nolimits}
+}
+\DeclareRobustCommand\lipdivisechap[1]{%
+  \ensuremath{\mathop{%
+    \begin{tikzpicture}[line width=0.1ex,-,#1]
+      \pgfsetbaseline{-0.575ex}
+      \useasboundingbox (-1.15ex, -1.15ex) rectangle (1.15ex, 1.15ex); 
+      \draw (90 :0.7ex) -- (210:0.7ex) -- (330:0.7ex) -- cycle;
+      \draw (180 : .25ex) -- (0:.25ex);
+      \fill (90: .2ex) circle[radius=.05ex];
+      \fill (270: .2ex) circle[radius=.05ex];
+      
+      \draw (-.3ex, .9ex) -- (0, 1.1ex) -- (.3ex, .9ex);
+    \end{tikzpicture}%
+  }\nolimits}
+}
+
+\DeclareRobustCommand\lipfois[1]{%
+  \ensuremath{\mathop{%
+    \begin{tikzpicture}[line width=0.1ex,-,#1]
+      \pgfsetbaseline{-0.575ex}
+      \useasboundingbox (-1.15ex, -1.15ex) rectangle (1.15ex, 1.15ex); 
+      \draw (90 :0.7ex) -- (210:0.7ex) -- (330:0.7ex) -- cycle;
+      \draw (45 : .25ex) -- (225:.25ex);
+      \draw (-45 : .25ex) -- (135:.25ex);
+    \end{tikzpicture}%
+  }\nolimits}
+}
+\DeclareRobustCommand\lipfoischap[1]{%
+  \ensuremath{\mathop{%
+    \begin{tikzpicture}[line width=0.1ex,-,#1]
+      \pgfsetbaseline{-0.575ex}
+      \useasboundingbox (-1.15ex, -1.15ex) rectangle (1.15ex, 1.15ex); 
+      \draw (90 :0.7ex) -- (210:0.7ex) -- (330:0.7ex) -- cycle;
+      \draw (45 : .25ex) -- (225:.25ex);
+      \draw (-45 : .25ex) -- (135:.25ex);
+
+      \draw (-.3ex, .9ex) -- (0, 1.1ex) -- (.3ex, .9ex);    \end{tikzpicture}%
+  }\nolimits}
+}
+
+\endinput

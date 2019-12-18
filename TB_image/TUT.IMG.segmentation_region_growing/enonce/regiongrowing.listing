@@ -1,0 +1,15 @@
+# start by displaying a figure,
+# ask for mouse input (click)
+fig = plt.figure ();
+ax = fig.add_subplot (211);
+ax.set_title ('Click on a point')
+# load image
+img = misc.ascent ();
+ax.imshow (img, picker = True, cmap = plt.gray ());
+
+# connect click on image to onpick function
+fig.canvas.mpl_connect ('button_press_event', onpick);
+plt.show ();
+
+def onpick(event):
+    """ connector """

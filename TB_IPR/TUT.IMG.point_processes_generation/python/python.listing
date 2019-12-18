@@ -1,0 +1,27 @@
+def marked(nb_points, xmin, xmax, ymin, ymax):
+    """
+    marked point process
+    """
+
+    # points
+    x,y = spat_pp.cond_Poisson(nb_points, xmin, xmax, ymin, ymax);
+
+    # first mark: radii
+    sigma = 5;
+    mu = 10;
+    r = sigma * np.random.randn(nb_points) + mu;
+    r[r<0.1] = 0.1;
+
+    # second mark: colors
+    nb_colors = 10;
+    c = np.random.randint(nb_colors,size = nb_points);
+
+    # plot
+    plt.scatter(x, y, r**2, c, alpha=.5);
+	
+	 # save pdf figure
+	 plt.savefig("marked.pdf");
+
+nb_points = 100;
+N=100;
+marked(nb_points, 0, N, 0, N);

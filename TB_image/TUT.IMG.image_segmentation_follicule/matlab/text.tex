@@ -1,0 +1,96 @@
+\def\QRCODE{TB_image_TUT.IMG.image_segmentation_follicule_matlabqrcode.png}
+\def\QRPAGE{http://www.iptutorials.science/tree/master/TB_image/TUT.IMG.image_segmentation_follicule/matlab}
+\mcorrectionsection{Matlab correction}
+
+\subsection{Vascularization}
+\subsubsection{Antrum segmentation}
+The first step consists in the segmentation of the antrum by thresholding the blue component. Some post-processes are used to remove artifacts such as holes. This is illustrated in Fig. \ref{fig:segfollicle:matlab:vascularization}.
+
+
+\begin{matlab}
+% image reading
+A = imread('follicule.bmp');
+% image visualization
+figure;imagesc(A);title('Original image');
+% antrum segmentation
+B = A(:,:,3);
+antrum = (B>220);
+antrum = bwselect(antrum,300,300,8);
+antrum = imfill(antrum,'holes');
+figure;colormap gray;imagesc(antrum);title('Antrum');
+\end{matlab}
+
+%\begin{mcomment}
+%\begin{mremark}
+%Notice that the images are of type double, which implies a special care when displaying them, for example by using the command \minline{imshow(I, [])}.
+%\end{mremark}
+%\end{mcomment}
+
+\subsubsection{Theca segmentation}
+The second step provides the segmentation of the theca which is extracted as a spatial region (corona) adjacent to and outside the antrum. The width of the corona is selected by the user (expert).
+\begin{matlab}
+se = strel('disk',40);
+theque = imdilate(antrum,se);
+theque = theque - antrum;
+figure;colormap gray;imagesc(theque);title('Theca');
+\end{matlab}
+
+\subsubsection{Vascularization segmentation}
+The final step extracts the vascularization of the considered follicle. Pixels belonging to the vascularization are considered to have a low blue component and they should also be included in the theca of the follicle.
+\begin{matlab}
+vascularisation = (B<140);
+vascularisation = min(vascularisation,theque);
+figure;colormap gray;imagesc(vascularisation);title('Vascularisation');
+\end{matlab}
+
+\subsubsection{Results}
+\begin{figure}[htbp]
+\centering
+ \subfloat[Original image.]{\includegraphics[width=4cm]{follicle.png}}
+ 
+ \subfloat[Antrum.]{\includegraphics[width=.3\linewidth]{antrum.png}}\hfill
+ \subfloat[Theca.]{\includegraphics[width=.3\linewidth]{theca.png}}\hfill
+ \subfloat[Vascularization.]{\includegraphics[width=.3\linewidth]{vascularization.png}}
+
+ \caption{Extraction of the different components of the follicle.}
+ \label{fig:segfollicle:matlab:vascularization}
+\end{figure}
+
+\subsection{Granulosa cells}
+\subsubsection{First solution}
+The granulosa cells have a low contrast, so it is difficlut to use thresholding techniques. But we know they are localized between the antrum and the vascularization. Nevertheless the vascularization is not a closed region outside the antrum. Therefore, the proposed solution consits in firt trying to close the vascularization region and taking the corona between this region and the antrum. The result is shown in Fig. \ref{fig:segfollicle:matlab:granulosa}.
+
+\begin{matlab}
+dil = 1-imclose(vascularisation,strel('disk',10));
+dil = bwselect(dil, 300, 300, 4);
+granulosa = dil - antrum;
+figure;colormap gray;imagesc(granulosa);title('Cellules de granulosa');
+\end{matlab}
+
+\begin{figure}[htbp]
+\centering
+ \subfloat[Original image.]{\includegraphics[width=.3\linewidth]{follicle.png}}\hspace{.1\linewidth}
+ \subfloat[Granulosa cells.]{\includegraphics[width=.3\linewidth]{granulosa.png}}
+ \caption{Extraction of the granulosa cells of the follicle.}
+ \label{fig:segfollicle:matlab:granulosa}
+\end{figure}
+
+\subsubsection{Second solution}
+This first solution is not really robust. The closing of the vascularization region is not really accurate. A more robust solution consists in using deformable models to get the corona between the vascularization and the antrum. But this kind of method is out of the scope of this tutorial.
+
+\subsection{Quantification}
+The quantification is easy to process. In addition, we can represent the different extracted components of the follicle in false colors.
+
+\begin{matlab}
+all = antrum + 2*granulosa + 3*vascularisation;
+figure;colormap jet;imagesc(all);title('Antrum, vascularization and granulosa cells');
+follicule = antrum + theque;
+qVascularisation = bwarea(vascularisation)/bwarea(follicule)
+qGranulosa = bwarea(granulosa)/bwarea(follicule)
+\end{matlab}
+
+\noindent This quantification gives:
+\begin{mwindow}
+qVascularisation = 0.0448
+qGranulosa = 0.0912
+\end{mwindow}

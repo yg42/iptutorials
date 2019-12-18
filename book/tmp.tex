@@ -1,0 +1,192 @@
+\documentclass[11pt,table]{book}
+\usepackage{lipsum}
+\usepackage[ISBN=978-80-86619-23-1]{ean13isbn}
+
+
+\input{header.tex}
+\togglefalse{matlabbook}
+\toggletrue{pythonbook}
+% ADDS corrections (or not) in python or matlab
+\togglefalse{includematlabcorrection}
+\toggletrue{includepythoncorrection}
+
+\includecomment{mcomment}
+\excludecomment{pcomment}
+
+
+\graphicspath{ 
+	{./media/}
+	} 
+	
+%\renewcommand{\cftchapterbreak}{\addpenalty{-4000}}
+ \graphicspath{
+	{./media/}
+	{../TB_image/TUT.IMG.introduction/enonce/}
+	{../TB_image/TUT.IMG.introduction/python/}
+	{../TB_image/TUT.IMG.introduction/matlab/}
+	}
+	
+\makeatletter
+\def\sujet{\@ifnextchar[{\@sujetwith}{\@sujetwithout}}
+\def\@sujetwith[#1]#2{\chapter[#1]{#2}}
+\def\@sujetwithout#1{\chapter{#1}}
+
+\makeatother
+\begin{document}
+\includepdf[pages={1},fitpaper]{media/TUT_pagedegarde_python_16x24.pdf}
+\includepdf[pages={1},fitpaper]{media/license_16x24.pdf}
+\tableofcontents
+\include{authors}
+\newpage
+\begin{figure}
+ \centering
+\EANisbn 
+\end{figure}
+
+\newpage
+\part{Premi\`ere partie: \matlabregistered}
+\def\difficulty{3}
+\chapter[Chapitre super long]{Ceci est un nom de Chapitre super long}
+
+\begin{note}Ceci est une note!\end{note}
+
+\begin{rmq}
+ Ceci est une remarque.
+\end{rmq}
+
+\sujet{Ceci est un sujet}
+
+\sujet[Option du sujet]{Ceci est un sujet}
+\section{section}
+\section{Ceci est un titre de section supersuper long qui dépasse la ligne}
+\subsection{subsection}
+\subsubsection{subsubsection}
+
+\begin{matlab}
+function t = test(A)
+% this is a test function
+A = rand(25,2);
+imagesc(A);
+[X, Y] = meshgrid(1:10, 1:10);
+\end{matlab}
+
+\begin{python}
+def myFunction(toto):
+	# this is a test function
+	return True;
+\end{python}
+
+\mcorrectionsection{Matlab correction}
+\begin{mwindow}
+ test
+\end{mwindow}
+
+\subsection{subsection}
+\subsection{Matlab environments}
+Deux environnements doivent être présentés maintenant, sauf si excludecomment est utilisé:
+
+\begin{mcomment}
+
+\begin{mremark}
+This is a \matlabregistered{} mremark environment.
+\end{mremark}
+
+\end{mcomment}
+
+\begin{mhelp}
+This is a \matlabregistered{} mhelp. 
+
+\lipsum[1-2]
+\end{mhelp}
+
+
+Voilà, c'est fait.
+
+\pcorrectionsection{Python correction}
+\begin{sh}
+This is a shell to show python results.
+\end{sh}
+ 
+\subsection{subsection}
+\subsection{Python environments}
+
+\begin{pcomment}
+
+\begin{premark}
+This is a python premark environment.
+\end{premark}
+
+\end{pcomment}
+
+
+\begin{phelp}
+ This is a python phelp environment
+\end{phelp}
+
+\begin{qbox}
+ this is a serie of questions, available with qbox.
+\begin{itemize}
+\item ATTENTION: L'UTILISATION DE PLUSIEURS PAGES SEMBLENT POSER PRO\-BLÈME.
+ \item \lipsum[1]
+ \item \lipsum[1-2]
+\end{itemize}
+\end{qbox}
+
+
+\lipsum[1]
+
+\section{Test existence of label}
+\iflabelexists{fig:test}{Label ``fig:test'' exists!}{Label ``fig:test'' does'nt exist! New label: \ref{fig:test2}.
+\begin{figure}
+ \centering
+ \includegraphics[width=1cm]{media/python-logo.pdf}
+ \caption{Figure example}
+ \label{fig:test2}
+\end{figure}
+} % iflabelexists
+
+\def\difficulty{2}
+\chapter[2e chapitre long]{Ceci est encore un nom de Chapitre su\-per\-su\-per long}
+
+
+\section{section}
+\section{section}
+\section{section}
+\section{section}
+\section{section}
+\section{section}
+\section{section}
+\section{section}
+\section{section}
+\section{section}
+\section{section}
+\section{section}
+\section{section}
+\section{section}
+\section{section}
+\section{section}
+\section{section}
+\section{section}
+
+\addtocontents{toc}{\protect\newpage}
+\part{2nd part}
+\chapter{Chapitre}
+\chapter{New chapter}
+ \section{sec of new chapter}
+
+\chapter{New chapter}
+\chapter{New chapter}
+\chapter{New chapter}
+\chapter{New chapter}
+\chapter{New chapter}
+\chapter{New chapter}
+\chapter{New chapter}
+\chapter{New chapter}
+\chapter{New chapter}
+\chapter{New chapter}
+ \section{sec of new chapter}\lipsum[1-5]
+ \section{sec of new chapter}
+\lipsum[1-5]
+
+\apppart{References}
+\end{document}

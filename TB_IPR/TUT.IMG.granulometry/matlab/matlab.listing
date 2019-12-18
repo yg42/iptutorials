@@ -1,0 +1,13 @@
+B=imread('poudre.bmp');
+% threshold
+imThresh=(B>74);
+% fill holes
+imHoles=imfill(imTresh,'holes');
+% suppress small objects
+se = strel('disk',1);
+C = imopen(imHoles,se);
+imSegmented=imreconstruct(C,imHoles);
+% visualisation images
+figure;
+subplot(121);imshow(B,[]);colormap('gray');title('Original image of silicium');
+subplot(122);imshow(imSegmented);colormap('gray');title('Segmented image');

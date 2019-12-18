@@ -1,0 +1,92 @@
+\def\QRCODE{TB_IPR_TUT.IMG.harris_detector_matlabqrcode.png}
+\def\QRPAGE{http://www.iptutorials.science/tree/master/TB_IPR/TUT.IMG.harris_detector/matlab}
+\mcorrectionsection{Matlab correction}
+
+
+\subsection{Cornerness measure}
+
+\begin{figure}[htbp]
+ \centering
+ \subfloat[Checkerboard.]{\includegraphics[width=.3\linewidth]{checkerboard.png}}\hfill
+ \subfloat[Cornerness measure.]{\includegraphics[width=.3\linewidth]{cornerness_checker.png}}\hfill
+ \subfloat[Harris corner points.]{\includegraphics[width=.3\linewidth]{harris_checker.pdf}\label{fig:harris:matlab:cornerness:harris}}
+ \caption{Cornerness measure for the checkerboard image. The next step is to locate the corners by thresholding the measure, extracting the local maxima, eliminating points near the edges...}
+ \label{fig:harris:matlab:cornerness}
+\end{figure}
+
+The first step is to compute the gradient in both x and y directions.
+\begin{matlab}
+% first of all, compute gradient in x and y directions
+hx = [-1  0 1; -2 0 2; -1 0 1];
+Ix = conv2(I, hx,  'same');
+Iy = conv2(I, hx', 'same');
+\end{matlab}
+
+Or more simply:
+\begin{matlab}
+[Ix, Iy] = imgradientxy(I);
+\end{matlab}
+
+Then, the coefficients of the matrix are computed.
+\begin{matlab}
+% compute the different coefficients of the Harris detector
+M1 = Ix.^2;
+M2 = Ix.*Iy;
+M4 = Iy.^2;
+\end{matlab}
+
+In case of using a scale parameter, these coefficients should be filtered (for example via a gaussian filter).
+\begin{matlab}
+% apply scale
+M1 = imgaussfilt(M1, sigma);
+M2 = imgaussfilt(M2, sigma);
+M4 = imgaussfilt(M4, sigma);
+\end{matlab}
+
+Finally, the cornerness measure is evaluated.
+\begin{matlab}
+% cornerness measure evaluation and display
+C = (M1.*M4 - M2.^2) - K *(M1+M4).^2;
+\end{matlab}
+
+The cornerness measure is displayed in Fig.\ref{fig:harris:matlab:cornerness}.
+
+\subsection{Corners detection}
+
+In order to keep only the strongest corner points, a threshold value $t$ is applied on $C$. This value is really depending on the considered image, thus such a global threshold is not generally a good idea. One would probably prefer a h-maximum or equivalent operator. For the purpose of this tutorial, we will keep this strategy.
+
+\begin{matlab}
+C(C<t)=0;
+\end{matlab}
+
+The local maxima are then extracted.
+\begin{matlab}
+corners = imextendedmax(C2, 3); 
+\end{matlab}
+
+In the case of the checkerboard image, corner points near the edges are detected. These may be removed.
+\begin{matlab}
+corners = imclearborder(corners, 8);
+\end{matlab}
+
+The result is a binary image, where some clusters of points are the corner points. To keep only one point per cluster, the centroid of each is detected. The final result is presented in Fig.\ref{fig:harris:matlab:cornerness:harris}.
+\begin{matlab}
+stats = regionprops(corners, 'Centroid');
+
+if ~isempty(stats)
+    pts = cat(1, stats.Centroid);
+else
+    pts = [];
+end 
+\end{matlab}
+
+\subsection{Road sign image application}
+In this case, the values $t=10^7$ and $\sigma=3$ are used. The result is illustrated in Fig.\ref{fig:harris:matlab:roadsign}.
+
+\begin{figure}[htbp]
+\centering 
+\subfloat[Cornerness measure.]{\includegraphics[width=.4\linewidth]{cornerness_roadsign.png}}\hfill
+\subfloat[Corner points.]{\includegraphics[width=.4\linewidth]{harris_roadsign.png} }
+\caption{Harris corner detection with scale $\sigma=3$ and threshold value $t=10^7$.}
+\label{fig:harris:matlab:roadsign}
+\end{figure}

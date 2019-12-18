@@ -1,0 +1,1 @@
+def energy(P, eFunction=exampleEnergyFunction):

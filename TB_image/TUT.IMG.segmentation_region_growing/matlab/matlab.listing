@@ -1,0 +1,11 @@
+function r = predicate3(I, p, seed, visited)
+% threshold parameter
+t = 10;
+
+m = mean(I(visited==1));
+sigma = std(I(visited==1));
+if abs(I(p(1), p(2)) - m) <= t * (1-sigma/m)
+    r = true;
+else
+    r = false;
+end

@@ -1,0 +1,40 @@
+figure
+[x,y]=disregular(150,4);subplot(231);plot(x,y,'b*');axis equal;title('Regular distribution');axis([-2 2 -2 2]);
+
+[x,y]=disalea(150,4);subplot(232);plot(x,y,'r*');axis equal;title('Uniform point process');axis([-2 2 -2 2]);
+[x,y]=disgauss(150, 4);subplot(233);plot(x,y,'g*');axis equal;title('Gaussian point process');axis([-2 2 -2 2]);
+hold on
+
+% generate 100 different processes
+% display the results
+[ ad, rfh, msigd, msigmst ] = analysis( [x y], 0);
+subplot(234);
+axis([0 1 0 1]);
+plot(ad, rfh, 'b*');  xlabel('AD'); ylabel('RFH'); hold on
+subplot(235);
+axis([0 1 0 1]);
+plot(msigd(1), msigd(2), 'b*');  xlabel('Mean DT edge length'); ylabel('std DT edge length'); hold on
+subplot(236);
+axis([0 1 0 1]);
+plot(msigmst(1), msigmst(2), 'b*');  xlabel('Mean DT edge length'); ylabel('std DT edge length'); hold on
+
+for i=1:100
+    [x,y]=disalea(150,4);
+    [ ad, rfh, msigd, msigmst ] = analysis( [x y], 0);
+    subplot(234);
+    plot(ad, rfh, 'r*');
+    subplot(235);
+    plot(msigd(1), msigd(2), 'r*');
+    subplot(236);
+    plot(msigmst(1), msigmst(2), 'r*');
+
+    [x,y]=disgauss(150, 8);
+    [ ad, rfh, msigd, msigmst ] = analysis( [x y], 0);
+    subplot(234);
+    plot(ad, rfh, 'g*');
+    subplot(235);
+    plot(msigd(1), msigd(2), 'g*');
+    subplot(236);
+    plot(msigmst(1), msigmst(2), 'g*');
+
+end
