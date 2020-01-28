@@ -41,7 +41,7 @@ def getColipM0():
 
 def lmstone(LMS):
     M0 = getColipM0()
-    return (M0-np.finfo(float).eps)*(1-LMS/M0)
+    return (M0-np.finfo(np.float32).eps)*(1-LMS/M0)
 
 
 def XYZ2LMS(XYZ):
@@ -101,7 +101,9 @@ def LMS2ARGYBhat(LMS):
     ARGYBtilde = LMS2ARGYBtilde(LMS)
     return ARGYBtilde2ARGYBhat(ARGYBtilde)
 
-
+""" 
+# Load CMF functions
+"""
 with np.load('cmf.npz') as data:
     cmap = data['cmap']
     pourpresLMS = data['pourpresLMS']
@@ -110,7 +112,10 @@ with np.load('cmf.npz') as data:
     SpecRGB = data['SpecRGB']
     l = data['l']
 
-# display classical CMF in xy
+"""
+# Display classical CMF in xy
+
+"""
 xn = SpecXYZ[:, :, 0]/np.sum(SpecXYZ, axis=2)
 yn = SpecXYZ[:, :, 1]/np.sum(SpecXYZ, axis=2)
 zn = 1-xn-yn
@@ -125,7 +130,9 @@ plt.scatter(ARGYB_hat[:, 0, 1], ARGYB_hat[:, 0, 2], c=cmap)
 purple_ARGYB_hat = LMS2ARGYBhat(pourpresLMS)
 plt.scatter(purple_ARGYB_hat[:, 0, 1], purple_ARGYB_hat[:, 0, 2], c='black')
 
-# RGB cube
+"""
+# Construction of the RGB cube
+"""
 N = 10
 cols = np.linspace(0, 255, num=N)
 R, G, B = np.meshgrid(cols, cols, cols)
