@@ -4,3 +4,4 @@ scikit-image
 scikit-learn
 scipy
 opencv-python
+pandas
