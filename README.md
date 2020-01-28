@@ -16,3 +16,4 @@ The tutorials are organized in folders that correspond to actual classes at Mine
 Each folder contains the LaTeX source of the book, and MATLAB and PYTHON propositions of corrections.
 
 Warning: corrections may contain errors. Feel free to modify and share your work.
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/yg42/iptutorials/master)
