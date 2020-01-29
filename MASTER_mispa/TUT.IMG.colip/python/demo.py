@@ -14,7 +14,7 @@ def graytone(F, M):
     # graytone function transform
     # M: maximal value
     # F: image function
-    f = M-np.finfo(float).eps-F
+    f = M-np.finfo(np.float32).eps-F
     return f
 
 

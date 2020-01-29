@@ -10,7 +10,7 @@ import LIP
 import numpy as np
 from scipy import misc
 import matplotlib.pyplot as plt
-
+import skimage
 import cv2
 
 """ Histogram equalization
@@ -30,7 +30,7 @@ def histeq(im, nbr_bins=256):
 
 
 M = 256.
-B = imageio.imread("breast.jpg")
+B = skimage.io.imread("breast.jpg")
 
 plt.imshow(B, cmap=plt.cm.gray, vmin=0, vmax=M)
 
@@ -52,14 +52,14 @@ plt.figure()
 plt.subplot(1, 3, 1)
 plt.imshow(E/M, cmap=plt.cm.gray, vmin=0, vmax=1)
 plt.title('dynamic expansion')
-imageio.imwrite("lipenhance.png", np.floor(E))
+skimage.io.imsave("lipenhance.png", np.floor(E))
 plt.subplot(1, 3, 2)
 plt.imshow(B/M, cmap=plt.cm.gray, vmin=0, vmax=1)
 plt.title('original image')
 plt.subplot(1, 3, 3)
 plt.imshow(heq/M, cmap=plt.cm.gray, vmin=0, vmax=1)
 plt.title('after histo equalization')
-imageio.imwrite("histeq.png", np.floor(heq))
+skimage.io.imsave("histeq.png", np.floor(heq))
 
 
 # contours detection
@@ -76,15 +76,16 @@ tonelip = LIP.phi(tone, M)
 
 # apply Sobel filter
 sobellip = LIP.graytone(LIP.invphi(Sobel(tonelip), M), M)
-imageio.imwrite("sobellip.png", sobellip)
+skimage.io.imsave("sobellip.png", sobellip)
 plt.figure()
 plt.subplot(1, 2, 1)
 plt.imshow(sobellip, cmap=plt.cm.gray)
 plt.title('LIP Sobel edge detection')
 
 # apply Sobel filter in the classic space
-sobel = 255-Sobel(B)
+sobel = 255.0-Sobel(B)
 plt.subplot(1, 2, 2)
-plt.imshow(sobel, cmap=plt.cm.gray)
+plt.imshow(sobel.astype(np.float32), cmap=plt.cm.gray)
 plt.title('Sobel edge detection')
-imageio.imwrite("sobel.png", sobel)
+plt.show()
+skimage.io.imsave("sobel.png", sobel)
