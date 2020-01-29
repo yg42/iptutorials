@@ -1,10 +1,12 @@
 import numpy as np
 
+import scipy
 import scipy.ndimage
 import imageio
 import matplotlib.pyplot as plt
 import matplotlib.patches as pat
 import skimage.measure
+import skimage
 
 import glob
 
@@ -20,10 +22,10 @@ def crofton_perimeter(I):
     h = np.array([[1, -1]])
     for i in range(4):
         II = np.copy(I)
-        I2 = scipy.misc.imrotate(II, 45*i, interp='nearest')
+        I2 = skimage.transform.rotate(II, angle=45*i, order=0)
         I3 = scipy.ndimage.convolve(I2, h)
 
-        inter.append(np.sum(I3 > 100))
+        inter.append(0.5*np.sum(np.abs(I3)))
 
     crofton = np.pi/4. * (inter[0]+inter[2] + (inter[1]+inter[3])/np.sqrt(2))
     return crofton
@@ -41,9 +43,9 @@ def feret_diameter(I):
     D = 0
 
     for a in np.arange(0, 180, 30):
-        I2 = scipy.misc.imrotate(I, a, interp='nearest')
+        I2 = skimage.transform.rotate(I, angle=a, order=0)
         F = np.max(I2, axis=0)
-        measure = np.sum(F > 100)
+        measure = np.sum(F )
 
         if (measure < d):
             d = measure

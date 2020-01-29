@@ -7,6 +7,7 @@ Created on Fri Feb 27 11:56:57 2015
 import numpy as np
 from scipy import ndimage, misc
 import matplotlib.pyplot as plt
+import skimage
 
 
 def linearDiffusion(I, nbIter, dt):
@@ -29,11 +30,11 @@ def linearDiffusion(I, nbIter, dt):
     return Z
 
 
-I = imageio.imread("cerveau.png")/255.
+I = skimage.io.imread("cerveau.png")/255.
 F = linearDiffusion(I, 10, .05)
 F2 = linearDiffusion(I, 50, .05)
-imageio.imwrite("cerveau_ld_10.png", F)
-imageio.imwrite("cerveau_ld_50.png", F2)
+skimage.io.imsave("cerveau_ld_10.png", F)
+skimage.io.imsave("cerveau_ld_50.png", F2)
 
 plt.subplot(1, 3, 1)
 plt.imshow(I, cmap=plt.cm.gray)

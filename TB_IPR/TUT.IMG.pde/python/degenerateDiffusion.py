@@ -7,6 +7,7 @@ Created on Fri Mar  6 14:31:52 2015
 import numpy as np
 from scipy import ndimage, misc
 import matplotlib.pyplot as plt
+import skimage
 
 
 def degenerateDiffusion1(image, nbIter, dt):
@@ -65,22 +66,22 @@ def degenerateDiffusion2(image, nbIter, dt):
     return Zdilation, Zerosion
 
 
-I = imageio.imread("cerveau.png")/255.
+I = skimage.io.imread("cerveau.png")/255.
 plt.figure()
 plt.subplot(2, 3, 1)
 plt.imshow(I, cmap=plt.cm.gray)
 
 (dil10, ero10) = degenerateDiffusion1(I, 10, .05)
-imageio.imwrite("cerveau_dil_10.png", dil10)
-imageio.imwrite("cerveau_ero_10.png", ero10)
+skimage.io.imsave("cerveau_dil_10.png", dil10)
+skimage.io.imsave("cerveau_ero_10.png", ero10)
 plt.subplot(2, 3, 2)
 plt.imshow(dil10, cmap=plt.cm.gray)
 plt.subplot(2, 3, 3)
 plt.imshow(ero10, cmap=plt.cm.gray)
 
 (dil50, ero50) = degenerateDiffusion1(I, 50, .05)
-imageio.imwrite("cerveau_dil_50.png", dil50)
-imageio.imwrite("cerveau_ero_50.png", ero50)
+skimage.io.imsave("cerveau_dil_50.png", dil50)
+skimage.io.imsave("cerveau_ero_50.png", ero50)
 plt.subplot(2, 3, 5)
 plt.imshow(dil50, cmap=plt.cm.gray)
 plt.subplot(2, 3, 6)
@@ -93,16 +94,16 @@ plt.subplot(2, 3, 1)
 plt.imshow(I, cmap=plt.cm.gray)
 
 (dil10, ero10) = degenerateDiffusion2(I, 10, .05)
-imageio.imwrite("cerveau_dil2_10.png", dil10)
-imageio.imwrite("cerveau_ero2_10.png", ero10)
+skimage.io.imsave("cerveau_dil2_10.png", dil10)
+skimage.io.imsave("cerveau_ero2_10.png", ero10)
 plt.subplot(2, 3, 2)
 plt.imshow(dil10, cmap=plt.cm.gray)
 plt.subplot(2, 3, 3)
 plt.imshow(ero10, cmap=plt.cm.gray)
 
 (dil50, ero50) = degenerateDiffusion2(I, 50, .05)
-imageio.imwrite("cerveau_dil2_50.png", dil50)
-imageio.imwrite("cerveau_ero2_50.png", ero50)
+skimage.io.imsave("cerveau_dil2_50.png", dil50)
+skimage.io.imsave("cerveau_ero2_50.png", ero50)
 plt.subplot(2, 3, 5)
 plt.imshow(dil50, cmap=plt.cm.gray)
 plt.subplot(2, 3, 6)

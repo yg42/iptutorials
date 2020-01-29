@@ -8,6 +8,7 @@ Created on Fri Feb 27 14:30:18 2015
 import numpy as np
 from scipy import ndimage, misc
 import matplotlib.pyplot as plt
+import skimage
 
 
 def c(I, alpha):
@@ -44,12 +45,12 @@ def nonlinearDiffusion(I, nbIter, alpha, dt):
 
 alpha = 0.1
 dt = .05
-I = imageio.imread("cerveau.png")/255.
+I = skimage.io.imread("cerveau.png")/255.
 
 F = nonlinearDiffusion(I, 10, alpha, dt)
 F2 = nonlinearDiffusion(I, 50, alpha, dt)
-imageio.imwrite("cerveau_nld_10.png", F)
-imageio.imwrite("cerveau_nld_50.png", F2)
+skimage.io.imsave("cerveau_nld_10.png", F)
+skimage.io.imsave("cerveau_nld_50.png", F2)
 plt.subplot(1, 3, 1)
 plt.imshow(I, cmap=plt.cm.gray)
 plt.subplot(1, 3, 2)

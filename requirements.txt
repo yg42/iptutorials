@@ -5,3 +5,4 @@ scikit-learn
 scipy
 opencv-python
 pandas
+shapely

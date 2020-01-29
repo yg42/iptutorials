@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Mar 27 14:18:01 2015
-mathematical morphology reconstruction
+This code illustrates mathematical morphology reconstruction
+
 @author: yann
 """
 
 import numpy as np
 from scipy import ndimage, misc
-
+import skimage
 import matplotlib.pyplot as plt
 
 
@@ -37,7 +38,7 @@ def killBorders(A):
     M[:, 0] = 1
     M[:, n-1] = 1
     M = reconstruct(A, M)
-    return A-M
+    return np.logical_xor(A, M)
 
 
 def closeHoles(A):
@@ -60,9 +61,9 @@ def killSmall(A, n):
 
 
 # read images
-A = imageio.imread('A.jpg')
+A = skimage.io.imread('A.jpg')
 A = A > 100
-M = imageio.imread('M.jpg')
+M = skimage.io.imread('M.jpg')
 M = M > 100
 # reconstruction de A par M
 AM = reconstruct(A, M)
@@ -75,13 +76,14 @@ plt.subplot(1, 3, 2)
 plt.imshow(M)
 plt.subplot(1, 3, 3)
 plt.imshow(AM)
-plt.show()
+
 plt.title("reconstruction")
-imageio.imwrite('reconstruct.png', AM)
+plt.show()
+skimage.io.imsave('reconstruct.png', 255*AM.astype(np.uint8))
 
 # kill borders
 plt.figure()
-B = imageio.imread('B.jpg')
+B = skimage.io.imread('B.jpg')
 B = B > 100
 B2 = killBorders(B)
 plt.subplot(1, 2, 1)
@@ -90,7 +92,7 @@ plt.subplot(1, 2, 2)
 plt.imshow(B2)
 plt.title('kill borders')
 plt.show()
-imageio.imwrite('borders.png', B2)
+skimage.io.imsave('borders.png', 255*B2.astype(np.uint8))
 
 # close holes
 plt.figure()
@@ -101,7 +103,7 @@ plt.subplot(1, 2, 2)
 plt.imshow(B3)
 plt.title('close holes')
 plt.show()
-imageio.imwrite('holes.png', B3)
+skimage.io.imsave('holes.png', 255*B3.astype(np.uint8))
 
 # kill small objects
 plt.figure()
@@ -112,13 +114,13 @@ plt.subplot(1, 2, 2)
 plt.imshow(B4)
 plt.title('remove small objects')
 plt.show()
-imageio.imwrite('small.png', B4)
+skimage.io.imsave('small.png', 255*B4.astype(np.uint8))
 
 
 # application to image "cells"
 plt.figure()
-cells = imageio.imread('cells.jpg') < 98
-imageio.imwrite('cellsbw.png', cells)
+cells = skimage.io.imread('cells.jpg') < 98
+skimage.io.imsave('cellsbw.png', 255*cells.astype(np.uint8))
 B = closeHoles(cells)
 B = killBorders(B)
 B = killSmall(B, 5)
@@ -128,4 +130,4 @@ plt.subplot(1, 2, 2)
 plt.imshow(B)
 plt.title('clean image')
 plt.show()
-imageio.imwrite('clean.png', B)
+skimage.io.imsave('clean.png', 255*B.astype(np.uint8))
