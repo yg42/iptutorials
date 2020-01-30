@@ -1,3 +1,5 @@
+Get the paper version at [Spartacus-IDH](https://spartacus-idh.com/068.html).
+
 This book is a collection of tutorials and exercises given at MINES Saint-Etienne as part of the Master’s Degree in Science and Executive Engineering ("Ingénieur Civil des Mines -- ICM"). In recent years, project-based learning has been used to illustrate theoretical concepts with real and concrete applications.
 
 Whether you are in the early years of your university studies, in preparatory classes for the French Grandes Ecoles or in an engineering school, or even as a teacher, this book is made for you. You will find a large number of tutorials, classified by field, to familiarize yourself with the theoretical concepts of image processing and analysis.
