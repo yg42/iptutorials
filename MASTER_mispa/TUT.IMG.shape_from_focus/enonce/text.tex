@@ -34,15 +34,16 @@ To overcome this problem and reconstruct an all-focused image as well as a surfa
 Practically, TIF files can handle stacks of images. Here is a way to open such a file:
 
 
-
+\begin{pcomment}
 \begin{python}
 from skimage import io
 
 I = io.imread('volume.tif');
 I = I.astype('float');
 \end{python}
+\end{pcomment}
 
-
+\begin{mcomment}
 \begin{matlab}
 % load a stack of images in file
 info = imfinfo(stackfile);
@@ -54,8 +55,9 @@ for k = 1:num_images
     % you can now do something with each image
 end
 \end{matlab}
+\end{mcomment}
 
-In the following, each of the proposed methods will compute a focus measure layer by layer, and will maximize this measure over the stack to find the most focused layer. 
+In the following, each of the proposed methods will compute a focus measure layer by layer, and will maximize this focus measure over the stack to find the most focused layer. 
 
 \subsection{Sum of Modified Laplacian}
 \index{Shape From Focus!SML}
@@ -65,14 +67,15 @@ $$\bigtriangleup^2 I = \frac{\partial^2 I}{\partial x^2} + \frac{\partial^2 I}{\
 The problem with this operator is that the second derivatives in the x and y dimensions can have opposite signs. One way to overcome this problem is to introduce the modified Laplacian as follows:
 $$\bigtriangleup_M^2 I = \left|\frac{\partial^2 I}{\partial x^2}\right| + \left|\frac{\partial^2 I}{\partial y^2}\right|$$
 
-The discrete approximation of the modified Laplacian is computed as:
-\begin{multline}ML(x, y)= \left| 2I(x,y)-I(x-1, y)-I(x+1,y)\right| \\
+The discrete approximation of the modified Laplacian is computed as (this can be coded as a convolution):
+\[ML(x, y)= \left| 2I(x,y)-I(x-1, y)-I(x+1,y)\right| \\
 + \left| 2I(x,y)-I(x, y-1)-I(x,y+1)\right|
-\end{multline}
+\]
                                                                                                              
 
 Then, the focus measure based on the modified Laplacian is:
-$$F_{ML} = \displaystyle{\sum_{(x,y)\in\omega}}ML(x,y)$$
+$$F_{ML}(p) = \displaystyle{\sum_{(x,y)\in\omega(p)}}ML(x,y)$$
+To clarify this formula, this means that for each pixel $p$, the focus measure is the sum of all coefficients $ML$ in a small window $\omega$ centered on $p$. The size of this window is relatively small, a value of $7\times 7$ pixels has been used in the correction.
 
 \subsection{Variance}
 \index{Shape From Focus!Variance}
@@ -103,7 +106,7 @@ For all the detailed methods:
 
 \subsection{Open question}
 \begin{qbox}
-Several methods have been implemented in order to perform the 3D surface/texture reconstruction. Propose a numerical measure that could compare the results and measure the effciciency of these methods? What is the best method?
+Several methods have been implemented in order to perform the 3D surface/texture reconstruction. Propose a numerical measure that could compare the results and measure the efficiency of these methods? What is the best method?
 \end{qbox}
 
 
