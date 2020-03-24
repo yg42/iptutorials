@@ -233,3 +233,51 @@ plt.axis('off')
 plt.title('Gaussian filter')
 
 plt.show()
+
+# using convolution filter
+from scipy.signal import convolve2d
+h = np.array([[-1, 0, 1], [-1, 0, 1], [-1, 0, 1] ])
+grad1 = convolve2d(ascent, h);
+plt.imshow(grad1, cmap=plt.cm.gray)
+plt.show()
+
+grad0 = convolve2d(ascent, h.transpose());
+plt.imshow(grad0, cmap=plt.cm.gray)
+plt.show()
+
+plt.imshow(np.sqrt(grad0**2 + grad1**2), cmap=plt.cm.gray)
+plt.show()
+
+# laplacian enhancement
+# image sharpening
+import skimage
+
+def sharpen(I, alpha):
+    
+    h = np.array([[-1, -1, -1], [-1, 8, -1], [-1, -1, -1] ])
+    L = convolve2d(I, h, mode='same')
+    np.max(L)
+    E = alpha * I + L
+    E = skimage.exposure.rescale_intensity(E, out_range=(0,255))
+    E = E.astype(np.uint8)
+    
+    return E
+
+
+I = skimage.io.imread('osteoblaste.bmp').astype(np.float)
+I = I/255
+A = [1, 0.5, 5]
+
+fig = plt.figure(figsize=(12,8))
+plt.subplot(221)
+plt.imshow(I, cmap=plt.cm.gray)
+for i,alpha in enumerate(A):
+    plt.subplot(222+i)
+    E = sharpen(I, alpha)
+    E = skimage.exposure.rescale_intensity(E, out_range=(0,255))
+    plt.imshow(E, cmap=plt.cm.gray)
+    plt.title('alpha='+str(alpha))
+    
+    skimage.io.imsave('osteoblaste_rehauss_'+str(alpha)+'.python.png', E)
+
+plt.show()

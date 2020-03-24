@@ -13,6 +13,8 @@ import numpy as np
 import time
 # read and save images
 import imageio
+# convolution method
+from scipy.signal import convolve2d
 \end{python}
 
 \vspace*{-10pt}
@@ -316,6 +318,14 @@ gaussian = ndimage.filters.gaussian_filter(ascent, 5)
  \label{fig:introduction:python:gaussian}%
 \end{figure}
 
+\subsection{High-pass filter}
+The computation of the high-pass filter is simply the subtraction of a low-pass filter from the original image. For example:
+
+\begin{python}
+H = I-m25
+\end{python}
+
+
 \vspace*{-7pt}
 \subsection{Derivative filters}
 \index{Filtering!High-pass}
@@ -364,4 +374,73 @@ plt.show()
 \subfloat[Prewitt filter for axis x.]{\includegraphics[width=5cm]{prewitt0.png}}\hspace{1.5cm}
 \subfloat[Prewitt filter for axis y.]{\includegraphics[width=5cm]{prewitt1.png}}
 \label{fig:introduction:python:prewitt}
+\end{figure}
+
+The previous code uses filters proposed by the \pinline{skimage} module. If you want to write down the convolution matrix, this is the solution:
+\begin{python}
+h = np.array([[-1, 0, 1], [-1, 0, 1], [-1, 0, 1] ])
+grad1 = convolve2d(ascent, h);
+plt.imshow(grad1, cmap=plt.cm.gray)
+plt.show()
+
+grad0 = convolve2d(ascent, h.transpose());
+plt.imshow(grad0, cmap=plt.cm.gray)
+plt.show()
+
+plt.imshow(np.sqrt(grad0**2 + grad1**2), cmap=plt.cm.gray)
+plt.show()
+\end{python}
+
+
+\subsection{Enhancement filter}
+
+This functions adds the Laplacian filter to the original image.
+\begin{python}
+def sharpen(I, alpha):
+    
+    h = np.array([[-1, -1, -1], [-1, 8, -1], [-1, -1, -1] ])
+    L = convolve2d(I, h, mode='same')
+    np.max(L)
+    E = alpha * I + L
+    E = skimage.exposure.rescale_intensity(E, out_range=(0,255))
+    E = E.astype(np.uint8)
+    
+    return E
+\end{python}
+
+This constitutes a really simple and efficient edge sharpening method. To test it, you may write this example code:
+\begin{python}
+I = skimage.io.imread('osteoblaste.png').astype(np.float)
+I = I/255
+A = [1, 0.5, 5]
+
+fig = plt.figure(figsize=(12,8))
+plt.subplot(221)
+plt.imshow(I, cmap=plt.cm.gray)
+for i,alpha in enumerate(A):
+    plt.subplot(222+i)
+    E = sharpen(I, alpha)
+    E = skimage.exposure.rescale_intensity(E, out_range=(0,255))
+    plt.imshow(E, cmap=plt.cm.gray)
+    plt.title('alpha='+str(alpha))
+    
+    skimage.io.imsave('osteoblaste_rehauss_'+str(alpha)+'.python.png', E)
+
+plt.show()
+\end{python}
+
+
+\begin{figure}[htbp]
+ \centering
+ 
+ \subfloat[$\alpha=1$.]{\includegraphics[width=5cm]{osteoblaste_rehauss_1.python.png}}
+ \hspace{1cm}
+ \subfloat[$\alpha=0.5$.]{\includegraphics[width=5cm]{osteoblaste_rehauss_0.5.python.png}}
+ 
+ \subfloat[$\alpha=5$.]{\includegraphics[width=5cm]{osteoblaste_rehauss_5.python.png}}
+ \hspace{1cm}
+ \subfloat[Original image.]{\includegraphics[width=5cm]{osteoblaste.png}}
+
+ \caption{Image enhancement: $I=\alpha\cdot I+HP(I)$, where $HP$ is a high-pass filter (the Laplacian filter in these illustrations).}
+ \label{fig:introduction:matlab:enhancement}
 \end{figure}
