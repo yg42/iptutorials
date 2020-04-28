@@ -8,7 +8,7 @@ Created on Thu Jan 25 11:34:54 2018
 
 from scipy import misc
 import matplotlib.pyplot as plt
-from skimage import exposure
+from skimage import exposure,io
 import numpy as np
 import sys
 
@@ -27,7 +27,7 @@ def displaySaveHisto(I, filename=None):
         fig.savefig(filename, bbox_inches='tight')
 
 
-I = imageio.imread("osteoblaste.png")
+I = io.imread("osteoblaste.png")
 I = I / np.max(I)
 plt.imshow(I)
 plt.show()
@@ -39,7 +39,7 @@ for gamma, name in osteo:
     I2 = exposure.adjust_gamma(I, gamma)
     plt.imshow(I2)
     plt.show()
-    imageio.imwrite(name, I2)
+    io.imsave(name, I2)
 
 
 def contrast_stretching(I, E):
@@ -58,7 +58,7 @@ for e, name in osteo:
     I2 = I2/np.max(I2)
     plt.imshow(I2)
     plt.show()
-    imageio.imwrite(name, I2)
+    io.imsave(name, I2)
 
 # histogram display
 displaySaveHisto(I, "histo_osteo.pdf")
@@ -67,7 +67,7 @@ displaySaveHisto(I, "histo_osteo.pdf")
 I2 = exposure.equalize_hist(I)
 plt.imshow(I2)
 plt.show()
-imageio.imwrite("histeq_osteo.png", I2)
+io.imsave("histeq_osteo.png", I2)
 
 displaySaveHisto(I2, "histeq_osteo_histo.pdf")
 
@@ -103,6 +103,11 @@ def hist_matching(I, cdf_dest):
     imhist, bins = np.histogram(I.flatten(), len(cdf_dest))
     cdf = imhist.cumsum()  # cumulative distribution function
     cdf = (cdf / cdf[-1])  # normalize between 0 and 1
+    
+    plt.step(bins[:-1], cdf, 'b')
+    plt.step(bins[:-1], cdf_dest, 'r')
+    plt.savefig('histocum_matching.pdf', bbox_inches='tight')
+    plt.show()
 
     # first: histogram equalization
     im2 = np.interp(I.flatten(), bins[:-1], cdf)
@@ -139,7 +144,7 @@ def twomodegauss(m1, sig1, m2, sig2, A1, A2, k):
 
 
 # apply results on phobos image
-I = imageio.imread("phobos.jpg")
+I = io.imread("phobos.jpg")
 displaySaveHisto(I, "hist_phobos.pdf")
 
 
@@ -153,12 +158,12 @@ fig.savefig("twomodegauss.pdf", bbox_inches='tight')
 # generates a two modes histogram, for testing purposes
 # applies it to original image I
 I2 = 255*histeq(I)
-imageio.imwrite("phobos_histeq.png", I2)
+io.imsave("phobos_histeq.png", I2)
 displaySaveHisto(I2, "hist_phobos_histeq.pdf")
 
 # applies matching
 I2 = hist_matching(I, p)
-imageio.imwrite("phobos_histmatch.png", I2)
+io.imsave("phobos_histmatch.png", I2)
 plt.imshow(I2)
 plt.show()
 
