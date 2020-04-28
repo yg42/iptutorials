@@ -8,6 +8,7 @@ Created on Thu Mar 29 14:12:09 2018
 import numpy as np
 from scipy import misc
 import matplotlib.pyplot as plt
+import skimage
 
 
 # function single step wavelet decomposition
@@ -288,7 +289,7 @@ def imdec2im(LcLrA, lvlC):
 
 
 print('######## images')
-I = imageio.imread('lena256.png')
+I = skimage.io.imread('lena256.png')
 C = simpleImageDec(I, 3)
 rec = displayImageDec(C)
 plt.imshow(rec)

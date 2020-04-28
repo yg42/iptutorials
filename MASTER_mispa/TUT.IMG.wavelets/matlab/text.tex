@@ -100,9 +100,13 @@ detail = zeros(1, length(a)*2);
 detail(1:2:end) = d;
 detail = conv(detail, hr);
 
+% sum up approximation and details to reconstruct signal at lower scale
 approx = approx + detail;
+
+% get rid of last value
 approx = approx(1:length(a)*2);
 \end{matlab}
+
 \subsubsection{Results}
 \begin{mwindow}
 >> signal = [4;8;2;3;5;18;19;20];
