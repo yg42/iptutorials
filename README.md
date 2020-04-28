@@ -1,4 +1,4 @@
-Get the paper version at [Spartacus-IDH](https://spartacus-idh.com/068.html).
+This project is a book. Get the paper version at [Spartacus-IDH](https://spartacus-idh.com/068.html).
 
 This book is a collection of tutorials and exercises given at MINES Saint-Etienne as part of the Master’s Degree in Science and Executive Engineering ("Ingénieur Civil des Mines -- ICM"). In recent years, project-based learning has been used to illustrate theoretical concepts with real and concrete applications.
 
