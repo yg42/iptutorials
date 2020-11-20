@@ -29,7 +29,7 @@ Area fraction & $\langle A_A\rangle$ & Fraction of area in intersection\\
  The measures are performed with the following definitions:
 \begin{itemize}
  \item $\langle P_P\rangle$: the count of the points that lie in the phase, normalized by the total number of points.
- \item $\langle P_L\rangle$: the count of the number of intersection of lines and the surface of the phase, normalized by the total length of the lines (in m$^{-1}$, see Fig.\ref{fig:stereology:enonce:PL}). $L_A$ is the ratio between the perimeter of the phase and the total area.
+ \item $\langle P_L\rangle$: the count of the number of intersection of lines and the surface of the phase, normalized by the length of the lines included in the objects (in m$^{-1}$, see Fig.\ref{fig:stereology:enonce:PL}). $L_A$ is the ratio between the perimeter of the phase and the total area.
  \item $\langle A_A\rangle$: in a 3D object, the probes are planes and $\langle A_A\rangle$ is the area of the intersections of the planes and the phase, normalized by the total area of the planes.
 \end{itemize}
  
@@ -110,7 +110,7 @@ Make the simulation for the ``random endpoints'' and compare it to the analytica
 
 
 \subsection{Analytical values}
-The probability to obtain a chord of half length $x$ between $a$ and $b$ is given by Eq. \ref{eq:stereology:enonce:disk}:
+The probability to obtain a chord of half length $x$ between $a$ and $b$ is given by Eq. \ref{eq:stereology:enonce:disk} (see \cite{Mazzolo2004}):
 \begin{equation}
 \mathbb{P}(x\in[a;b])=\int_{a}^{b}\frac{\rho}{R\sqrt{R^2-{\rho}^2}}\textrm{d}\rho \label{eq:stereology:enonce:disk}
 \end{equation}
