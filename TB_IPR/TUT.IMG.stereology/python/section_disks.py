@@ -16,8 +16,8 @@ R = 1.
 # first simulation method: random radius
 d = R * np.random.rand(N)
 radii = np.sqrt(R**2 - d**2)
-probaSimu = np.histogram(radii, bins=nBins)
-plt.plot(probaSimu[1][:-1], probaSimu[0]/N, linewidth=2)
+hi, edges = np.histogram(radii, bins=nBins)
+plt.plot(edges[:-1], hi/N, linewidth=2)
 
 
 # 2nd method: random angles defining points on the circle
@@ -27,8 +27,8 @@ theta = np.pi*2*np.random.rand(N, 2)
 dX = np.diff(R * np.cos(theta))
 dY = np.diff(R * np.sin(theta))
 radii = 1./2 * np.sqrt(dX**2 + dY**2)
-probaSimu2 = np.histogram(radii, bins=nBins)
-plt.plot(probaSimu2[1][:-1], probaSimu2[0]/N, linewidth=2)
+hi, edges = np.histogram(radii, bins=nBins)
+plt.plot(edges[:-1], hi/N, linewidth=2)
 
 # analytical values
 step = .05

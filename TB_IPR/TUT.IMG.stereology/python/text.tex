@@ -184,20 +184,20 @@ R = 1.;
 # first simulation method: random radius
 d = R * np.random.rand(N);
 radii = np.sqrt(R**2 - d**2);
-probaSimu = np.histogram(radii, bins=nBins);
-plt.plot(probaSimu[1][:-1], probaSimu[0]/N, linewidth=2);
+hi, edges = np.histogram(radii, bins=nBins);
+plt.plot(edges[:-1], hi/N, linewidth=2);
 \end{python}
 
 The second method consists in choosing 2 random points on the circle, given by two random angles.
 \begin{python}
-#2nd method: random points on the circle
+# 2nd method: random points on the circle
 # from 2 random angles
 theta = np.pi*2*np.random.rand(int(N),2);
 dX = np.diff(R * np.cos(theta))
 dY = np.diff(R * np.sin(theta));
 radii = 1./2 * np.sqrt(dX**2 + dY**2);
-probaSimu2 = np.histogram(radii, bins=nBins);
-plt.plot(probaSimu2[1][:-1], probaSimu2[0]/N, linewidth=2);
+hi, edges = np.histogram(radii, bins=nBins);
+plt.plot(edges[:-1], hi/N, linewidth=2);
 \end{python}
 
 Finally, the analytical results are computed for comparison.
