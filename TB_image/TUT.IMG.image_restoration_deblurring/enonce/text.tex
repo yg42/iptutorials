@@ -16,7 +16,7 @@ Some of the images are based on observations made with the NASA/ESA Hubble Space
 % https://cral.univ-lyon1.fr/labo/perso/eric.thiebaut/?Teaching
 
 \section{Damage modeling}
-\begin{figure}[!h]\caption{Images that can be used for testing the different restoration algorithms. Intensity levels are represented in false colors.}%
+\begin{figure}[htbp]\caption{Images that can be used for testing the different restoration algorithms. Intensity levels are represented in false colors.}%
 \begin{center}
 	\vspace*{5pt}
 \subfloat[Jupiter, from Hubble Space Telescope, \newline ads/Sa.HST\#ic3g01qlq.]{\includegraphics[width=6.5cm]{ic3g01qlq_flt.png}}
@@ -37,7 +37,7 @@ g=D(f)+n
 Knowing $g$, the objective of restoration is to get an estimate $\hat{f}$ (the restored image) of the original image $f$. If $D$ is a linear process, spatially invariant, then the equation can be simplified as:
 \begin{eqnarray}
 g=h*f+n \label{eq:damage}
-\end{eqnarray}
+\end{eqnarray} 
 where $h$ is the spatial representation of the damage function (called the Point Spread Function - PSF), and $*$ denotes the convolution operation.
 In general, the more knowledge you have about the function $H$ and the noise $n$, the closer $\hat{f}$ is to $f$.\index{Point Spread Function}
 
@@ -66,6 +66,18 @@ where the letters in uppercase are the Fourier transforms of the corresponding t
  \matlabregistered{} has a \minline{checkerboard} function for the 'chessboard' image. The \minline{fspecial} function generates a convolution matrix.
 \end{mremark}
 \end{mcomment}
+
+\begin{pcomment}
+ 
+ \begin{premark}The following function generates in python a checkerboard.
+  \begin{python}
+def checkerboard2(s=8):
+    return np.kron([[1, 0] * 4, [0, 1] * 4] * 4, np.ones((s, s)))
+  \end{python}
+
+ \end{premark}
+
+\end{pcomment}
 
 
 \section{Simple case: no noise}\index{Fourier Transform!Inverse}
