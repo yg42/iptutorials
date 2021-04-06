@@ -10,7 +10,6 @@ from astropy.io import fits
 import matplotlib.pyplot as plt
 import numpy as np
 from astropy.convolution import convolve, convolve_fft
-from scipy.misc import imresize
 import scipy.io as sio
 from scipy import signal
 import progressbar
@@ -35,13 +34,8 @@ def psf2otf(psf, s):
     H = np.real(H)
     return H
 
-
-def checkerboard():
-    arr = np.zeros((8, 8), dtype=int)
-    arr[::2, ::2] = 1
-    arr[1::2, 1::2] = 1
-    out = imresize(arr, 8*np.array(arr.shape), interp='nearest')/255
-    return out
+def checkerboard(s=8):
+    return np.kron([[1, 0] * 4, [0, 1] * 4] * 4, np.ones((s, s)))
 
 
 def addGaussianNoise(I, sigma=1000):
