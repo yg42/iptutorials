@@ -129,22 +129,18 @@ Write a function for generating a set of $n$ random points around a point with c
 \begin{itemize}
 \item Use this function to generate 3 set of points (in a unique matrix) around the points $(0,0)$, $(3,4)$ and $(-5,-3)$.
 
-\begin{mcomment}
- \item  Use the Matlab function \minline{kmeans} for separating the points. The result is presented in Fig. \ref{fig:histoseg:kmeans}.
-\end{mcomment}
+\item Use the builtin kmeans function for separating the points. The result is presented in Fig. \ref{fig:histoseg:kmeans}.
 
-\begin{pcomment}
- \item  Use the python function \pinline{sklearn.cluster.KMeans} for separating the points. The result is presented in Fig.\ref{fig:histoseg:kmeans}.
-\end{pcomment}
 
 \end{itemize}
  \end{qbox} 
+ 
 \begin{mcomment}
-\begin{mremark}Verify the utility of the option \minline{replicate}.  
+\begin{mremark}Use the Matlab function \minline{kmeans}. Verify the utility of the option \minline{replicate}.  
 \end{mremark}
 \end{mcomment}
 \begin{pcomment}
-\begin{premark}
+\begin{premark}Use the python function \pinline{sklearn.cluster.KMeans}. 
 Verify the utility of the option \pinline{n_init=10}.
 \end{premark}
 \end{pcomment}
