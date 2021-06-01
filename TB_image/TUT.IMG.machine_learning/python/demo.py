@@ -11,18 +11,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # preprocessing data and normalization
-from sklearn.preprocessing import scale
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.preprocessing import minmax_scale
-from sklearn.preprocessing import MaxAbsScaler
 from sklearn.preprocessing import StandardScaler
-from sklearn.preprocessing import RobustScaler
-from sklearn.preprocessing import Normalizer
-from sklearn.preprocessing.data import QuantileTransformer
 
 # learning methods
 from sklearn import svm
-from sklearn.cluster import KMeans
 from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
@@ -87,7 +79,7 @@ for ind_c, c in enumerate(classes):
         index = index+1
 
 # percentage of the data used for splitting into train/test
-percentTest = .25
+percentTest = .5
 #%%##############################################################################
 # MLP Classifier (Multi-Layer Perceptron)
 # the data are first scaled
@@ -122,6 +114,8 @@ print("Training set score: %f" % classifier.score(prop_train, target_train))
 print(classification_report(target_test, target_pred, target_names=classes))
 # Compute confusion matrix
 cnf_matrix = confusion_matrix(target_test, target_pred)
+
+
 fig = plot_cm(cnf_matrix, classes, normalize=True)
 fig.savefig("confusion_norm_svm.pdf", bbox_inches='tight')
 fig = plot_cm(cnf_matrix, classes)

@@ -38,9 +38,31 @@ You can use the Matlab function \minline{regionprops} to extract some features s
 
 \begin{pcomment}
 \begin{premark}
-You can use the Python function \pinline{skimage.measure.regionprops} to extract the same geometrical features.
+You can use the Python function \pinline{skimage.measure.regionprops} to extract the same geometrical features. In order to load all image, from the directory, you can use this for loop and use the \pinline{glob} module in order to load all files.
+
+\begin{python}
+import glob
+rep = 'images_Kimia216/'
+classes = ['bird', 'bone', 'brick', 'camel', 'car', 'children',
+           'classic', 'elephant', 'face', 'fork', 'fountain',
+           'glass', 'hammer', 'heart', 'key', 'misk', 'ray', 'turtle']
+nbClasses = len(classes)
+nbImages = 12
+
+# The features are manually computed
+properties = np.zeros((nbClasses*nbImages, 9))
+target = np.zeros(nbClasses * nbImages)
+index = 0
+for ind_c, c in enumerate(classes):
+    filelist = glob.glob(rep+c+'*')
+    for filename in filelist:
+        print(filename)
+\end{python}
+
 \end{premark}
 \end{pcomment}
+
+
 
 
 \section{Image classification}
@@ -48,17 +70,27 @@ You can use the Python function \pinline{skimage.measure.regionprops} to extract
 In order to classify the images, we are going to use neural networks. Pattern recognition networks are feedforward networks that can be trained to classify inputs according to target classes.
 The inputs are the features of each image. The target data are the labels, indicating the class of each image.
 
-\pagebreak  
 
+\subsection{Construction of the array of properties}
 \begin{qbox}
-\begin{enumerate}
-	\item Build the target data, representing the class of each image. The target data for pattern recognition networks should consist of vectors of all zero values except for a 1 in element i, where i is the class they are to represent. In our example, the target data will be an array of 18 lines and 216 columns.
+\begin{itemize}
+	\item Build the target data, representing the class of each image. The target data for pattern recognition networks should consist of vectors of all zero values except for a 1 in element i, where i is the class they are to represent. In our example, the target data will be an array of 18 lines and 216 columns.	
 	\item The database will be divided into a training set ($75\%$) and a test set ($25\%$).
+	\end{itemize}
+	\end{qbox}
+	
+\begin{pcomment}
+\begin{premark}Use \pinline{from sklearn.model_selection import train_test_split} to perform this partition into training/test sets.
+\end{premark}
+\end{pcomment}
+
+
+\subsection{Training and classification}
+\begin{qbox}
+\begin{itemize}
 	\item Run the training task and classify the test images.
 	\item Show the classification confusion matrix as well as the overall performance.
-	\item Try to run the same process. What can you conclude?
-	\item Try to change the parameters of the network to improve the classification performance.
-\end{enumerate}
+\end{itemize}
 \end{qbox}
 
 \begin{mcomment}
@@ -69,7 +101,15 @@ Look at the Matlab function \minline{patternnet} to make the classification.  Lo
 
 \begin{pcomment}
 \begin{premark}
-Look at the Python module \pinline{sklearn.neural_network.MLPClassifier} to make the classification. Notice that your data may be normalized before performing the classification.
+Look at the Python module \pinline{sklearn.neural_network.MLPClassifier} to make the classification. You may also use SVM classifier. Notice that your data may be normalized (use \pinline{from sklearn.preprocessing import StandardScaler}) before performing the classification.
 \end{premark}
 \end{pcomment}
+
+
+\begin{qbox}
+\begin{itemize}
+ 	\item Try to run the same process again (starting from the traint/test split). What can you conclude?
+	\item Try to change the parameters of the network to improve the classification performance.
+\end{itemize}
+\end{qbox}
 
