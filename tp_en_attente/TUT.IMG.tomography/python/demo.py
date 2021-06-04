@@ -7,8 +7,10 @@ Created on Mon Jun 11 14:59:47 2018
 """
 
 import numpy as np
+import numpy.matlib
 import matplotlib.pyplot as plt
 
+import skimage
 from skimage.io import imread
 from skimage.transform import radon, rescale, rotate
 from scipy.signal import convolve
@@ -22,7 +24,7 @@ def imsave(filename, A):
     """
     A[A < 0] = 0
     A = A / np.max(A)
-    skimage.io.imsave(filename, A)
+    skimage.io.imsave(filename, skimage.img_as_ubyte(A))
 
 
 def RamLak(width):
@@ -96,7 +98,7 @@ def backprojection(P, theta, filtre):
 
 # Read image
 image = imread("phantom.png", as_gray=True)
-image = image[:, :, 0]
+image = image[:, :]
 plt.imshow(image, cmap='gray')
 
 
