@@ -96,9 +96,9 @@ The seed pixel is denoted $s$.
  \item Code a function that performs region growing, from a starting pixel (seed).
  \item Try others predicate functions like:
  \begin{itemize}
-  \item pixel $p$ intensity is close to the region mean value, i.e.: $$ |I(p)-m_s|\leq T$$
-  \item Threshold value $T_i$ varies depending on the region $R_i$ and the intensity of the pixel $I(p)$.It can be chosen this way:
-$$T_i=(1-\frac{\sigma_i}{m_i})\cdot T$$
+  \item pixel $p$ intensity is close to the region $\mathcal{R}$ mean value, i.e.: $$ |I(p)-m_\mathcal{R}|\leq T$$
+  \item Threshold value $T$ varies depending on the region $\mathcal{R}$ and the intensity of the pixel $I(p)$. It can be chosen this way, with $\sigma$ and $m$ representing the standard deviation and the mean, respectively:
+$$T_i=\left(1-\frac{\sigma_\mathcal{R}}{m_\mathcal{R}}\right)\cdot T_0$$
  \end{itemize}
 
 \end{itemize}
