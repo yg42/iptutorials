@@ -8,3 +8,4 @@ pandas
 shapely
 imageio
 seaborn
+librosa
