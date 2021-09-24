@@ -25,7 +25,8 @@ ind=np.lexsort(points.transpose());
 P = points[ind[0],:];    
 
 # all points but first one
-pp =points[:-1,:]
+points = points[ind]
+pp =points[1:,:]
 \end{python}
 
 Then, the points are sorted by the cosinus of the angle. This step has complexity $O(n\log n)$.
