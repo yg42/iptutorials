@@ -43,7 +43,8 @@ def conv_hull(points):
     P = points[ind[0], :]
 
     # all points but first one
-    pp = points[:-1,:]
+    points = points[ind]
+    pp = points[1:,:]
 
     # sort all points by angle
     hypothenuse = np.sqrt((pp[:, 0]-P[0])**2 + (pp[:, 1]-P[1])**2)
