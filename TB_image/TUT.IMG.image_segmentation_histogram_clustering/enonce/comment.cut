@@ -1,3 +1,0 @@
-\begin{premark}
-The python function \pinline{numpy.reshape} does the same transformation.
-\end{premark}
