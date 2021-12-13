@@ -12,7 +12,7 @@
 
 \begin{figure}[H]
 \centering%
-\caption{Illustration of 2-D Boolean models observed in a squared window $W$.}%
+\caption{Illustration of 2-D Boolean models observed in a squared window $\Omega$.}%
 \subfloat[Boolean model of disks]{
 \scalebox{0.75}{\input{tikzBooleanModelDisk}}}\hspace*{1.5cm}
 \subfloat[Boolean model of rectangles]{
@@ -34,19 +34,18 @@ Z=\bigcup_{i=1}^{\infty}(Z_i+x_i)
 \end{eqnarray}
 \vspace*{-12pt}
 
-\noindent is a random closed set, which is called the stationary Boolean model with intensity $\lambda$ and grain distribution $\mathbb{Q}$. The random collection $X=\{Z_1+x_1,Z_2+x_2,\dots\} $ of the shifted grains is the particle process underlying the Boolean model. 
+\noindent is a random closed set, which is called the stationary Boolean model with intensity $\gamma$ and grain distribution $\mathbb{Q}$. The random collection $X=\{Z_1+x_1,Z_2+x_2,\dots\} $ of the shifted grains is the particle process underlying the Boolean model. 
 
-Figure \ref{fig:booleanModel} shows a realization of two different Boolean models $Z$ observed in a compact and convex observation window $W$.
+Figure \ref{fig:booleanModel} shows a realization of two different Boolean models $Z$ observed in a compact and convex observation window $\Omega$.
 
-
-\textls[-20]{We are going to simulate some realizations of a Boolean model of 2-D disks in a squared observation window. The final simulated model will be represented as a discrete binary image.}
+We are going to simulate some realizations of a Boolean model of 2-D disks in a squared observation window. The final simulated model will be represented as a discrete binary image.
 
 \begin{qbox}
 \begin{itemize}
 \item
-Generate a 2-D discrete observation window $W$ of size $500 \times 500$.
+Generate a 2-D discrete observation window $\Omega$ of size $500 \times 500$.
 \item
-Generate the random germs that follows a Poisson law with intensity $\lambda=100/(500*500)$. Take care of the edge effects (a grain with a germ outside the observation window could intersect it!)
+Generate the random germs that follows a Poisson law with intensity $\gamma=100/(500*500)$. Take care of the edge effects (a grain with a germ outside the observation window could intersect it!)
 \item Generate the random grains (as disks). The disk radius will follow a uniform distribution $\mathcal{U}(10,50)$.
 \item Vizualize the realization.
 \end{itemize}
@@ -70,18 +69,18 @@ Generate the random germs that follows a Poisson law with intensity $\lambda=100
 \vspace*{-8pt}
 \section{Geometrical characterization of a 2-D Boo\-lean mo\-del}\vspace*{-8pt}
 
-Assume we observe $Z$ in a compact, convex observation window $W$ with positive volume (as shown in Figure \ref{fig:booleanModel}).
-Our aim is to extract distributional information from the geometric properties of the sample $Z \cap W$. Thus, we assume we can measure geometric functionals like the perimeter of the sample $Z \cap W$ which is a finite union of convex bodies (a polyconvex set). By a geometric functional $\phi$ we mean a real-valued functional defined on the space of polyconvex sets with specific additional properties. Important examples of geometric functionals are the Minkowski functionals $W_{\nu}$ that are related in the 2-D space to the measures of area ($A$), perimeter ($P$) and Euler number ($\chi$):
+Assume we observe $Z$ in a compact, convex observation window $\Omega$ with positive volume (as shown in Figure \ref{fig:booleanModel}).
+Our aim is to extract distributional information from the geometric properties of the sample $Z \cap W$. Thus, we assume we can measure geometric functionals like the perimeter of the sample $Z \cap W$ which is a finite union of convex bodies (a polyconvex set). By a geometric functional $\phi$ we mean a real-valued functional defined on the space of polyconvex sets with specific additional properties. Important examples of geometric functionals are the Minkowski functionals $W_{n}$ that are related in the 2-D space to the measures of area ($A$), perimeter ($P$) and Euler number ($\chi$):
 \begin{eqnarray}
 W_0&=&A\\
 W_1&=&P/2\\
 W_2&=&\pi \chi
 \end{eqnarray}
 %
-The boundary of the observation window $W$ has a disturbing effect. It is therefore of advantage to assume a sufficiently large observation
+The boundary of the observation window $\Omega$ has a disturbing effect. It is therefore of advantage to assume a sufficiently large observation
 window and to consider only limits as the window tends to infinity. This motivates the introduction of the density (or specific value) of the Boolean model for a geometric functional $\phi$. The density of $\phi$ is the combined spatial and probabilistic mean value:\vspace*{-8pt}
 \begin{eqnarray}
-\overline{\phi}(Z)=\lim_{r\rightarrow\infty}\frac{\mathbb{E}[\phi(Z\cap rW)]}{W_0(rW)}
+\overline{\phi}(Z)=\lim_{r\rightarrow\infty}\frac{\mathbb{E}[\phi(Z\cap r\Omega)]}{W_0(r\Omega)}
 \end{eqnarray}
 The crucial problem when studying a Boolean model is, that the particles overlap and can therefore not be observed individually.
 
@@ -90,13 +89,20 @@ For isotropic Boolean models and by using the densities of the particle process 
 \begin{eqnarray}
 \overline{\phi}(X)=\gamma\mathbb{E}[\phi(Z_0)]
 \end{eqnarray}
-Miles formulas express the observable Minkowski densities $\overline{W}_{\nu}(Z)$ in terms of the Minkowski densities $\overline{W}_{\nu}(X)$ and can be inverted.\\
+Miles formulas express the observable Minkowski densities $\overline{W}_{n}(Z)$ in terms of the Minkowski densities $\overline{W}_{n}(X)$ and can be inverted.\\
 For example in 2-D: \vspace*{-8pt}
 \begin{eqnarray}
 \overline{W}_0(Z)&=&1-e^{-\overline{W}_0(X)}\\
 \overline{W}_1(Z)&=&e^{-\overline{W}_0(X)}\overline{W}_1(X)\label{eq:miles2}\\
 \overline{W}_2(Z)&=&e^{-\overline{W}_0(X)}\left(\overline{W}_2(X)-\overline{W}_1(X)^2\right)\label{eq:miles3}
 \end{eqnarray}
+Practically, in 2-D, $A,P,\chi$ are the measures (area, perimeter, Euler number) obtained in the entire observation, $a,p,x$ are the measures of the typical grain, and $\gamma$ is the density of the process. $\Omega_{size}$ is the area of the observation window $\Omega$.
+
+\begin{align}
+\dfrac{A}{\Omega_{size}} & = 1-e^{-\gamma a}\\
+\dfrac{P}{\Omega_{size}} & = e^{-\gamma a}\times \gamma p\\
+\dfrac{\pi \chi}{\Omega_{size}} & = e^{-\gamma a} \left( \pi\gamma x - \dfrac{1}{4}(\gamma p)^2 \right)
+\end{align}
 \vspace*{-8pt}
 \begin{qbox}
 \begin{itemize}
