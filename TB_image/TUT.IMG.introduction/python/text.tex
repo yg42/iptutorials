@@ -6,41 +6,44 @@
 # display images
 import matplotlib.pyplot as plt
 # ndimage defines a few filters
-from scipy import misc, ndimage
+from skimage.filters.rank import mean
+import skimage.filters  # prewitt, gaussian
 # numeric calculation
 import numpy as np
 # measure time
 import time
 # read and save images
-import imageio
+from skimage.io import imread, imsave
 # convolution method
 from scipy.signal import convolve2d
+# data
+import skimage.data as data
 \end{python}
 
 \vspace*{-10pt}
 \subsection{First manipulations}
 
 \subsubsection{Open, write images}
-The following file loads the ascent image and display it. The \minline{print} function is optional.
+The following file loads the camera image and display it. The \minline{print} function is optional.
 
 \index{Image!Load}
 
 \begin{python}
-# load file ascent
-ascent = misc.ascent()
+# load file camera
+camera = data.camera()
 # load file cerveau.jpg
-brain = imageio.imread('cerveau.jpg')
+brain = imread('cerveau.jpg')
 print(type(brain))
 print(brain.shape, brain.dtype)
 # save file
-imageio.imwrite('test.png', brain)
+imsave('test.png', brain)
 \end{python}
 
 
 \subsubsection{Display images}\index{Image!Display}
 You can modify to previous example to add the following lines:
 \begin{python}
-plt.imshow(ascent)
+plt.imshow(camera)
 plt.show()
 \end{python}
 Notice that you have to close the image window to write commands again. Also, the colormap is not the good one by default (see Fig. \ref{fig:introduction:python:display}).
@@ -49,14 +52,14 @@ Notice that you have to close the image window to write commands again. Also, th
 plt.figure(figsize=(10, 3.6))
 # first subplot
 plt.subplot(131)
-plt.imshow(ascent)
+plt.imshow(camera)
 # second subplot
 plt.subplot(132)
-plt.imshow(ascent, cmap=plt.cm.gray)
+plt.imshow(camera, cmap=plt.cm.gray)
 plt.axis('off')
 # third subplot (zoom)
 plt.subplot(133)
-plt.imshow(ascent[200:220, 200:220], cmap=plt.cm.gray, interpolation='nearest')
+plt.imshow(camera[200:220, 200:220], cmap=plt.cm.gray, interpolation='nearest')
 plt.subplots_adjust(wspace=0, hspace=0., 
                     top=0.99, bottom=0.01, 
                     left=0.05, right=0.99)
@@ -111,9 +114,10 @@ The number of pixels is reduced by subsampling the image. Notice that there is n
 The following code uses the properties of integer operations to round values to the nearest integer. Illustration is presented Fig. \ref{fig:introduction:python:quantization}.
 
 \begin{python}
-q4 = ascent // 4*4;
-q16= ascent //16*16;
-q32= ascent //32*32;
+# Integer division operator //
+q4 = camera // 4*4;
+q16= camera //16*16;
+q32= camera //32*32;
 \end{python}
 
 \vspace*{-3mm}
@@ -132,13 +136,13 @@ q32= ascent //32*32;
 In order to test the effect of jpeg compression, one can use the parameter \pinline{quality}. For the lowest quality, the loss of informations is really important (see Fig.\ref{fig:introduction:python:jpeg}).
 \begin{python}
 # test jpeg quality
-imageio.imwrite("a_25.python.jpeg", ascent, quality=25);
-imageio.imwrite("a_100.python.jpeg", ascent, quality=100);
-imageio.imwrite("a_50.python.jpeg", ascent, quality=50);
-imageio.imwrite("a_75.python.jpeg", ascent, quality=75);
-imageio.imwrite("a_1.python.jpeg", ascent, quality=1);
+imsave("a_25.python.jpeg", camera, quality=25);
+imsave("a_100.python.jpeg", camera, quality=100);
+imsave("a_50.python.jpeg", camera, quality=50);
+imsave("a_75.python.jpeg", camera, quality=75);
+imsave("a_1.python.jpeg", camera, quality=1);
 \end{python}
-
+ 
 \begin{figure}[H]
  \centering\caption{Different quality used to compress jpeg files.}%
  \subfloat[Quality 1.]{\includegraphics[width=.28\linewidth]{a_1.python.jpeg}}\hfill
@@ -150,19 +154,19 @@ imageio.imwrite("a_1.python.jpeg", ascent, quality=1);
 
 
 \subsection{Histogram}\index{Histogram}
-To plot the histogram of an image, you can use the hist function (see result in Fig. \ref{fig:histo}).
+To compute the histogram of an image, we recommand the numpy function \pinline{histogram} (see result in Fig. \ref{fig:histo}).
 \begin{python}
-plt.hist(ascent.flatten(), 256)
-plt.show()
+h, edges = np.histogram(camera, bins=256)
+plt.plot(edges[:-1], h)
 \end{python}
-\begin{figure}[H]
- \centering\caption{Histogram of ascent image.}%
- \includegraphics[width=8cm]{histo.png}%
+\begin{figure}[H] 
+ \centering\caption{Histogram of camera image.}%
+ \includegraphics[width=.8\linewidth]{histogramme.pdf}%
  \vspace*{-5pt}%
  \label{fig:histo}%
 \end{figure}
 
-You can also write your own code. The execution time is higher for these two functions than for the previous one.
+You can also write your own code. The execution time is lower for the numpy method, which is vectorized and optimized.
 \begin{python}
 # Histogram function with 2D image
 def compute_histogram(image):
@@ -188,37 +192,41 @@ def compute_histogram2(image):
 The following code presents a comparison of the different method for histogram computation.
 
 \begin{python}
-# load ascent image and compute histograms
-ascent = misc.ascent()
-t0 = time.clock()
-h = compute_histogram(ascent)
-t1 = time.clock()
-h2=compute_histogram2(ascent)
-t2 = time.clock()
+# load camera image and compute histograms
+camera = data.camera()
+t0 = time.time()
+h = compute_histogram(camera)
+t1 = time.time()
+h2 = compute_histogram2(camera)
+t2 = time.time()
+
 # .... plots
-print "execution time 2D:%g" %(t1-t0)
+print(f"execution time 2D: {t1-t0:.2} s")
 plt.subplot(131)
 plt.plot(h)
 plt.title('2D function')
 
-print "execution time 1D:%g" %(t2-t1)
+print(f"execution time 1D: {t2-t1:.2} s")
 plt.subplot(132)
 plt.plot(h2)
 plt.title('1D function')
-# last plot: with matplotlib function
+
+# last plot: with numpy function
 plt.subplot(133)
-t3 = time.clock()
-plt.hist(ascent.flatten(), 256)
-t4 = time.clock()
-print "execution time matplotlib:%g" %(t4-t3)
+t3 = time.time()
+h, edges = np.histogram(camera, bins=256)
+plt.plot(edges[:-1], h)
+t4 = time.time()
+print(f"execution time numpy: {t4-t3:.2} s")
+
 # display
 plt.show()
 \end{python}
 The console outputs the following computation durations:
 \begin{sh}
-execution time 2D: 1.40284 s
-execution time 1D: 1.27649 s
-execution time matplotlib: 0.261095 s
+execution time 2D: 0.44 s
+execution time 1D: 0.4 s
+execution time numpy: 0.0025 s
 \end{sh}
 
 
@@ -227,44 +235,11 @@ The linear mapping is a simple method that stretches linearly the histogram. If 
 
 \begin{python}
 def image_stretch(image):
-	# return image with new maximum and minimum at 255 and 0
-	minimum = image.min();
-	maximum = image.max();
-	a = 255/(maximum-minimum);
-	b = -255*minimum/(maximum-minimum);
-	return a*image+b;
+    # returns image with new maximum and minimum at 255 and 0
+    I = I - np.min(I)
+    I = 255 * I / np.max(I)
+    return I.astype('int')
 \end{python}
-
-
-\subsection{Aliasing effect}\index{Aliasing}
-\begin{python}
-# aliasing effect (Moire)
-def circle(fs, f):
-    # Generates an image with aliasing effect
-    # fs: sample frequency
-    # f : signal frequency
-    t = np.arange(0,1,1./fs);
-    ti,tj = np.meshgrid(t,t);
-    C = np.sin(2*np.pi*f*np.sqrt(ti**2+tj**2));
-    return C
-\end{python}
-
-The image of Fig. \ref{fig:introduction:python:aliasing} is generated with the following code.
-
-\begin{python}
-C = circle(300,50);
-plt.imshow(C, cmap=plt.cm.gray);
-plt.show()
-imageio.imwrite('moire.png', C);
-\end{python}
-
-\begin{figure}[H]
- \centering\caption{Moiré effect, generated with $f_s=300$ and $f=50$.}%
- \vspace*{-2pt}%
- \includegraphics[width=8.5cm]{moire.png}%
- \vspace*{-10pt}%
- \label{fig:introduction:python:aliasing}%
-\end{figure}
 
 
 \subsection{Low-pass filtering}
@@ -277,8 +252,8 @@ The mean filter is illustrated in Fig. \ref{fig:introduction:python:mean}.
 
 \begin{python}
 # mean on a 3x3 neighborhood
-m3 = ndimage.filters.uniform_filter(ascent)
-m25= ndimage.filters.uniform_filter(ascent, 25)
+m3 = mean(camera, np.ones((3, 3))
+m25= mean(camera, np.ones((25, 25))
 
 plt.subplot(121)
 plt.imshow(m3, cmap=plt.cm.gray)
@@ -295,19 +270,19 @@ plt.show()
 
 \begin{figure}[H]
  \centering\caption{Mean filters.}
- \subfloat[Neighborhood of size 3x3.]{\includegraphics[height=5cm]{ascent_mean_3.png}}\hspace{1cm}
- \subfloat[Neighborhood of size 25x25.]{\includegraphics[height=5cm]{ascent_mean_25.png}}%
+ \subfloat[Neighborhood of size 3x3.]{\includegraphics[height=5cm]{camera_mean_3.png}}\hspace{1cm}
+ \subfloat[Neighborhood of size 25x25.]{\includegraphics[height=5cm]{camera_mean_25.png}}%
  \label{fig:introduction:python:mean}%
 \end{figure}
 
 \subsubsection{Gaussian filter}
 The gaussian filter is presented in Fig. \ref{fig:introduction:python:gaussian}.
 \begin{python}
-# ascent image
-ascent = misc.ascent()
+# camera image
+camera = data.camera()
 
 # Gaussian filter
-gaussian = ndimage.filters.gaussian_filter(ascent, 5)
+gaussian = skimage.filters.gaussian(camera, 5)
 \end{python}
 
 \vspace*{-4pt}
@@ -336,17 +311,17 @@ Derivative filters (Prewitt, Sobel...) use a finite derivation approximation. Th
 Illustration is proposed in Fig. \ref{fig:introduction:python:prewitt}.
 
 \begin{python}
-# ascent image
-ascent = misc.ascent()
-ascent.astype('int32');
+# camera image
+camera = data.camera()
+camera.astype('int32');
 
 # Prewitt filter
-prewitt0 = ndimage.filters.prewitt(ascent, axis=0)
-prewitt1 = ndimage.filters.prewitt(ascent, axis=1)
+prewitt0 = skimage.filters.prewitt(camera, axis=0)
+prewitt1 = skimage.filters.prewitt(camera, axis=1)
 
 # Sobel filter
-dy = ndimage.filters.sobel(ascent, axis=0) # vertical
-dx = ndimage.filters.sobel(ascent, axis=1) # horizontal
+dy = skimage.filters.sobel(camera, axis=0) # vertical
+dx = skimage.filters.sobel(camera, axis=1) # horizontal
 mag = np.hypot(dx, dy)  # magnitude
 sobel = mag * 255.0 / mag.max()  # normalize (Q&D)
 
@@ -379,15 +354,15 @@ plt.show()
 The previous code uses filters proposed by the \pinline{skimage} module. If you want to write down the convolution matrix, this is the solution:
 \begin{python}
 h = np.array([[-1, 0, 1], [-1, 0, 1], [-1, 0, 1] ])
-grad1 = convolve2d(ascent, h);
-plt.imshow(grad1, cmap=plt.cm.gray)
+grad1 = convolve2d(camera, h);
+plt.imshow(grad1, "gray")
 plt.show()
 
-grad0 = convolve2d(ascent, h.transpose());
-plt.imshow(grad0, cmap=plt.cm.gray)
+grad0 = convolve2d(camera, h.transpose());
+plt.imshow(grad0, "gray")
 plt.show()
 
-plt.imshow(np.sqrt(grad0**2 + grad1**2), cmap=plt.cm.gray)
+plt.imshow(np.sqrt(grad0**2 + grad1**2), "gray")
 plt.show()
 \end{python}
 
@@ -410,7 +385,7 @@ def sharpen(I, alpha):
 
 This constitutes a really simple and efficient edge sharpening method. To test it, you may write this example code:
 \begin{python}
-I = skimage.io.imread('osteoblaste.png').astype(np.float)
+I = imread('osteoblaste.png').astype(np.float)
 I = I/255
 A = [1, 0.5, 5]
 
@@ -424,7 +399,7 @@ for i,alpha in enumerate(A):
     plt.imshow(E, cmap=plt.cm.gray)
     plt.title('alpha='+str(alpha))
     
-    skimage.io.imsave('osteoblaste_rehauss_'+str(alpha)+'.python.png', E)
+    imsave('osteoblaste_rehauss_'+str(alpha)+'.python.png', E)
 
 plt.show()
 \end{python}
@@ -444,3 +419,36 @@ plt.show()
  \caption{Image enhancement: $I=\alpha\cdot I+HP(I)$, where $HP$ is a high-pass filter (the Laplacian filter in these illustrations).}
  \label{fig:introduction:matlab:enhancement}
 \end{figure}
+
+
+
+\subsection{Aliasing effect}\index{Aliasing}
+\begin{python}
+# aliasing effect (Moire)
+def circle(fs, f):
+    # Generates an image with aliasing effect
+    # fs: sample frequency
+    # f : signal frequency
+    t = np.arange(0,1,1./fs);
+    ti,tj = np.meshgrid(t,t);
+    C = np.sin(2*np.pi*f*np.sqrt(ti**2+tj**2));
+    return C
+\end{python}
+
+The image of Fig. \ref{fig:introduction:python:aliasing} is generated with the following code.
+
+\begin{python}
+C = circle(300,50);
+plt.imshow(C, cmap=plt.cm.gray);
+plt.show()
+imsave('moire.png', C);
+\end{python}
+
+\begin{figure}[H]
+ \centering\caption{Moiré effect, generated with $f_s=300$ and $f=50$.}%
+ \vspace*{-2pt}%
+ \includegraphics[width=8.5cm]{moire.png}%
+ \vspace*{-10pt}%
+ \label{fig:introduction:python:aliasing}%
+\end{figure}
+
