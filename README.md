@@ -22,3 +22,6 @@ Each folder contains the LaTeX source of the book, and MATLAB and PYTHON proposi
 
 **Warning**: corrections may contain errors. Feel free to modify and share your work.
 
+# Practicing online
+
+Register for free to the [online course at coursera](https://fr.coursera.org/learn/moocimage-filtrage) if you need video introduction and interactive advices.
