@@ -8,13 +8,14 @@ Created on Wed Apr 11 14:49:19 2018
 
 
 from skimage import morphology as m
-from scipy import misc
+
 import matplotlib.pyplot as plt
 from skimage.measure import regionprops
 from skimage.measure import label
 import numpy as np
+from skimage.io import imread, imsave
 
-I = imageio.imread("toy.png")
+I = imread("toy.png")
 I = I[:, :, 1]
 plt.imshow(I)
 plt.show()
@@ -78,25 +79,25 @@ def shapeFilter(I, selem=m.square(25)):
 F = bwFilter(I > 50, 'area', (0, 5000))
 plt.imshow(F)
 plt.show()
-imageio.imwrite('toy_binary_areaOpening.python.png', 255*np.uint8(F))
+imsave('toy_binary_areaOpening.python.png', 255*np.uint8(F))
 
 F = grayFilter(I, 'area', (0, 1000))
 plt.imshow(F)
 plt.show()
-imageio.imwrite('toy_areaOpening.python.png', F)
+imsave('toy_areaOpening.python.png', F)
 
 F = grayFilter(I, 'eccentricity', (0, 0.75))
 plt.imshow(F)
 plt.show()
-imageio.imwrite('toy_elongThinning.python.png', F)
+imsave('toy_elongThinning.python.png', F)
 
 
 F = grayFilter(I, 'solidity', (0, 0.75))
 plt.imshow(F)
 plt.show()
-imageio.imwrite('toy_convThinning.python.png', F)
+imsave('toy_convThinning.python.png', F)
 
 F = shapeFilter(I)
 plt.imshow(F)
 plt.show()
-imageio.imwrite('toy_recOpening.python.png', F)
+imsave('toy_recOpening.python.png', F)
