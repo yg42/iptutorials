@@ -14,7 +14,7 @@ from scipy import signal
 from scipy import misc
 from scipy import spatial
 from skimage import measure
-
+from skimage.io import imread, imsave
 
 def countIntercepts(I, h):
     B = np.abs(signal.convolve2d(I, h, mode='same'))
@@ -35,10 +35,10 @@ def perimCrofton(I):
     n2 = countIntercepts(I, h.transpose())
 
     h = np.array([[1, 0], [0, -1]])
-    n3 = countIntercepts(I, h.transpose())
+    n3 = countIntercepts(I, h)
 
     h = np.array([[0, 1], [-1, 0]])
-    n4 = countIntercepts(I, h.transpose())
+    n4 = countIntercepts(I, h)
 
     perim_Crofton = np.pi/4 * (n1+n2 + 1/np.sqrt(2)*(n3+n4))
     return perim_Crofton
@@ -113,8 +113,8 @@ def convexity(I):
 
 # tests on binary image
 # load the image
-I = imageio.imread("camel-5.png")
-I = I[:, :, 0] > 100
+I = imread("camel-5.png")
+I = I > 100
 plt.imshow(I)
 plt.axis('equal')
 plt.show()
