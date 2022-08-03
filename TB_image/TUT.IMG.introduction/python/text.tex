@@ -300,6 +300,37 @@ The computation of the high-pass filter is simply the subtraction of a low-pass 
 H = I-m25
 \end{python}
 
+\subsection{Convolution algorithm}
+
+\index{Filtering!Convolution}
+A very simple 2D convolution function, that does not handle sides, can be coded as:
+
+\begin{python}
+ def myconv2d(I, h):
+    X, Y = I.shape
+    N, M = h.shape
+    G = I.copy()
+    
+    # loop on all pixels that can include the kernel 
+    # (this avoids side effects)
+    for i in np.arange(0, X-N):
+        for j in np.arange(0, Y-M):
+            
+            w = I[i:i+N, j:j+M]
+            g = np.sum(w*h)
+            G[i+N//2, j+M//2] = g
+            
+    return G
+\end{python}
+ 
+\begin{figure}[htbp]
+ \centering 
+ \includegraphics[width=5cm]{myconv2d.png}
+ \caption{Illustration of a simple convolution filter, a mean filter of size $25\times 25$. One can see the sides of the image have not been filtered.}
+\end{figure}
+
+
+
 
 \vspace*{-7pt}
 \subsection{Derivative filters}

@@ -4,6 +4,8 @@
 
 \begin{note}
 In this tutorial, you will discover the basic functions in order to load, manipulate and  display images. The main informations of the images will be retrieved, like size, number of channels, storage class, etc. Afterwards, you will be able to perform your first classic filters.
+
+Do not forget that one of the main objectives is finding by yourself (in the documentation of the different modules) the usage of the appropriate functions. 
 \end{note}
 
 \noindent The different processes will be realized on the following images:
@@ -27,8 +29,15 @@ In this tutorial, you will discover the basic functions in order to load, manipu
 \index{Image!Load}\index{Image!Display}
 
 \begin{pcomment}
-\begin{premark}Image loading can be made by the use of the python function \pinline{imageio.imread}.
+\begin{premark}
+\begin{itemize}\item Image loading can be made by the use of the python function \pinline{skimage.io.imread}.
+ \item 
 The visualization of the image in the screen is realized by using the module \pinline{matplotlib.pyplot}.
+\item Also import the numpy module with \pinline{import numpy as np}. All images with be manipulated as a numpy array.
+\end{itemize}
+
+
+
 \end{premark}
 \end{pcomment}
 
@@ -56,6 +65,14 @@ Try to write images with the JPEG file format with different compression ratios 
  \end{mremark}
 \end{mcomment}
 
+\begin{pcomment}
+ \begin{premark}
+  See \pinline{skimage.io.imsave}
+ \end{premark}
+
+\end{pcomment}
+\index{Image!Save}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Color quantization}
 \index{Quantization}
@@ -69,29 +86,57 @@ Color quantization is a process that reduces the number of distinct colors used 
 \end{qbox}
 
 
+\begin{pcomment}
+ You can take advantage of the floor division in order to get integer value of the division, for example:
+ \begin{sh}
+>>> print(255//4)
+63
+ \end{sh}
+ 
+\end{pcomment}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \vspace*{-8pt}
 \section{Image histogram}
 \index{Histogram}
 An image histogram represents the gray level distribution in a digital image.
-The histogram corresponds to the number of pixels for each gray level.
+The histogram corresponds to the number of pixels for each gray level. It is equivalent to a probability density function.
+\index{Probability density function}
+
 \begin{mcomment}
-The \matlabregistered{} function that computes the histogram of any gray level image has the following prototype:
+You have to code a \matlabregistered{} function that computes the histogram of any gray level image, with the following prototype:
 \begin{matlab}
 function h = histogram(I)
 \end{matlab}
 \end{mcomment}
 
 \begin{pcomment}
-The python function has the following prototype:
+
+
+With \pinline{numpy}, you can use a the following code to plot the histogram:
+
+\begin{python}
+# I is the 2D grayscale image
+h, edges = np.histogram(I, bins=256)
+plt.plot(edges[:-1], h)
+plt.show()
+\end{python}
+
+You have to code a python function with the following prototype:
 \begin{python}
 def histogram(I):
 \end{python}
+
 \end{pcomment}
 
 \begin{qbox}
-Compute and visualize the histogram of the image 'muscle.jpg'.
+\begin{itemize}
+ \item Test the numpy version of the histogram.
+ \item Code your own version of this function and visualize the histogram of the image 'muscle.jpg'.
+\end{itemize}
+
 \end{qbox}
 
 
@@ -112,27 +157,6 @@ $f(min)=0$ and $f(max)=255$.
 \end{itemize}
 \end{qbox}
 
-\vspace*{-8pt}
-
-\section{Aliasing effect}
-\index{Aliasing}
-
-\begin{qbox}
-	\begin{minipage}{0.6\textwidth}
-\begin{itemize}
-\item Create an image (as right) that contains rings as sinusoids. The function takes two input parameters: the sampling frequency and the signal frequency.
-%\begin{center}
-%\includegraphics[height=3.5cm]{moire.png}
-%\includegraphics[height=4.25cm]{moire2.png}
-%\end{center}
-\item Look at the influence of the two varying frequencies. What do you observe? Explain the phenomenon from a theoretical point of view.
-\end{itemize}
-\end{minipage}
-\hfill
-\begin{minipage}{0.35\textwidth}
-	\includegraphics[height=3.5cm]{moire.png}
-\end{minipage}
-\end{qbox}
 
 %%%%%%%%%%%%%%%%%
 % filtering
@@ -172,7 +196,7 @@ Be careful to the function options for border problems. Also, the \matlabregiste
 
 \begin{pcomment}
 \begin{premark}
-The module \pinline{scipy.ndimage.filters} contains a lot of classical filters.
+The modules \cprotect{\href{https://scikit-image.org/docs/stable/api/skimage.filters.html}}{\pinline{scipy.ndimage.filters}} and  \cprotect{\href{https://scikit-image.org/docs/stable/api/skimage.filters.rank.html}}{\pinline{scipy.ndimage.filters.rank}} contain a lot of classical filters.
 \end{premark}
 \end{pcomment}
 \begin{qbox}
@@ -189,7 +213,35 @@ High-pass filtering aims to smooth the low intensity variations of the image to 
 \begin{itemize}
 	\item Test the high-pass filters $HP$ on the two initial images in the following way: 
 	$HP(f)=f-LP(f)$ where $LP$ is a low-pass filtering (see the previous exercise).
-	\item Test the Laplacian \label{lbl:introduction:laplacien}(high-pass) filter on the two initial images with the following convolution mask:
+	\item Test the Laplacian \label{lbl:introduction:laplacien}(high-pass) filter on the two initial images.
+	
+\end{itemize}
+\end{qbox}
+
+\section{Convolution algorithm}
+
+The general expression of the convolution, denoted by the operator $*$, is given by
+$$g(x,y)= h *f(x,y)=\sum_{i=0}^{N-1}{\sum_{j=0}^{M-1}{ h(i, j)f(x-i,y-j)}}$$
+
+with $f$ the original image, $g$ the filtered image and $h$ the convolution mask (a.k.a. kernel). 
+
+\begin{pcomment}
+The \cprotect{\href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.convolve2d.html}}{\pinline{scipy.signal.convolve2d}} is used for 2D convolution.
+\end{pcomment}
+
+\begin{qbox} Apply the convolution operation with the following convolution kernels, that define some classical filters:
+ \begin{itemize}
+ \item Mean filter
+ $$\frac{1}{9}
+\left[
+\begin{array}{ccc}
+1&1&1\\
+1&1&1\\
+1&1&1
+\end{array}
+\right]
+$$
+  \item Laplacian filter
 $$
 \left[
 \begin{array}{ccc}
@@ -199,7 +251,19 @@ $$
 \end{array}
 \right]
 $$
-\end{itemize}
+
+\item Gaussian filter:
+$$\frac{1}{16}
+\left[
+\begin{array}{ccc}
+1&2&1\\
+2&4&2\\
+1&2&1
+\end{array}
+\right]
+$$
+ \end{itemize}
+
 \end{qbox}
 
 
@@ -262,6 +326,27 @@ Enhancement filtering aims to enhance the contrast or accentuate some specific i
 	\item Parameterize the previous filter as:
 	$E(f)=\alpha f+HP(f)$, where $\alpha\in\mathbb{R}$.
 \end{itemize}
+\end{qbox}
+
+
+\section{Aliasing effect}
+\index{Aliasing}
+
+\begin{qbox}
+	\begin{minipage}{0.6\textwidth}
+\begin{itemize}
+\item Create an image (as right) that contains rings as sinusoids. The function takes two input parameters: the sampling frequency and the signal frequency.
+%\begin{center}
+%\includegraphics[height=3.5cm]{moire.png}
+%\includegraphics[height=4.25cm]{moire2.png}
+%\end{center}
+\item Look at the influence of the two varying frequencies. What do you observe? Explain the phenomenon from a theoretical point of view.
+\end{itemize}
+\end{minipage}
+\hfill
+\begin{minipage}{0.35\textwidth}
+	\includegraphics[height=3.5cm]{moire.png}
+\end{minipage}
 \end{qbox}
 
 \section{Open question}

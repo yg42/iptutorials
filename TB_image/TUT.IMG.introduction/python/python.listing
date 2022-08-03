@@ -1,31 +1,4 @@
-# ascent image
-ascent = misc.ascent()
-ascent.astype('int32');
-
-# Prewitt filter
-prewitt0 = ndimage.filters.prewitt(ascent, axis=0)
-prewitt1 = ndimage.filters.prewitt(ascent, axis=1)
-
-# Sobel filter
-dy = ndimage.filters.sobel(ascent, axis=0) # vertical
-dx = ndimage.filters.sobel(ascent, axis=1) # horizontal
-mag = np.hypot(dx, dy)  # magnitude
-sobel = mag * 255.0 / mag.max()  # normalize (Q&D)
-
-# display results
-plt.subplot(131)
-plt.imshow(prewitt0, cmap=plt.cm.gray)
-plt.axis('off')
-plt.title('Prewitt filter axis 0')
-
-plt.subplot(132)
-plt.imshow(prewitt1, cmap=plt.cm.gray)
-plt.axis('off')
-plt.title('Prewitt filter axis 1')
-
-plt.subplot(133)
-plt.imshow(sobel, cmap=plt.cm.gray)
-plt.axis('off')
-plt.title('Sobel filter')
-
+C = circle(300,50);
+plt.imshow(C, cmap=plt.cm.gray);
 plt.show()
+imsave('moire.png', C);
