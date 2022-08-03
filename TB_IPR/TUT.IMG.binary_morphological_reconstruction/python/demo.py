@@ -68,9 +68,27 @@ plt.show()
 """
 
 def reconstruct(image, mask):
-    # should be binary images
+    """
+    Should be binary images. Performs morphological binary reconstruction.
+
+    Parameters
+    ----------
+    image : array
+        binary image.
+    mask : TYPE
+        binary image, representing the seed. mask is included in image.
+
+    Returns
+    -------
+    M : TYPE
+        DESCRIPTION.
+
+    """
+    
+    # Constrain mask into image, takes intersection
     M = np.minimum(mask, image)
 
+    # evaluate size of M
     area = ndimage.measurements.sum(M)
     s = 0
 
