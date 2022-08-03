@@ -14,9 +14,9 @@ import scipy
 from skimage.io import imread, imsave
 from skimage.feature import peak_local_max
 from skimage import measure, exposure
-
+from skimage.exposure import rescale_intensity
 from skimage.morphology import disk, dilation
-
+from skimage import img_as_ubyte
 
 def checkerboard(nb_x=2, nb_y=2, s=10):
     """
@@ -28,7 +28,7 @@ def checkerboard(nb_x=2, nb_y=2, s=10):
     return C
 
 
-def harris(I, K, sigma, t):
+def harris(I, K, sigma, t, filename=None):
     """
     Harris corner detector
     I     : original grayscale image
@@ -46,6 +46,11 @@ def harris(I, K, sigma, t):
     M1 = Ix * Ix
     M2 = Iy * Ix
     M4 = Iy * Iy
+    
+    if filename is not None:
+        imsave(filename+"_M1.png", img_as_ubyte(rescale_intensity( M1, out_range=(0,1))))
+        imsave(filename+"_M2.png", img_as_ubyte(rescale_intensity( M2, out_range=(0,1))))
+        imsave(filename+"_M4.png", img_as_ubyte(rescale_intensity( M4, out_range=(0,1))))
 
     # gaussian filter
     M1 = scipy.ndimage.gaussian_filter(M1, sigma)
@@ -54,6 +59,8 @@ def harris(I, K, sigma, t):
 
     # cornerness measure
     C = M1*M4 - M2*M2 - K * (M1+M4)*(M1+M4)
+    plt.imshow(C, 'gray')
+    plt.show()
     C2 = C.copy()
     C[C < t] = 0
 
@@ -83,7 +90,7 @@ t = 0
 checker = checkerboard(nb_x=2, nb_y=2, s=8)
 imsave('checkerboard.python.png', checker.astype('int'))
 plt.imshow(checker)
-cornerness, corners = harris(checker, K, sigma, t)
+cornerness, corners = harris(checker, K, sigma, t, filename="checker")
 fig = plt.figure()
 plt.imshow(checker)
 plt.plot(corners[:, 1], corners[:, 0], 'o')
@@ -98,7 +105,7 @@ imsave('cornerness_checker.python.png', cornerness)
 I = imread('../matlab/sweden_road.png')
 sigma = 3
 t = 10**7
-cornerness, corners = harris(I, K, sigma, t)
+cornerness, corners = harris(I, K, sigma, t, filename="roadsign")
 imsave('cornerness_swedenroad.python.png',
        exposure.equalize_adapthist(cornerness))
 corners = corners.astype('int')
@@ -109,7 +116,7 @@ P = np.zeros(I.shape, dtype='uint8')
 
 P[corners[:, 0], corners[:, 1]] = 255
 SE = disk(10)
-P = dilation(P, selem=SE)
+P = dilation(P, footprint=SE)
 
 I2[:, :, 0] = np.maximum(I2[:, :, 0], P)
 I2[:, :, 1] = np.minimum(I2[:, :, 1], 255-P)
