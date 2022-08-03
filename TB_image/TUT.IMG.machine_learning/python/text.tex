@@ -25,17 +25,28 @@ import pandas as pd
 \subsection{Feature extraction}
 We make a loop on the whole database to extract some features of each image. The 9 features used here are: area, convex area, eccentricity, equivalent diameter, extent, major axis length, minor axis length, perimeter and solidity. 
 
+Each image in this database is named with the following pattern: \textit{name}--\textit{number.bmp}. One method for reading all images is to define the list of names, and ready all the files by this name, associated to a class of object.
+
 \begin{python}
 # Definitions of the database, classes and images
 rep = 'images_Kimia216/';
 classes = ['bird','bone','brick','camel','car','children',
     'classic','elephant','face','fork','fountain',
     'glass','hammer','heart','key','misk','ray','turtle'];
+    \end{python}
+The following arrays are constructed in order to store the properties and the classes.
+
+\begin{python}
 nbClasses = len(classes);
 nbImages = 12;
 # The features are manually computed
 properties = np.zeros((nbClasses*nbImages,9));
 target = np.zeros(nbClasses * nbImages);
+\end{python}
+
+Each class contains 12 images. The glob python module is used to easily read all images with the given pattern. The variable index handles the index of the class of the object.
+
+\begin{python}
 index=0;
 for ind_c, c in enumerate(classes):
     filelist = glob.glob(rep+c+'*');
