@@ -175,7 +175,7 @@ probaReal = 1/R* r2./sqrt(R^2 - r2.^2);
 \end{matlab}
 
 In order to get the probability density function, you have to perform the approximation of the integral (here, by the so-called rectangle method):
-$$\int_a^b f(t)\textrm{d}t\approx(b-a)\cdot f\left(\frac{b-a}{2}\right)$$
+$$\int_a^b f(t)\textrm{d}t\approx(b-a)\cdot f\left(\frac{b+a}{2}\right)$$
 which is coded by:
 \begin{matlab}
 probaReal = probaReal * R/nBins; % approximation of the integral
