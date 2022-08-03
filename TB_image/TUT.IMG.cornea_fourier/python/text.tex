@@ -29,7 +29,7 @@ def viewSpectrumPhase(amplitude, phase):
 \end{python}
 
 \subsection{Fourier transform}
-Results (amplitude and phase) are represented in Fig. \ref{fig:fourier:python:cornee}.
+Results (amplitude and phase) are represented in Figs.\ref{fig:fourier:python:fft} and \ref{fig:fourier:python:cornee}.
 
 \begin{python}
 cornea = imageio.imread('cornee.png')
@@ -52,7 +52,14 @@ G = np.angle(spectre);
 viewSpectrumPhase(A, G);
 \end{python}
 
+\begin{figure}[htbp]
+ \centering
+ \subfloat[Logarithm of the amplitude: $\log(1+A)$.]{\includegraphics[width=.45\linewidth]{amplitude.png}}\hfill
+ \subfloat[Phase.]{\includegraphics[width=.45\linewidth]{phase.png}}
+ \caption{Amplitude and phase of the Fourier transform of the cornea. Remember that the information lays in the phase (see reconstruction by phase).}\label{fig:fourier:python:fft}
+\end{figure}
 
+ 
 \subsection{Inverse Fourier Transform}
 
 \begin{python}
@@ -118,7 +125,8 @@ def LowPassFilter(spectrum, cut):
     mask[mx-cut:mx+cut, my-cut:my+cut] = 1;
     f = spectrum * mask;
     plt.figure
-    plt.imshow(abs(f)); plt.title('Low pass filter')
+    plt.imshow(np.log(1+abs(f))); 
+    plt.title('Low pass filter')
     return f;
 \end{python}
 
@@ -137,7 +145,8 @@ def HighPassFilter(spectrum, cut):
     mask[mx-cut:mx+cut, my-cut:my+cut] = 0;
     f = spectrum * mask;
     plt.figure
-    plt.imshow(abs(f)); plt.title('High pass filter')
+    plt.imshow(np.log(1+abs(f))); 
+    plt.title('High pass filter')
     return f;
 \end{python}
 
@@ -162,7 +171,7 @@ plt.imshow(corneaLP, plt.cm.gray);plt.title('reconstruction after LP filtering')
 plt.subplot(1,2,2)
 plt.imshow(corneaHP, plt.cm.gray);plt.title('reconstruction after HP filtering')
  \end{python}
-
+ 
 \vspace*{-5pt}
 \subsection{Application: evaluation of cellular density}
 The cells can be considered as a pattern, and its frequency repetition can found in the Fourier transform. More precisions on this application can be found in \cite{Ruggeri2005,Grisan2005,Ruggeri2007,Selig2015} on the relation between the real cellular density and the image pixels.
