@@ -87,14 +87,14 @@ The module \pinline{skimage.exposure} contains different methods for contrast en
 \index{Histogram!Definition}
 The objective is to transform the image so that its histogram would be constant (and its cumulative distribution function would be linear).
 The notations are:
-\begin{itemize}  \item $I$ is the image of $n$ pixels, with intensities between $0$ and $L$.
+\begin{itemize}  \item $I$ is the image of $n$ pixels, with intensities between $0$ and $L$ (for 8-bits images, $L=255$).
   \item $h$ is the histogram, defined by:
  \end{itemize}
 
-$${\displaystyle h_I(k)=p(x=k)={\frac {n_{k}}{n}},\quad 0\leq k<L}$$
+$${\displaystyle h_I(k)=p(x=k)={\frac {n_{k}}{n}},\quad 0\leq k\leq L}$$
 
 The following transformation $T(I)$ is called histogram equalization.\index{Histogram!Equalization}
-$${\displaystyle T(x_k)=(L-1)\sum _{j=0}^{k}p(x_{j})} $$
+$${\displaystyle T(x_k)=L\cdot \mathrm{cdf}_I(k)} $$
 
 
  where $${\displaystyle \mathrm{cdf}_I(k)=\sum _{j=0}^{k}p(x_{j})} $$ is the cumulative distribution function (cumulative histogram). 
