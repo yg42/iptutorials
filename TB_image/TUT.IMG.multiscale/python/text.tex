@@ -8,13 +8,14 @@ The following function makes the decomposition of the Laplacian and Gaussian pyr
 
 
 \begin{python}
-def LaplacianPyramidDecomposition(Image, levels, interp='bilinear'):
+from skimage.transform import rescale, resize
+
+def LaplacianPyramidDecomposition(Image, levels):
     """
     Laplacian / Gaussian Pyramid
     The last image of the laplacian pyramid allows a full reconstruction of the original image.
     Image: original image, float32
     levels: number of levels of decomposition
-    interp: interpolation mode for downsizing the image
     
     returns: pyrL, pyrG: Laplacian and Gaussian pyramids, respectively, as a list of arrays
     """
@@ -28,8 +29,8 @@ def LaplacianPyramidDecomposition(Image, levels, interp='bilinear'):
         g = ndimage.gaussian_filter(Image, sigma);
         print(g.dtype)
         
-        Image = misc.imresize(g, .5, interp=interp, mode='F');
-        primeImage= misc.imresize(Image, prevImage.shape, interp=interp, mode='F');
+        Image = rescale(g, .5);
+        primeImage= resize(Image, prevImage.shape);
         
         pyrL.append(prevImage - primeImage);
         pyrG.append(prevImage);
@@ -40,7 +41,7 @@ def LaplacianPyramidDecomposition(Image, levels, interp='bilinear'):
 \end{python}
 
 \begin{phelp}
-Notice that with the \pinline{misc.imresize} function, the float mode of the operation has to be specified.
+\pinline{rescale} and \pinline{resize} functions have the same goal but use a scale or a shape as a parameter.
 \end{phelp}
 
 
@@ -73,7 +74,7 @@ def LaplacianPyramidReconstruction(pyr, interp='bilinear'):
     
     Image = pyr[-1];
     for i in range(len(pyr)-2, -1, -1):
-        Image = pyr[i] + misc.imresize(Image, pyr[i].shape, interp=interp, mode='F');
+        Image = pyr[i] + resize(Image, pyr[i].shape);
         
     return Image;
 \end{python}
