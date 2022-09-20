@@ -34,9 +34,9 @@ The Delaunay graph is the dual graph that links the germs of the neighborhing Vo
 Follow these instructions to generate a random tesselation:
 \begin{qbox}
 \begin{enumerate}
-	\item Generate a random point process.
-	\item Determine the Delaunay triangulation.
-	\item Determine the Voronoi diagram.
+	\item Generate a simple random point process, using a uniform distribution. The result is an array of size $N$ by 2.
+	\item Compute the Delaunay triangulation.
+% 	\item Compute the Voronoi diagram.
 	%\item Determine the minimum spanning tree with the \matlabregistered{} function 
 	%\minline{minspantree} (introduced in Matlab 2015b) or \minline{graphminspantree}. It uses Kruskal's algorithm.
 \end{enumerate}
@@ -53,6 +53,10 @@ Follow these instructions to generate a random tesselation:
 \end{premark}
 \end{pcomment}
 
+\begin{note}
+ Notice that these structures will be used to loop over vertices, edges or regions. They contain attributes that make this process easy.
+\end{note}
+
 
 \subsection{Characterization of the Voronoi diagram}
 This basic approach characterizes the set of the cells. With the help of the Voronoi diagram, it is possible to make the two following measurements,
@@ -61,8 +65,10 @@ Area Disorder (AD) and Round Factor Homogeneity (RFH), defined by:
 	AD&=&1-\frac{1}{1+\displaystyle\frac{\sigma(A)}{\mu(A)}}\\
 	RFH&=&1-\frac{\sigma(RF)}{\mu(RF)}
 	\end{eqnarray}
-	where $A$ and $RF$ are calculated on the regions $R_k$ of the Voronoi diagram.  $\mu$ and $\sigma$ are the mean and standard 
-deviation of the areas of the Voronoi cells. The circularity (RF) of a polygon can be defined as the ratio between its area and the area of the disk of an equivalent perimeter.
+	where $A$ and $RF$ are calculated on the regions $R_k$ of the Voronoi diagram.  $\mu(A)$ and $\sigma(A)$ are the mean and standard 
+deviation of the areas of the Voronoi cells. 
+
+The circularity ($RF$) of a polygon can be defined as the ratio between its area and the area of the disk of an equivalent perimeter. $\mu(RF)$ and $\sigma(RF)$ are thus the mean and standard deviation of $RF$.
 
 
 \begin{qbox}
@@ -82,6 +88,8 @@ def AD(vor):
   
   In order to evaluate the area of each Voronoi cell, transform each cell to a polygon. 
 
+  \item $RFH$ can be computed with (almost) the same algorithm.
+  
 \item Represent the couple $(ad,rfh)$ in a graph, which gives a characterization of the Voronoi diagram.
  \end{itemize}
 \end{qbox}
@@ -110,6 +118,29 @@ can also give informations on the graph.
 
 \end{qbox}
 
+\begin{pcomment}
+It is advised to use import the following module:
+\begin{python}
+import networkx as nx
+\end{python}
+
+Then, create a function that transforms the simplices of the Delaunay triangulation into a networkx graph, with the following prototype:
+
+\begin{python}
+def triToNx(tri): 
+"""
+    Convert a triangulation into a NX graph.
+    tri : Delaunay triangulation from scipy.spatial
+
+    Returns
+    G : networkx graph
+    """
+\end{python}
+This function will loop over all simplices of the triangulation, and add an edge in the graph with the computed distance between vertices. 
+
+\end{pcomment}
+
+
 \section{Minimum spanning tree}
 Definition from Wikipedia: a minimum spanning tree (MST) or minimum weight spanning tree is a subset of the edges of a connected, edge-weighted undirected graph that connects all the vertices together, without any cycles and with the minimum possible total edge weight. 
 That is, it is a spanning tree whose sum of edge weights is as small as possible.
@@ -123,6 +154,14 @@ It is implemented in Matlab via the function
 \end{mremark}
 \end{mcomment}
 
+\begin{pcomment}
+ \begin{premark}
+ The networkx module has a function in order to compute the minimum spanning tree. You will then be able to get all edges weights of this MST.
+ \end{premark}
+
+\end{pcomment}
+
+
 \begin{qbox}
  \begin{itemize}
  \item Compute the MST.
@@ -135,7 +174,7 @@ MST.
 \section{Characterization of various point patterns}
 \begin{qbox}
 \begin{enumerate}
-	\item Generate $n$ condition Poisson point processes of $100$ points each. For each realization, calculate the parameters $(AD,RFH)$, 
+	\item Generate $n$ conditional Poisson point processes of $100$ points each. For each realization, calculate the parameters $(AD,RFH)$, 
 $(\mu(L),\sigma(L))$ and $(\mu(L^*),\sigma(L^*))$. Display these $n$ points in a 2D diagram in order to analyze the robustness of the 
 quantification.
 	\item Generate 3 different point processes with regular, uniform and Gaussian dispersion. Display the different diagrams. Which one 

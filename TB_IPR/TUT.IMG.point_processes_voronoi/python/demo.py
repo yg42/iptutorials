@@ -11,8 +11,8 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 from shapely import geometry
-from scipy.sparse import csgraph  # for MST
-
+import networkx as nx # graphs and MST
+from tqdm import tqdm
 
 def RFH(vor):
     """
@@ -41,53 +41,47 @@ def AD(vor):
     res = 1 - 1/(1+np.std(areas) / np.mean(areas))
     return res
 
+def triToNx(tri):
+    """
+    Convert a triangulation into a NX graph.
 
-def triToMat(tri, value=0.):
+    Parameters
+    ----------
+    tri : Delaunay triangulation from scipy.spatial
+
+    Returns
+    -------
+    G : networkx graph
+
     """
-    Transforms the triangulation into a matrix representation, 
-    for simplicity
-    """
-    M = np.full((tri.npoints, tri.npoints), value)
+    G = nx.Graph()
     d = distance.pdist(tri.points)
     distances = distance.squareform(d)
     for s in tri.simplices:
-        M[s[0], s[1]] = distances[s[0], s[1]]
-        M[s[1], s[2]] = distances[s[1], s[2]]
-        M[s[2], s[0]] = distances[s[2], s[0]]
-    return M
-
+        G.add_edge(s[0], s[1], weight=distances[s[0], s[1]])
+        G.add_edge(s[1], s[2], weight=distances[s[1], s[2]])
+        G.add_edge(s[0], s[2], weight=distances[s[0], s[2]])
+    return G
 
 def characterization(tri):
     """
     Characterization of the Delaunay triangulation 
     (mean and std dev of edges lengths)
     """
-    M = triToMat(tri)
-    m = np.mean(M[M > 0])
-    s = np.std(M[M > 0])
+    G = triToNx(tri)
+    L = [w['weight'] for _, _, w in G.edges(data=True)]
+    m = np.mean(L)
+    s = np.std(L)
     return m, s
-
 
 def mst(tri):
     """
     Construction of the minimum spanning tree from the Delaunay triangulation
     retuns mean and std of lengths of edges of the MST.
     """
-    M = triToMat(tri, np.inf)
-    graph = csgraph.csgraph_from_dense(M, null_value=np.inf)
-    Tcsr = csgraph.minimum_spanning_tree(graph)
-    mat = Tcsr.toarray()
-    it = np.nditer(mat, flags=['multi_index'])
-    # plt.figure()
-    Lstar = []
-    while not it.finished:
-        if it[0] != 0:
-            #plt.plot(tri.points[it.multi_index,0], tri.points[it.multi_index,1]);
-            Lstar.append(it[0])
-        it.iternext()
-    #plt.title("Minimum spanning tree")
-    # plt.show();
-
+    G = triToNx(tri)
+    mst = nx.minimum_spanning_tree(G)
+    Lstar = [w['weight'] for _, _, w in mst.edges(data=True)]
     return np.mean(Lstar), np.std(Lstar)
 
 
@@ -117,13 +111,14 @@ def analyse_distributions(n=100):
     ad = []
     all_points = []
     colors = plt.cm.get_cmap('Set1', 8)
-    N = 500
+    N = 500 # number of points
     labs = ['uniform distribution',
             'Gaussian distribution', 'Regular distribution']
     dists = [dist_uniform, dist_gaussian]
 
+    # for the 2 random distributions, we generate n simulations
     for idx, f in enumerate(dists):
-        for i in range(n):
+        for i in tqdm(range(n)):
             points = f(N)
             vor = Voronoi(points)
             tri = Delaunay(points)
@@ -213,7 +208,7 @@ def illustrations():
     This code is used to generate illustrations of the voronoi diagram, 
     delaunay graph and minimum spanning tree
     """
-    N = 15
+    N = 50 # number of points
     # np.random.seed(0); # in order to generate the same distribution each time
     points = np.random.randint(50, size=(N, 2))
     fig = plt.figure()
@@ -242,19 +237,15 @@ def illustrations():
     print(m, s)
 
     # MST
-    M = triToMat(tri, np.inf)
-    graph = csgraph.csgraph_from_dense(M, null_value=np.inf)
-    Tcsr = csgraph.minimum_spanning_tree(graph)
-    mat = Tcsr.toarray()
-    it = np.nditer(mat, flags=['multi_index'])
+    G = triToNx(tri)
+    MST = nx.minimum_spanning_tree(G)
+    
     fig = plt.figure()
     Lstar = []
-    while not it.finished:
-        if it[0] != 0:
-            plt.plot(tri.points[it.multi_index, 0],
-                     tri.points[it.multi_index, 1])
-            Lstar.append(it[0])
-        it.iternext()
+    for i, j in MST.edges():
+        plt.plot(tri.points[(i,j), 0],
+                 tri.points[(i,j), 1])
+        
     plt.plot(points[:, 0], points[:, 1], 'o')
     plt.show()
     fig.savefig("mst.pdf", bbox_inches='tight')
@@ -282,5 +273,7 @@ def illustrateDistributions():
     plt.show()
     fig.savefig("regular.pdf", bbox_inches='tight')
 
+# do not call illustrations by default
+# illustrations()
 
 analyse_distributions()

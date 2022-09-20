@@ -9,7 +9,7 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 from shapely import geometry # for polygons, area and perimeter
-from  scipy.sparse import csgraph # minimum spanning tree
+import networkx as nx # graphs and minimum spanning tree
 \end{python}
 
 \subsection{Random tessellations}
@@ -81,29 +81,36 @@ The Delaunay triangulation is computed with
 \begin{python}
 tri = delaunay(points);
 \end{python}
+
+Then, the conversion to networkx graphs is done by the following function. Notice that the \pinline{pdist} function is used to compute the distance between all pairs of vertices, which is definitely not efficient, but probably simplifies the notations.
+
+\begin{python}
+def triToNx(tri):
+    
+    G = nx.Graph()
+    d = distance.pdist(tri.points)
+    distances = distance.squareform(d)
+    for s in tri.simplices:
+        G.add_edge(s[0], s[1], weight=distances[s[0], s[1]])
+        G.add_edge(s[1], s[2], weight=distances[s[1], s[2]])
+        G.add_edge(s[0], s[2], weight=distances[s[0], s[2]])
+    return G
+\end{python}
+
 Then, the characterization of the triangulation is done by measuring the distances of the edges.
 \begin{python}
 def characterization(tri):
     """
     Characterization of the Delaunay triangulation (mean and std dev of edges)
     """
-    M = triToMat(tri);
-    m = np.mean(M[M>0]);
-    s = np.std(M[M>0]);
-    return m, s;
-def triToMat(tri, value=0.):
-    """
-    Transforms the triangulation into a matrix representation, 
-    for simplicity
-    """
-    M = np.full((tri.npoints, tri.npoints), value);
-    d = distance.pdist(tri.points);
-    distances = distance.squareform(d);
-    for s in tri.simplices:
-        M[s[0], s[1]] = distances[s[0], s[1]];
-        M[s[1], s[2]] = distances[s[1], s[2]];
-        M[s[2], s[0]] = distances[s[2], s[0]];
-    return M;
+    G = triToNx(tri)
+    L = [w['weight'] for _, _, w in G.edges(data=True)]
+    return np.mean(L), np.std(L)
+\end{python}
+
+The characterization of the minimum spanning tree is done with the same kind of function as for the Delaunay graph, and the MST is computed with:
+\begin{python}
+mst = nx.minimum_spanning_tree(G)
 \end{python}
 
 \subsection{Characterization of different realizations}

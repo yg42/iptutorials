@@ -70,7 +70,7 @@ Generate the random germs that follows a Poisson law with intensity $\gamma=100/
 \section{Geometrical characterization of a 2-D Boo\-lean mo\-del}\vspace*{-8pt}
 
 Assume we observe $Z$ in a compact, convex observation window $\Omega$ with positive volume (as shown in Figure \ref{fig:booleanModel}).
-Our aim is to extract distributional information from the geometric properties of the sample $Z \cap W$. Thus, we assume we can measure geometric functionals like the perimeter of the sample $Z \cap W$ which is a finite union of convex bodies (a polyconvex set). By a geometric functional $\phi$ we mean a real-valued functional defined on the space of polyconvex sets with specific additional properties. Important examples of geometric functionals are the Minkowski functionals $W_{n}$ that are related in the 2-D space to the measures of area ($A$), perimeter ($P$) and Euler number ($\chi$):
+Our aim is to extract distributional information from the geometric properties of the sample $Z \cap \Omega$. Thus, we assume we can measure geometric functionals like the perimeter of the sample $Z \cap \Omega$ which is a finite union of convex bodies (a polyconvex set). By a geometric functional $\phi$ we mean a real-valued functional defined on the space of polyconvex sets with specific additional properties. Important examples of geometric functionals are the Minkowski functionals $W_{n}$ that are related in the 2-D space to the measures of area ($A$), perimeter ($P$) and Euler number ($\chi$):
 \begin{eqnarray}
 W_0&=&A\\
 W_1&=&P/2\\
@@ -111,3 +111,11 @@ Practically, in 2-D, $A,P,\chi$ are the measures (area, perimeter, Euler number)
 \item Compare the computed and theoretical values. 
 \end{itemize}
 \end{qbox}
+
+\begin{pcomment}
+ \begin{premark}
+  Useful Python functions from \pinline{skimage.measure}: \pinline{area}, 
+\pinline{perimeter} and \pinline{euler_number}. 
+ \end{premark}
+
+\end{pcomment}
