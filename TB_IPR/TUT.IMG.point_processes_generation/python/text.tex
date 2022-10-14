@@ -3,16 +3,15 @@
 \pcorrectionsection{Python correction}
 
 \begin{python}
-import numpy as np;
-import matplotlib.pyplot as plt;
-from scipy.spatial.distance import pdist;
-from scipy.stats import poisson
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.spatial.distance import pdist
 \end{python}
 
 \vspace*{-8pt}
 
 \subsection{Conditional Poisson Process}
-\textls[-18]{The conditional Poisson Point Process uses a given number of point, contrary to the Poisson Process where the number of points follows a Poisson law. The result is illustrated in Fig.\ref{fig:point_process_generation:python:ppp}.}
+The conditional Poisson Point Process uses a given number of point, contrary to the Poisson Process where the number of points follows a Poisson law. The result is illustrated in Fig.\ref{fig:point_process_generation:python:ppp}.
 
 \vspace*{-8pt}
 
@@ -71,7 +70,7 @@ def neyman_scott(nRoot, xmin, xmax, ymin, ymax, lambdaS, rSon):
     # lambdaS: number of points. lambda is a density, S is the spatial domain
     # rSon: radius around agregate (points are distributed in a square)
     
-    # number of sons
+    # number of sons, follows random law
     nSons = poisson.rvs(lambdaS, size=nRoot);
     # results    
     x=[];
@@ -129,7 +128,7 @@ def energy(P, eFunction=exampleEnergyFunction):
     """
     P = np.transpose(P);
     d = pdist(P);
-    e = exampleEnergyFunction(d);
+    e = eFunction(d);
     return np.sum(e);
     
 def energyFromPoint(p, P, eFunction=exampleEnergyFunction):
@@ -153,7 +152,7 @@ def gibbs(nb_points, xmin, xmax, ymin, ymax, nbiter, eFunction=exampleEnergyFunc
     """
     
     # start with a Poisson Point Process
-    x,y = spat_pp.cond_Poisson(nb_points, xmin, xmax, ymin, ymax);
+    x,y = cond_Poisson(nb_points, xmin, xmax, ymin, ymax);
     nb_moves = 0;
     e_prev = energy(np.vstack((x,y)), eFunction);
     print("initial energy: {0:f}".format(e_prev));
@@ -168,7 +167,7 @@ def gibbs(nb_points, xmin, xmax, ymin, ymax, nbiter, eFunction=exampleEnergyFunc
         e1 = energyFromPoint([x[j], y[j]], P, eFunction);
         
         for m in range(10):
-            xm,ym = spat_pp.cond_Poisson(1, xmin, xmax, ymin, ymax);
+            xm,ym = cond_Poisson(1, xmin, xmax, ymin, ymax);
             
             e2 = energyFromPoint([xm, ym], P, eFunction);
             if e2<e1:
@@ -244,7 +243,7 @@ def marked(nb_points, xmin, xmax, ymin, ymax):
     """
     
     # points
-    x,y = spat_pp.cond_Poisson(nb_points, xmin, xmax, ymin, ymax);
+    x,y = cond_Poisson(nb_points, xmin, xmax, ymin, ymax);
     
     # first mark: radii
     sigma = 5;
