@@ -8,16 +8,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 import spat_pp
 from scipy.spatial.distance import pdist
-
+from tqdm import tqdm
 
 def exampleEnergyFunction(distance):
     """ This function returns e with the same size as distance
     e takes the value given in the variable energy according to the steps
 
     Regular energy function
+    
+    see stairsEnergy for energy definition
     """
-    e = np.zeros(distance.shape)
-    e[distance < 10] = 10
+    steps = [10]
+    energy = [10]
+    # displayEnergy(steps, energy)
+    e = stairsEnergy(distance, steps, energy)
+    
+    
     return e
 
 
@@ -27,12 +33,17 @@ def agregatedEnergyFunction(distance):
 
     Agregated energy function
     """
-    e = np.zeros(distance.shape)
-    e[distance < 2] = 50
-    e[np.logical_and(distance >= 2, distance < 5)] = -10
-    e[np.logical_and(distance >= 5, distance < 10)] = 5
+    steps=[2, 5, 10]
+    energy =[ 50, -10, 5]
+    # displayEnergy(steps, energy)
+    return stairsEnergy(distance, steps, energy)
 
-    return e
+
+def displayEnergy(steps, energy):
+    # if you want to plot energy function, just uses plt.stairs
+    plt.stairs(energy, np.append(0, steps))
+    plt.axhline(0, 0, 50, color='red')
+    plt.show()
 
 
 def energy(P, eFunction=exampleEnergyFunction):
@@ -43,9 +54,20 @@ def energy(P, eFunction=exampleEnergyFunction):
     """
     P = np.transpose(P)
     d = pdist(P)
-    e = exampleEnergyFunction(d)
+    e = eFunction(d)
     return np.sum(e)
 
+
+def stairsEnergy(distance, steps, energy):
+    e = np.zeros_like(distance)
+    prev_step = 0
+    
+    for i, s in enumerate(energy):
+        e[np.logical_and(distance>=prev_step, distance<steps[i])] = energy[i]
+        
+        prev_step = steps[i]
+
+    return e
 
 def energyFromPoint(p, P, eFunction=exampleEnergyFunction):
     """
@@ -70,14 +92,23 @@ def gibbs(nb_points, xmin, xmax, ymin, ymax, nbiter, eFunction=exampleEnergyFunc
     nb_moves = 0
     e_prev = energy(np.vstack((x, y)), eFunction)
     print("initial energy: {0:f}".format(e_prev))
-
-    for i in range(nbiter):
+    plt.figure()
+    
+    # ee=[]
+    for i in tqdm(range(nbiter)):
         # choose a random point
         j = np.random.randint(0, nb_points)
+        
+        # x2, y2 are the points coordinates without the point of index j
         x2 = np.delete(x, j)
         y2 = np.delete(y, j)
+        # In case you want to show the point to be moved
+        # plt.scatter(x, y)
+        # plt.plot(x[j], y[j], 'ro')
+        # plt.show()
 
-        P = np.vstack((x2, y2))
+        # P is the set of points without point of index j
+        P = np.vstack((x2, y2)) 
         e1 = energyFromPoint([x[j], y[j]], P, eFunction)
 
         for m in range(10):
@@ -86,21 +117,29 @@ def gibbs(nb_points, xmin, xmax, ymin, ymax, nbiter, eFunction=exampleEnergyFunc
             e2 = energyFromPoint([xm, ym], P, eFunction)
             if e2 < e1:
                 nb_moves += 1
+                #print(f"Energy before movement:{energy(np.vstack((x, y)), eFunction)} " )
+                # takes some time
                 x[j] = xm
                 y[j] = ym
+                #print(f"Energy after movement:{energy(np.vstack((x, y)), eFunction)} " )
                 e1 = e2
+                
+        # ee.append(energy(np.vstack((x, y)), eFunction))
 
     print("Number of moves: " + str(nb_moves))
     print("Final energy:    " + str(e1))
+    # plt.plot(ee)
+    # plt.show()
     return x, y
 
 
 def test_gibbs():
-    N = 100
-    x, y = gibbs(N, 0, 100, 0, 100, 1000, eFunction=agregatedEnergyFunction)
+    nb_points = 100 # nombre de points
+    nb_iter  = 200  # nombre d'itérations (points à déplacer)
+    x, y = gibbs(nb_points, 0, 100, 0, 100, nb_iter, eFunction=agregatedEnergyFunction)
     print("final energy: " + str(energy((x, y))))
     plt.figure()
     plt.plot(x, y, 'o')
     plt.show()
 
-# test_gibbs();
+test_gibbs()
