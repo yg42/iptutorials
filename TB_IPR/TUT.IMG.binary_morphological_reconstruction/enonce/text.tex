@@ -41,11 +41,17 @@ $A \bullet B  = (A \oplus B) \ominus B $.
 \index{Mathematical Morphology!Erosion}
 \index{Mathematical Morphology!Dilation}
 \begin{qbox}
+\begin{itemize}
+\item Create a square structuring element by simply generating a square matrix of ones.
+\item Create a circular structuring element.
+ \item 
 Test the functions  of dilation, erosion, opening and closing on the image $I_2$ by varying:
 \begin{enumerate}
 	\item the shape of the structuring element,
 	\item the size of the structuring element.
 \end{enumerate}
+\end{itemize}
+
 \end{qbox}
 
 \begin{mcomment}
@@ -57,9 +63,21 @@ The \matlabregistered{} functions are \minline{imdilate}, \minline{imerode}, \mi
 \begin{premark}
 The python functions come from the python module \pinline{scipy.ndimage.morphology}. Useful func\-tions are \pinline{binary_dilation}, \pinline{binary_erosion}, 
  \pinline{binary_opening} and
-\pinline{binary_closing}.
- The function \pinline{ndimage.generate_binary_structure} creates a structuring element.
+\pinline{binary_closing}. 
+
+There are multiple modules and functions for reading images; among them, you could use \pinline{imagio.imread} or \pinline{skimage.io.imread}.
 \end{premark}
+
+For generating a circular structuring element, the following function makes use of the \pinline{numpy.meshgrid} functions.
+\begin{python}
+def disk(radius):
+    # circular structuring element with a given radius
+    x = np.arange(-radius, radius+1, 1)
+    xx, yy = np.meshgrid(x, x)
+    d = np.sqrt(xx**2 + yy**2)
+    return d <= radius
+\end{python}
+
 \end{pcomment}
 
 \section{Morphological reconstruction}\index{Mathematical Morphology!Reconstruction}

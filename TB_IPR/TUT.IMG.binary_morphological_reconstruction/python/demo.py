@@ -29,28 +29,28 @@ B = B > 100
 square = np.ones((5, 5))
 
 # Erosion
-Bsquare_erode = ndimage.morphology.binary_erosion(B, structure=square)
+Bsquare_erode = ndimage.binary_erosion(B, structure=square)
 plt.subplot(231)
 plt.imshow(Bsquare_erode)
 plt.title("erosion")
 skimage.io.imsave('erosion.png', 255*Bsquare_erode.astype(np.uint8))
 
 # Dilation
-Bsquare_dilate = ndimage.morphology.binary_dilation(B, structure=square)
+Bsquare_dilate = ndimage.binary_dilation(B, structure=square)
 plt.subplot(232)
 plt.imshow(Bsquare_dilate)
 plt.title("dilation")
 skimage.io.imsave('dilation.png', 255*Bsquare_dilate.astype(np.uint8))
 
 # Opening
-Bsquare_open = ndimage.morphology.binary_opening(B, structure=square)
+Bsquare_open = ndimage.binary_opening(B, structure=square)
 plt.subplot(233)
 plt.imshow(Bsquare_open)
 plt.title("opening")
 skimage.io.imsave('open.png', 255*Bsquare_open.astype(np.uint8))
 
 # Closing
-Bsquare_close = ndimage.morphology.binary_closing(B, structure=square)
+Bsquare_close = ndimage.binary_closing(B, structure=square)
 plt.subplot(234)
 plt.imshow(Bsquare_close)
 plt.title("closing")
@@ -84,20 +84,20 @@ def reconstruct(image, mask):
         DESCRIPTION.
 
     """
-    
+
     # Constrain mask into image, takes intersection
     M = np.minimum(mask, image)
 
     # evaluate size of M
-    area = ndimage.measurements.sum(M)
+    area = ndimage.sum(M)
     s = 0
 
     se = np.array([[0, 1, 0], [1, 1, 1], [0, 1, 0]])
     while (area != s):
         s = area
         M = np.minimum(
-            image, ndimage.morphology.binary_dilation(M, structure=se))
-        area = ndimage.measurements.sum(M)
+            image, ndimage.binary_dilation(M, structure=se))
+        area = ndimage.sum(M)
 
     return M
 
@@ -129,7 +129,7 @@ def closeHoles(A):
 def killSmall(A, n):
     # destroy small objects
     se = np.ones((n, n))
-    M = ndimage.morphology.binary_erosion(A, structure=se)
+    M = ndimage.binary_erosion(A, structure=se)
     return reconstruct(A, M)
 
 
