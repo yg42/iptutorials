@@ -34,6 +34,23 @@ From a binary image representing a shape, we need to extract a random set of poi
 \end{enumerate}
 \end{qbox}
 
+\begin{pcomment}
+A simple way to do this is to select all discrete points that are part of the image with \pinline{np.where} and randomly select a small quantity of these points.
+
+\begin{python}
+A = imread('camel.png')
+pts = np.where(A)
+pts = np.array(pts).transpose()
+
+rng = np.random.default_rng()
+pts = rng.permutation(pts)
+
+points = pts[:num_points]
+\end{python}
+
+\end{pcomment}
+
+
 \section{Delaunay triangulation}
 
 In order to build the alpha shape of a set of points, it is firstly required to compute its Delaunay triangulation.
@@ -49,7 +66,7 @@ In order to build the alpha shape of a set of points, it is firstly required to 
 \begin{qbox}
 \begin{enumerate}
 	\item By using the initial point pattern, build its Delaunay triangulation.
-	\item Look at the resulting Matlab object to understand the structure of the triangulation.
+	\item Look at the resulting object to understand the structure of the triangulation.
 \end{enumerate}
 \end{qbox}
 
@@ -59,8 +76,21 @@ You can use the matlab function  \minline{delaunayTriangulation}.
 \end{mremark}
 \end{mcomment}
 
+\begin{pcomment}
+You can import the module Delaunay with \pinline{from scipy.spatial import Delaunay}.
+ 
+ The display of the triangulation can be done by:
+ \begin{python}
+tri = Delaunay(points)
+plt.triplot(points[:,0], points[:,1], tri.simplices, lw=.5)
+ \end{python}
+
+
+\end{pcomment}
+
+
 \section{Alpha-shape}
-The alpha-shape corresponds to the union of Delaunay triangles $T_{ijk}$ such that the circumradius $C_{ijk}$ is lower than $\alpha$.
+The alpha-shape corresponds to the union of Delaunay triangles $T_{ijk}$ such that the circumradius $C_{ijk}$ is lower than $1/\alpha$.
 
 \begin{figure}[htbp]
 \centering
@@ -76,9 +106,20 @@ The alpha-shape corresponds to the union of Delaunay triangles $T_{ijk}$ such th
 
 \begin{qbox}
 \begin{enumerate}
-\item Implement the algorithm.
-\item Test this operator with the input data using different values of $\alpha$.
+\item Implement the algorithm : loop over all simplices of the Delaunay triangulation, and check if the radius is lower than $\alpha$. In this case, do not display this triangle.
+\item Test this operator with the input data using different values of $\alpha$ (floating point parameter).
 \end{enumerate}
 \end{qbox}
 
+\begin{pcomment}
+The radius of the circumcircle is not difficult to compute, however, you may use the module \pinline{sympy} in order to compute it easily.
+
+ \begin{python}
+from sympy import Point, Triangle
+p1, p2, p3 = Point(0, 0), Point(1, 0), Point(0, 1)
+t = Triangle(p1, p2, p3)
+print(t.circumradius)
+ \end{python}
+
+\end{pcomment}
 

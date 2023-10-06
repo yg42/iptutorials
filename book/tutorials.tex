@@ -84,9 +84,9 @@
   {../MASTER_mispa/TUT.IMG.morphological_attribute_filtering/enonce/}
   {../MASTER_mispa/TUT.IMG.morphological_attribute_filtering/matlab/}
   {../MASTER_mispa/TUT.IMG.morphological_attribute_filtering/python/}
-  {../MASTER_mispa/TUT.IMG.lbp/enonce/}  
-  {../MASTER_mispa/TUT.IMG.lbp/matlab/} 
-  {../MASTER_mispa/TUT.IMG.lbp/python/}  
+  {../TB_IPR/TUT.IMG.lbp/enonce/}  
+  {../TB_IPR/TUT.IMG.lbp/matlab/} 
+  {../TB_IPR/TUT.IMG.lbp/python/}  
   {../MASTER_mispa/TUT.IMG.image_segmentation_watershed/enonce/}
   {../MASTER_mispa/TUT.IMG.image_segmentation_watershed/matlab/}
   {../MASTER_mispa/TUT.IMG.image_segmentation_watershed/python/}
@@ -118,6 +118,9 @@
   {../TB_image/TUT.IMG.image_registration/enonce/}
   {../TB_image/TUT.IMG.image_registration/matlab/}
   {../TB_image/TUT.IMG.image_registration/python/}
+  {../TB_IPR/TUT.IMG.alpha_shapes/enonce/}
+  {../TB_IPR/TUT.IMG.alpha_shapes/matlab/}
+  {../TB_IPR/TUT.IMG.alpha_shapes/python/}
   {../TB_IPR/TUT.IMG.granulometry/python/} 
   {../TB_IPR/TUT.IMG.granulometry/matlab/}
   {../TB_IPR/TUT.IMG.granulometry/enonce/}
@@ -157,7 +160,7 @@
 \begin{document}
 %\maketitle
 \ifmatlab{\includepdf[pages={1},fitpaper]{media/TUT_pagedegarde_16x24.pdf}}
-\ifpython{\includepdf[pages={1},fitpaper]{media/TUT_pagedegarde_python_16x24.pdf}}
+\ifpython{\includepdf[pages={1},fitpaper]{media/TUT_pagedegarde_python_2ed_16x24.pdf}}
 \includepdf[pages={1},fitpaper]{media/license_16x24.pdf}
 \input{credits}
 
@@ -354,6 +357,11 @@
 \inputpythoncorrection{../TB_IPR/TUT.IMG.point_processes_voronoi/python/text.tex}
 
 
+\input{../TB_IPR/TUT.IMG.alpha_shapes/enonce/text.tex}\newpage
+\inputmatlabcorrection{../TB_IPR/TUT.IMG.alpha_shapes/matlab/text.tex}
+\inputpythoncorrection{../TB_IPR/TUT.IMG.alpha_shapes/python/text.tex}
+
+
 \part{Image Characterization and Pattern Analysis}
 
 
@@ -393,10 +401,10 @@
 \inputmatlabcorrection{../TB_IPR/TUT.IMG.harris_detector/matlab/text.tex}
 \inputpythoncorrection{../TB_IPR/TUT.IMG.harris_detector/python/text.tex}
 
-\input{../MASTER_mispa/TUT.IMG.lbp/enonce/text.tex}
+\input{../TB_IPR/TUT.IMG.lbp/enonce/text.tex}
 \newpage
-\inputmatlabcorrection{../MASTER_mispa/TUT.IMG.lbp/matlab/text.tex}
-\inputpythoncorrection{../MASTER_mispa/TUT.IMG.lbp/python/text.tex}
+\inputmatlabcorrection{../TB_IPR/TUT.IMG.lbp/matlab/text.tex}
+\inputpythoncorrection{../TB_IPR/TUT.IMG.lbp/python/text.tex}
 
 
 % \part{Computational photography}

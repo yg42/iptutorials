@@ -48,8 +48,8 @@ plt.show()
 
 \begin{figure}[htbp]
  \centering 
- \subfloat[Set of points, uniformely chosen in the shape.]{\includegraphics[width=.45\linewidth]{points.pdf}}\hfill
- \subfloat[Delaunay triangulation.]{\includegraphics[width=.45\linewidth]{delaunay.pdf}}
+ \subfloat[Set of points, uniformely chosen in the shape.]{\includegraphics[width=.45\linewidth]{points.alphashapes.pdf}}\hfill
+ \subfloat[Delaunay triangulation.]{\includegraphics[width=.45\linewidth]{delaunay.alphashapes.pdf}}
  \caption{Set of points and its Delaunay triangulation.}
  \label{fig:alphashape:python:points}
 \end{figure}
@@ -89,7 +89,7 @@ with progressbar.ProgressBar(max_value=len(tri.simplices)) as bar:
 Then, given a radius,  one can filter the triangles. The results are presented in Fig.\ref{fig:alphashape:python:ashape}.
 
 \begin{python}
- or R in progressbar.progressbar([5,10, 50, 100, 100000]):
+for R in progressbar.progressbar([5,10, 50, 100, 100000]):
     
     r = np.array(radius)<R
     fig = plt.figure()
@@ -112,3 +112,39 @@ Then, given a radius,  one can filter the triangles. The results are presented i
  \caption{Different alpha-solids.}
  \label{fig:alphashape:python:ashape}
 \end{figure}
+
+\begin{pcomment}
+\subsection{To go further}
+
+There exist a python module dedicated to alpha-shapes. Here is a solution that uses it:
+
+\begin{python}
+import alphashape
+import matplotlib.pyplot as plt
+from descartes import PolygonPatch
+\end{python}
+
+\begin{python}
+for R in progressbar.progressbar([5, 10, 50, 100, 100000]):
+    # Generate the alpha shape
+    alpha_shape = alphashape.alphashape(points, 1/R)
+
+    # Initialize plot
+    fig, ax = plt.subplots()
+
+    # Plot input points
+    ax.scatter(*zip(*points), s=1)
+
+    # Plot alpha shape
+    ax.add_patch(PolygonPatch(alpha_shape, alpha=.2))
+    plt.title(fr"$\alpha={R}$")
+    plt.show()
+\end{python}
+
+\begin{figure}[htbp]
+ \centering 
+ \includegraphics[width=.7\linewidth]{module_alphashape_10.python.pdf}
+ \caption{Illustration with the \pinline{alphashape} module.}
+\end{figure}
+
+\end{pcomment}
