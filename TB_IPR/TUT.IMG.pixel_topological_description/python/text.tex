@@ -3,7 +3,15 @@
 \pcorrectionsection{Python correction}
 
 
-\subsection{Toplogical description}
+\begin{python}
+import numpy as np
+from scipy.ndimage import label
+import skimage.morphology as morpho
+from skimage.io import imread
+import matplotlib.pyplot as plt
+\end{python}
+
+\subsection{Topological description}
 The operations are not difficult, except that the $CAdj_4$ should be coded carefully.
 
 \begin{python}
@@ -19,13 +27,13 @@ def nc(A):
     # intersection is done by the min operation
     X1=np.minimum(V8_star,A);
     TT8=np.sum(X1);
-    L, T8 = mes.label(X1, structure=V8);
-    # The C-ajd-4 might introduce some problems if a pixel is not 4-connected
-    # to the central pixel
+    L, T8 = label(X1, structure=V8);
+    # The C-ajd-4 might introduce some problems if a pixel
+    # is not 4-connected to the central pixel
     X2=np.minimum(V8,invA);
     Y=np.minimum(X2,V4);
-    X=morpho.reconstruction(Y,X2,selem=V4);
-    L, T8c = mes.label(X, structure=V4);
+    X=morpho.reconstruction(Y, X2, footprint=V4);
+    L, T8c = label(X, structure=V4);
     
     return T8, T8c, TT8
 \end{python}
@@ -81,3 +89,34 @@ def classification(A):
 \caption{Classification of all the pixels of the the original image.}
 \label{fig:topological_description:python:classification}
 \end{figure}
+
+
+Here is a code that can be used to get human-readable connectivity type.
+
+\begin{python}
+def translate_type(type):
+    """
+    Translates the type of a pixel to a human-readable string.
+
+    Args:
+        type (int): The type of the pixel.
+
+    Returns:
+        str: The human-readable string.
+    """
+    if type == 1:
+        return "isolated point"
+    if type == 2:
+        return "2-junction point"
+    if type == 3:
+        return "3-junction point"
+    if type == 4:
+        return "4-junction point"
+    if type == 5:
+        return "border point"
+    if type == 6:
+        return "end point"
+    if type == 7:
+        return "interior point"
+    return "unknown"
+\end{python}
