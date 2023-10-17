@@ -5,12 +5,13 @@ Created on Wed Mar 14 13:43:55 2018
 
 @author: yann
 """
+#%%
 import numpy as np
 from skimage import draw
 from scipy import misc, signal
 import matplotlib.pyplot as plt
 import progressbar
-
+import skimage.io
 
 def booleanModel(Wsize, gamma, radius):
     """
@@ -37,7 +38,7 @@ def booleanModel(Wsize, gamma, radius):
     # union of grains
     Z = np.zeros((WsizeExtended[0], WsizeExtended[1])).astype('int')
     for r, xx, yy in zip(rGrains, x, y):
-        rr, cc = draw.circle(xx, yy, radius=r, shape=Z.shape)
+        rr, cc = draw.disk((xx, yy), radius=r, shape=Z.shape)
         Z[rr, cc] = 1
     # restrain window for side effects
     Z = Z[edgeEffect:edgeEffect+Wsize[0], edgeEffect:edgeEffect+Wsize[1]]
@@ -54,22 +55,11 @@ def minkowskiFunctionals(X):
     Notice: regionprops from skimage.measure is not a good solution because
             it computes properties of each object of a labelled image
     """
-    F = np.array([[0, 0, 0], [0, 1, 4], [0, 2, 8]])
-    XF = signal.convolve2d(X, F, mode='same')
-    edges = np.arange(0, 17, 1)
-    h, edges = np.histogram(XF[:], bins=edges)
-    f_intra = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1]
-    e_intra = [0, 2, 1, 2, 1, 2, 2, 2, 0, 2, 1, 2, 1, 2, 2, 2]
-    v_intra = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-    EulerNb8 = np.sum(h*v_intra - h*e_intra + h*f_intra)
-    f_inter = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
-    e_inter = [0, 0, 0, 1, 0, 1, 0, 2, 0, 0, 0, 1, 0, 1, 0, 2]
-    v_inter = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1]
-    EulerNb4 = np.sum(h*v_inter - h*e_inter + h*f_inter)
-    Area = sum(h*f_intra)
-    Perimeter = sum(-4*h*f_intra + 2*h*e_intra)
+    Area = np.sum(X>0)
+    Perimeter = skimage.measure.perimeter(X, neighbourhood=4)
+    EulerNb = skimage.measure.euler_number(X, connectivity=2)
 
-    return Area, Perimeter, EulerNb8, EulerNb4
+    return Area, Perimeter, EulerNb
 
 
 def realizations(Wsize, gamma, radius, n=100):
@@ -84,8 +74,8 @@ def realizations(Wsize, gamma, radius, n=100):
     bar = progressbar.ProgressBar()
     for i in bar(range(n)):
         Z = booleanModel(Wsize, gamma, radius)
-        a, p, chi8, chi4 = minkowskiFunctionals(Z)
-        W[i, :] = np.array([a, p/2, chi8*np.pi]) / areaWsize
+        a, p, chi = minkowskiFunctionals(Z)
+        W[i, :] = np.array([a, p/2, chi*np.pi]) / areaWsize
 
     return W
 
@@ -99,10 +89,9 @@ Z = booleanModel(Wsize, gamma, radius)
 plt.imshow(Z)
 plt.show()
 
-imageio.imwrite('boolean_model.python.png', Z)
+skimage.io.imsave('boolean_model.python.png', Z)
 
-
-W = realizations(Wsize, gamma, radius, 1000)
+W = realizations(Wsize, gamma, radius, 10000)
 W = np.mean(W, axis=0)
 
 # comparison with
@@ -121,3 +110,31 @@ error_2 = np.abs(W_2-W[2]) / W_2
 print("errorW0: ", error_0)
 print("errorW1: ", error_1)
 print("errorW2: ", error_2)
+
+# %%
+# Another way to compare with the theoretical values
+# Theoretical values
+rMean = np.mean(radius)
+areaMean = np.pi*rMean**2
+perMean = 2*np.pi*rMean
+
+# By inversing the formulas
+# Warning, perimeter has been divided by 2
+W[1] = W[1]*2
+# Also, euler number is multiplied by pi
+W[2] = W[2]/np.pi
+
+x = 1 # Euler characteristic for a disk, no hole
+gamma_measured = 1/np.pi/x * ( np.pi*W[2] *1/(1-W[0]) + 1/4*(W[1]/(1-W[0]))**2)
+perim_measured = 1/gamma_measured * 1/(1-W[0]) * W[1]
+area_measured  = -1/gamma_measured * np.log(1-W[0])
+
+
+print('rMean', rMean)
+print("gamma_measured: ", gamma_measured, gamma)
+print("perim_measured: ", perim_measured)
+print("area_measured: ", area_measured)
+
+print('radius measured', perim_measured/2/np.pi)
+
+# %%
