@@ -7,21 +7,22 @@ Granulometry example on powder image
 """
 
 
-from scipy import ndimage, misc
+from scipy import ndimage
 import numpy as np
+from skimage.io import imread, imsave
 
 import matplotlib.pyplot as plt
 
 
 def granulometry(BW, T=35, filename="simu"):
     # total original area
-    A = ndimage.measurements.sum(BW)
+    A = ndimage.sum(BW)
 
     # number of objects
-    label, N = ndimage.measurements.label(BW)
+    label, N = ndimage.label(BW)
 
-    area = np.zeros((T,), dtype=np.float)
-    number = np.zeros((T,), dtype=np.float)
+    area = np.zeros((T,), dtype=float)
+    number = np.zeros((T,), dtype=float)
 
     """
     Warning: the structuring elements must verify B(n) = B(n-1) o B(1).
@@ -29,10 +30,10 @@ def granulometry(BW, T=35, filename="simu"):
     se = ndimage.generate_binary_structure(2, 1)
     for i in np.arange(T):
         SE = ndimage.iterate_structure(se, i-1)
-        m = ndimage.morphology.binary_erosion(BW, structure=SE)
-        G = ndimage.morphology.binary_propagation(m, mask=BW)
-        area[i] = 100*ndimage.measurements.sum(G)/A
-        label, n = ndimage.measurements.label(G)
+        m = ndimage.binary_erosion(BW, structure=SE)
+        G = ndimage.binary_propagation(m, mask=BW)
+        area[i] = 100*ndimage.sum(G)/A
+        label, n = ndimage.label(G)
         number[i] = 100*n/N  # beware of integer division
 
     plt.figure()
@@ -52,8 +53,8 @@ def granulometry(BW, T=35, filename="simu"):
 
 # Granulometry of synthetic image
 # read binary simulated image, normalize it
-I = imageio.imread("simulation.png")/255
-I = I[:, :, 2] > .5
+I = imread("simulation.png")/255
+I = I > .5
 plt.figure()
 plt.imshow(I)
 plt.show()
@@ -62,19 +63,19 @@ granulometry(I, 35)
 
 
 # Granulometry of real image
-I = imageio.imread("poudre.bmp")
+I = imread("poudre.bmp")
 
 # segmentation
 BW = I > 74
-BW = ndimage.morphology.binary_fill_holes(BW)
+BW = ndimage.binary_fill_holes(BW)
 
 # suppress small objects
 se = ndimage.generate_binary_structure(2, 1)
-m = ndimage.morphology.binary_opening(BW)
+m = ndimage.binary_opening(BW)
 # opening by reconstruction
-BW = ndimage.morphology.binary_propagation(m, mask=BW)
+BW = ndimage.binary_propagation(m, mask=BW)
 
-imageio.imwrite("segmentation_granulo.python.png", BW.astype('int'))
+imsave("segmentation_granulo.python.png", BW.astype('int'))
 plt.imshow(BW)
 plt.show()
 
