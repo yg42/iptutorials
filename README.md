@@ -25,3 +25,8 @@ Each folder contains the LaTeX source of the book, and MATLAB and PYTHON proposi
 # Practicing online
 
 Register for free to the [online course at coursera](https://fr.coursera.org/learn/moocimage-filtrage) if you need video introduction and interactive advices.
+
+## Introduction course for special classes CPGE
+
+[Link to introduction tutorials](book/fauriel.pdf)
+
