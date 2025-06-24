@@ -26,7 +26,7 @@ The image database used in this tutorial is composed of 18 classes. Each class c
 \begin{qbox}
 \begin{enumerate}
 	\item For each image in the database, extract a number of different features, denoted \textsl{nbFeatures}.
-	\item Organize these features in an array of \textsl{nbFeatures} lines and 216 columns. In this way, each column $i$ represents the different features of the image $i$.
+	\item Organize these features in an array of \textsl{nbFeatures} columns and 216 lines (the shape is thus $(216,nbFeatures)$). In this way, each line $i$ represents the different features of the image $i$.
 \end{enumerate}
 \end{qbox}
 
@@ -74,8 +74,15 @@ The inputs are the features of each image. The target data are the labels, indic
 \subsection{Construction of the array of properties}
 \begin{qbox}
 \begin{itemize}
-	\item Build the target data, representing the class of each image. The target data for pattern recognition networks should consist of vectors of all zero values except for a 1 in element i, where i is the class they are to represent. In our example, the target data will be an array of 18 lines and 216 columns.	
+% \begin{mcomment}
+% 	\item Build the target data, representing the class of each image. The target data for pattern recognition networks should consist of vectors of all zero values except for a 1 in element i, where i is the class they are to represent. In our example, the target data will be an array of 18 lines and 216 columns.	
+% 	\item The database will be divided into a training set ($75\%$) and a test set ($25\%$).
+% \end{mcomment}
+\begin{pcomment}
+ \item Build the target data, representing the class of each image. The target data for pattern recognition networks should consist of one vector containing the index of the target class. In our example, the target data will be a vector of 216 elements.	
 	\item The database will be divided into a training set ($75\%$) and a test set ($25\%$).
+\end{pcomment}
+
 	\end{itemize}
 	\end{qbox}
 	
